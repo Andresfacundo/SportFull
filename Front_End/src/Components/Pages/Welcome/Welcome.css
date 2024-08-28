@@ -1,0 +1,47 @@
+*{
+    margin: 0;
+    padding: 0;
+    color: #e7e7e7;
+}
+
+.container_welcome{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} 
+
+.title_Welcome{
+    font-size: 2.8rem;
+    margin-top: 5rem;
+}
+
+.logo_welcome{
+    width: 10rem;
+}
+
+.slogan{
+    width: 13rem;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.salir{
+    color: #07954A;
+}
+
+.option_welcome{
+    width: 19rem;
+    height:4rem;
+    background-color: #07954A;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983; 
+
+}
