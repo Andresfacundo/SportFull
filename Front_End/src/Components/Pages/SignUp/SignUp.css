@@ -20,7 +20,8 @@
 .title_signUp {
     font-size: 2.8rem;
     font-weight: 400;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
+    margin-top: 2rem;
 }
 
 .input_signUp {
@@ -50,28 +51,26 @@
 
 .register,
 .return {
+    margin-top: 3rem;
+    width: 19rem;
+    border: none;
     height: 4rem;
     background-color: #07954A;
-    margin-bottom: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
     text-decoration: none;
     box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+
 
 }
 
-.register {
-    margin-top: 3rem;
-    width: 19rem;
-    border: none;
-
+.return{
+    margin-bottom: 4rem;
 }
 
-.return {
-    width: 13rem;
-}
 
 .account-type-container {
     width: auto;
@@ -176,4 +175,10 @@
     align-items: center;
     transform-origin: right center;
     transition: transform .3s;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

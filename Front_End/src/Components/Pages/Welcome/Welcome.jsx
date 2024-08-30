@@ -30,10 +30,6 @@ export const Welcome = () => {
         <NavLink className={'option_welcome'} to='/SignUp'>Registrarse</NavLink>
       </Main>
 
-      <Footer>
-
-        <NavLink className={'salir'}>Salir</NavLink> 
-      </Footer>
     </div>
   )
 }

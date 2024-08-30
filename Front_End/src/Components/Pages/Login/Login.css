@@ -1,10 +1,10 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
 
 
-.container-login{
+.container-login {
     width: 100%;
     height: 100%;
     display: flex;
@@ -13,42 +13,46 @@
     background-color: #073B4C;
 }
 
-.logo{
+.logo {
     width: 15rem;
 }
 
-.login, .return{
-    height:4rem;
+.login,
+.return {
+    height: 4rem;
     background-color: #07954A;
-    margin-bottom: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
     text-decoration: none;
-    box-shadow: 7px 6px 10px #07954983; 
-
-}
-
-.login{
-    margin-top: 3rem;
+    box-shadow: 7px 6px 10px #07954983;
     width: 19rem;
+    border: none;
+    font-size: 1.2rem;
+
 }
 
-.return{
-    width: 13rem;
+.login {
+    margin-top: 4rem;
 }
 
-.recover_password{
-        color: #07954A;
-        position: absolute;
-        top: 36.5rem;
-        left: 12rem;
-    }
+.recover_password {
+    color: #07954A;
+    position: absolute;
+    top: 33.5rem;
+    left: 11rem;
+}
 
 
-.title-login{
+.title-login {
     font-size: 2.8rem;
     margin-bottom: 3rem;
     font-weight: 400;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
