@@ -25,12 +25,18 @@ public class ClientControllers {
     @Autowired
     IClientRepository clientRepository;
 
-    @PostMapping("/profile")
+    @PostMapping
     public ClientModels createClient(@RequestBody ClientModels clientModels) {
         return this.clientServices.saveClient(clientModels);
     }
 
-    @PutMapping(path = "/{id}")
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientModels> getClientProfile(@PathVariable Long id) {
+        Optional<ClientModels> clientModels = clientServices.getClientById(id);
+        return clientModels.map(models -> new ResponseEntity<>(models, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/{id}")
     public ResponseEntity<ClientModels> updateClient(@PathVariable("id") Long id, @RequestBody ClientModels clientModels) {
         Optional<ClientModels> existingClient = this.clientServices.getClientById(id);
         if (existingClient.isPresent()) {
@@ -39,6 +45,18 @@ public class ClientControllers {
         }else {
             return ResponseEntity.notFound().build();
         }
-
+    }
+    @DeleteMapping(path = "/{id}")
+    public String deleteClient(@PathVariable("id") Long id) {
+        if(!clientServices.getClientById(id).isPresent()) {
+            return "Error al eliminar el cliente";
+        }else{
+            boolean ok = this.clientServices.deleteClient(id);
+            if(ok) {
+                return "Cliente con id " + id + " eliminado";
+            }else{
+                return "Error al eliminar el cliente";
+            }
+        }
     }
 }
