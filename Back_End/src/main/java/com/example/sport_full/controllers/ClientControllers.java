@@ -6,6 +6,7 @@ import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
 import com.example.sport_full.repositories.IUserRepository;
+import com.example.sport_full.services.ClientServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,40 +18,27 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/client")
 public class ClientControllers {
-    private final IUserRepository userRepository;
-    private final IClientRepository clientRepository;
-
 
     @Autowired
-    public ClientControllers(IUserRepository userRepository, IClientRepository clientRepository) {
-        this.userRepository = userRepository;
-        this.clientRepository = clientRepository;
+    ClientServices clientServices;
+
+    @Autowired
+    IClientRepository clientRepository;
+
+    @PostMapping("/profile")
+    public ClientModels createClient(@RequestBody ClientModels clientModels) {
+        return this.clientServices.saveClient(clientModels);
     }
 
-    @PostMapping("/register-client")
-    public ResponseEntity<?> registerClient(@RequestBody ClientModels clientModels, UserModels userModels) {
-        Optional<UserModels> userOptional = userRepository.findById(userModels.getId());
-
-        if (userOptional.isPresent()) {
-            UserModels user = userOptional.get();
-
-            if (!"CLIENTE".equalsIgnoreCase(user.getTipoUsuario())) {
-                return new ResponseEntity<>("El usuario no es de tipo CLIENTE", HttpStatus.BAD_REQUEST);
-            }
-
-            if (user.getClientModels() != null) {
-                return new ResponseEntity<>("El usuario ya tiene un perfil de cliente asociado", HttpStatus.CONFLICT);
-            }
-
-            clientModels.setUserModels(user);
-            ClientModels savedClient = clientRepository.save(clientModels);
-            user.setClientModels(savedClient);
-            userRepository.save(user);
-
-            return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<ClientModels> updateClient(@PathVariable("id") Long id, @RequestBody ClientModels clientModels) {
+        Optional<ClientModels> existingClient = this.clientServices.getClientById(id);
+        if (existingClient.isPresent()) {
+            ClientModels updatedClientModels = this.clientServices.updateClient(clientModels, id);
+            return ResponseEntity.ok(updatedClientModels);
+        }else {
+            return ResponseEntity.notFound().build();
         }
-    }
 
+    }
 }
