@@ -47,7 +47,7 @@ export const SignUp = () => {
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={saveUser}>
+        <form onSubmit={saveUser} className='form'>
           <label className='form_label'>
             <input
               type='text'
@@ -84,6 +84,16 @@ export const SignUp = () => {
             <span className='form_text'>Contraseña</span>
           </label>
 
+          <label className='form_label'>
+            <input
+              type='password'
+              placeholder=' '
+              className='form_input'
+              required
+            />
+            <span className='form_text'>Confirmar Contraseña</span>
+          </label>
+
           <div className="account-type-container">
             <p>Seleccione el tipo de cuenta</p>
             <label className="radio-option">
@@ -113,9 +123,9 @@ export const SignUp = () => {
           </div>
 
           <button type="submit" className='register'>Registrarse</button>
+        <NavLink className='return' to='/'>Volver</NavLink> 
         </form>
 
-        <NavLink className='return' to='/'>Volver</NavLink>
       </Main>
     </div>
   );

@@ -3,9 +3,11 @@ package com.example.sport_full.models;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "usuarios")
-public class    UserModels {
+public class UserModels implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +16,7 @@ public class    UserModels {
     @Column(nullable = false)
     private String nombreCompleto;
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -23,7 +25,17 @@ public class    UserModels {
     @Column(nullable = false)
     private String tipoUsuario;
 
-    public int getId() {
+    // Relación opcional con ClientModels
+    @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
+    private ClientModels clientModels;
+
+    // Relación opcional con AdminModels
+    @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
+    private AdminModels adminModels;
+
+    // Getters y Setters
+
+    public long getId() {
         return id;
     }
 
@@ -61,5 +73,21 @@ public class    UserModels {
 
     public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public ClientModels getClientModels() {
+        return clientModels;
+    }
+
+    public void setClientModels(ClientModels clientModels) {
+        this.clientModels = clientModels;
+    }
+
+    public AdminModels getAdminModels() {
+        return adminModels;
+    }
+
+    public void setAdminModels(AdminModels adminModels) {
+        this.adminModels = adminModels;
     }
 }

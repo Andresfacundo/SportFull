@@ -48,7 +48,7 @@ export const Login = () => {
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className='form'>
           <label className='form_label'>
             <input
               type='email'
@@ -76,9 +76,9 @@ export const Login = () => {
           <NavLink className={'recover_password'} to="/recover-password">¿Olvidó su contraseña?</NavLink>
         
           <button type="submit" className='login'>Iniciar Sesión</button>
+          <NavLink className={'return'} to='/'>Volver</NavLink>
         </form>
 
-        <NavLink className={'return'} to='/'>Volver</NavLink>
       </Main>
     </div>
   );
