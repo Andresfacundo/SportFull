@@ -7,6 +7,7 @@ import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,27 @@ public class AdminControllers {
         if (existingAdmin.isPresent()) {
             AdminModels updatedAdminModels = this.adminServices.updateAdmin(request, id);
             return ResponseEntity.ok(updatedAdminModels);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AdminModels> getAdminById(@PathVariable("id") Long id) {
+        Optional<AdminModels> admin = this.adminServices.getAdmin(id);
+        if (admin.isPresent()) {
+            return ResponseEntity.ok(admin.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAdminById(@PathVariable("id") Long id) {
+        Optional<AdminModels> admin = this.adminServices.getAdmin(id);
+        if (admin.isPresent()) {
+            this.adminServices.deleteAdmin(id);
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
