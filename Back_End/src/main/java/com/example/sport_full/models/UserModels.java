@@ -1,6 +1,7 @@
 package com.example.sport_full.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -31,6 +32,7 @@ public class UserModels implements Serializable {
 
     // Relación opcional con AdminModels
     @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
+    @JsonIgnore
     private AdminModels adminModels;
 
     // Getters y Setters
