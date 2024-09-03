@@ -114,4 +114,7 @@ public class AdminModels {
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
     }
+
+    public void setId(int i) {
+    }
 }

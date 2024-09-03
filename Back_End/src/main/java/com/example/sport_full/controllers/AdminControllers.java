@@ -5,10 +5,10 @@ import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.services.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -42,15 +42,13 @@ public class AdminControllers {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<AdminModels> deleteAdminById(@PathVariable("id") Long id) {
-        Optional<AdminModels> admin = this.adminServices.getAdmin(id);
-        if (admin.isPresent()) {
-            this.adminServices.deleteAdmin(id);
-            return new ResponseEntity<>(admin.get(), HttpStatus.OK);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PatchMapping("/{id}")
+    public ResponseEntity<AdminModels> patchAdmin(@PathVariable("id") Long id, @RequestBody Map<String, Object> updates) {
+        try {
+            AdminModels updatedAdmin = adminServices.patchAdmin(id, updates);
+            return ResponseEntity.ok(updatedAdmin);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
-
 }
