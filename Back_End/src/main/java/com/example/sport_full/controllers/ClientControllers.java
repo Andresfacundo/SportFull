@@ -1,11 +1,8 @@
 package com.example.sport_full.controllers;
 
 
-import ch.qos.logback.core.net.server.Client;
 import com.example.sport_full.models.ClientModels;
-import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
-import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.ClientServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,21 +39,18 @@ public class ClientControllers {
         if (existingClient.isPresent()) {
             ClientModels updatedClientModels = this.clientServices.updateClient(clientModels, id);
             return ResponseEntity.ok(updatedClientModels);
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
-    @DeleteMapping(path = "/{id}")
-    public String deleteClient(@PathVariable("id") Long id) {
-        if(!clientServices.getClientById(id).isPresent()) {
-            return "Error al eliminar el cliente";
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> patchClient(@PathVariable("id") Long id) {
+        if (this.clientRepository.existsById(id)) {
+            this.clientServices.patchClient(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
         }else{
-            boolean ok = this.clientServices.deleteClient(id);
-            if(ok) {
-                return "Cliente con id " + id + " eliminado";
-            }else{
-                return "Error al eliminar el cliente";
-            }
+            return ResponseEntity.notFound().build();
         }
     }
 }

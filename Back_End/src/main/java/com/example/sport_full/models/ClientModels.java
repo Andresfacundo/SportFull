@@ -1,36 +1,41 @@
 package com.example.sport_full.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.apache.catalina.User;
+import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Perfil_cliente")
+@Where(clause = "estado_cuenta = false")
 public class ClientModels implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = true, unique = true)  // Hacer opcionales las columnas
     private String CC;
 
-    @Column(nullable = true, unique = true)  // Hacer opcionales las columnas
+    @Column(nullable = true)  // Hacer opcionales las columnas
     private String telefono;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private UserModels userModels;
 
+    private boolean estadoCuenta;
+
     // Getters y Setters
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,5 +61,13 @@ public class ClientModels implements Serializable {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
+    }
+
+    public boolean isEstadoCuenta() {
+        return estadoCuenta;
+    }
+
+    public void setEstadoCuenta(boolean estadoCuenta) {
+        this.estadoCuenta = estadoCuenta;
     }
 }
