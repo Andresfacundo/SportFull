@@ -2,9 +2,7 @@ package com.example.sport_full.controllers;
 
 
 import com.example.sport_full.models.AdminModels;
-import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.repositories.ICompanyRepository;
-import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,11 +43,11 @@ public class AdminControllers {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdminById(@PathVariable("id") Long id) {
+    public ResponseEntity<AdminModels> deleteAdminById(@PathVariable("id") Long id) {
         Optional<AdminModels> admin = this.adminServices.getAdmin(id);
         if (admin.isPresent()) {
             this.adminServices.deleteAdmin(id);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(admin.get(), HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }

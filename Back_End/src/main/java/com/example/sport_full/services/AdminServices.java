@@ -17,10 +17,18 @@ public class AdminServices {
     public AdminModels updateAdmin(AdminModels adminModels, Long id) {
         return companyRepository.findById(id)
                 .map(admin -> {
+                    if (adminModels.getNIT() != null) {
+                        admin.setNIT(adminModels.getNIT());
+                    }
+                    if (adminModels.getCCpropietario() != null) {
+                        admin.setCCpropietario(adminModels.getCCpropietario());
+                    }
                     admin.setNombreEmpresa(adminModels.getNombreEmpresa());
-                    admin.setCedulaPropietario(adminModels.getCedulaPropietario());
+                    admin.setTelefonoEmpresa(adminModels.getTelefonoEmpresa());
                     admin.setEmailEmpresa(adminModels.getEmailEmpresa());
-                    admin.setTelefono(adminModels.getTelefono());
+                    admin.setDireccionEmpresa(adminModels.getDireccionEmpresa());
+                    admin.setTelefonoPropietario(adminModels.getTelefonoPropietario());
+                    admin.setEmailPropietario(adminModels.getEmailPropietario());
                     return companyRepository.save(admin);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found with id: " + id));
