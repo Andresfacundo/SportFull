@@ -1,41 +1,29 @@
 package com.example.sport_full.validations;
 
 import com.example.sport_full.models.AdminModels;
+import com.example.sport_full.repositories.ICompanyRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Component
 public class AdminValidations {
 
-    public AdminModels patchAdmin(AdminModels adminModels) {
-        // Dejar el id en cero (0) para que quede "vacío"
-        adminModels.setId(0);
+    private final ICompanyRepository companyRepository;
 
-        // Dejar el userModels en null
-        adminModels.setUserModels(null);
-        if (adminModels.getNIT() == null) {
-            adminModels.setNIT("");
+    public AdminValidations(ICompanyRepository companyRepository) {
+
+        this.companyRepository = companyRepository;
+    }
+
+
+    public void validate(AdminModels adminModels) {
+        // Validación de email existente
+        Optional<AdminModels> existingAdmin = companyRepository.findById(adminModels.getId());
+        if (existingAdmin.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya existe");
         }
-        if (adminModels.getNombreEmpresa() == null) {
-            adminModels.setNombreEmpresa("");
-        }
-        if (adminModels.getTelefonoEmpresa() == null) {
-            adminModels.setTelefonoEmpresa("");
-        }
-        if (adminModels.getEmailEmpresa() == null) {
-            adminModels.setEmailEmpresa("");
-        }
-        if (adminModels.getDireccionEmpresa() == null) {
-            adminModels.setDireccionEmpresa("");
-        }
-        if (adminModels.getCCpropietario() == null) {
-            adminModels.setCCpropietario("");
-        }
-        if (adminModels.getTelefonoPropietario() == null) {
-            adminModels.setTelefonoPropietario("");
-        }
-        if (adminModels.getEmailPropietario() == null) {
-            adminModels.setEmailPropietario("");
-        }
-        return adminModels;
     }
 }

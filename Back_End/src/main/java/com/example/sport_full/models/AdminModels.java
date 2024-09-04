@@ -1,16 +1,20 @@
 package com.example.sport_full.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Perfil_empresa")
-public class AdminModels {
+@Where(clause = "estado_cuenta = false")
+public class AdminModels implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Long id;
 
     @Column(nullable = true, unique = true) // Hacer opcionales los columnas
     private String NIT;
@@ -36,12 +40,21 @@ public class AdminModels {
     @Column(nullable = true, unique = true)
     private String emailPropietario;
 
+    private boolean estadoCuenta;
+
     @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @JsonIgnore
     private UserModels userModels;
 
     // Getters y Setters
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNIT() {
         return NIT;
@@ -115,6 +128,11 @@ public class AdminModels {
         this.userModels = userModels;
     }
 
-    public void setId(int i) {
+    public boolean isEstadoCuenta() {
+        return estadoCuenta;
+    }
+
+    public void setEstadoCuenta(boolean estadoCuenta) {
+        this.estadoCuenta = estadoCuenta;
     }
 }

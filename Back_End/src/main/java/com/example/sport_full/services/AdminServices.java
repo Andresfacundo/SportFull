@@ -1,7 +1,6 @@
 package com.example.sport_full.services;
 
 import com.example.sport_full.models.AdminModels;
-import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.validations.AdminValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +43,16 @@ public class AdminServices {
         return companyRepository.findById(id);
     }
 
-    public AdminModels patchAdmin(Long id, Map<String, Object> updates) {
-        return companyRepository.findById(id)
-                .map(admin -> {
-                    updates.forEach((key, value) -> {
-                        switch (key) {
-                            case "NIT" -> admin.setNIT((String) value);
-                            case "nombreEmpresa" -> admin.setNombreEmpresa((String) value);
-                            case "telefonoEmpresa" -> admin.setTelefonoEmpresa((String) value);
-                            case "emailEmpresa" -> admin.setEmailEmpresa((String) value);
-                            case "direccionEmpresa" -> admin.setDireccionEmpresa((String) value);
-                            case "CCpropietario" -> admin.setCCpropietario((String) value);
-                            case "telefonoPropietario" -> admin.setTelefonoPropietario((String) value);
-                            case "emailPropietario" -> admin.setEmailPropietario((String) value);
-                            case "userModels" -> admin.setUserModels((UserModels) value);
-                        }
-                    });
-                    AdminValidations.patchAdmin(admin);
-                    return companyRepository.save(admin);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found with id: " + id));
+    public String patchAdmin(Long id) {
+        Optional<AdminModels> optionalAdmin = companyRepository.findById(id);
+        if (optionalAdmin.isPresent()) {
+            AdminModels admin = optionalAdmin.get();
+            admin.setEstadoCuenta(true);
+            companyRepository.save(admin);
+            return "Admin con id " + id + " ha sido eliminado";
+
+        }else{
+            return "Admin con id " + id + " no existe";
+        }
     }
 }

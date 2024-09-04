@@ -5,9 +5,11 @@ import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.services.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +34,11 @@ public class AdminControllers {
         }
     }
 
+    @GetMapping("/find-all")
+    public List<AdminModels> findAll() {
+        return companyRepository.findAll();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AdminModels> getAdminById(@PathVariable("id") Long id) {
         Optional<AdminModels> admin = this.adminServices.getAdmin(id);
@@ -43,12 +50,12 @@ public class AdminControllers {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AdminModels> patchAdmin(@PathVariable("id") Long id, @RequestBody Map<String, Object> updates) {
-        try {
-            AdminModels updatedAdmin = adminServices.patchAdmin(id, updates);
-            return ResponseEntity.ok(updatedAdmin);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+    public ResponseEntity<String> patchAdmin(@PathVariable("id") Long id) {
+        if (this.companyRepository.existsById(id)) {
+            this.adminServices.patchAdmin(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
