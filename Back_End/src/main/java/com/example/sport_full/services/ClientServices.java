@@ -1,8 +1,10 @@
 package com.example.sport_full.services;
 
 import com.example.sport_full.models.ClientModels;
+import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
 import com.example.sport_full.repositories.IUserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +27,22 @@ public class ClientServices {
         return clientRepository.findById(id);
     }
 
-    public ClientModels updateClient(ClientModels request, Long id) {
-        ClientModels clientOptional = clientRepository.findById(id).get();
+public UserModels updateUserAndClient(UserModels user, ClientModels client, Long id) {
+    UserModels existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    ClientModels existingClient = clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
 
-        clientOptional.setCC(request.getCC());
-        clientOptional.setTelefono(request.getTelefono());
-        return clientRepository.save(clientOptional);
-    }
+    existingUser.setNombreCompleto(user.getNombreCompleto());
+    existingUser.setEmail(user.getEmail());
+    String hashedPassword = BCrypt.hashpw(user.getContraseña(), BCrypt.gensalt());
+    user.setContraseña(hashedPassword);
+    existingUser.setContraseña(user.getContraseña());
+
+    existingClient.setCC(client.getCC());
+    existingClient.setTelefono(client.getTelefono());
+
+    clientRepository.save(existingClient);
+    return userRepository.save(existingUser);
+}
 
     public String patchClient(Long id) {
         Optional<ClientModels> optionalClient = clientRepository.findById(id);

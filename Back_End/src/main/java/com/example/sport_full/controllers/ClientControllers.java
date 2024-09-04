@@ -2,7 +2,9 @@ package com.example.sport_full.controllers;
 
 
 import com.example.sport_full.models.ClientModels;
+import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
+import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.ClientServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,28 +24,34 @@ public class ClientControllers {
     @Autowired
     IClientRepository clientRepository;
 
+    @Autowired
+    IUserRepository userRepository;
+
     @PostMapping
     public ClientModels createClient(@RequestBody ClientModels clientModels) {
         return this.clientServices.saveClient(clientModels);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientModels> getClientProfile(@PathVariable Long id) {
-        Optional<ClientModels> clientModels = clientServices.getClientById(id);
-        return clientModels.map(models -> new ResponseEntity<>(models, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ClientModels> updateClient(@PathVariable("id") Long id, @RequestBody ClientModels clientModels) {
-        Optional<ClientModels> existingClient = this.clientServices.getClientById(id);
-        if (existingClient.isPresent()) {
-            ClientModels updatedClientModels = this.clientServices.updateClient(clientModels, id);
-            return ResponseEntity.ok(updatedClientModels);
+    @GetMapping("/find/{id}")
+    public ResponseEntity<UserModels> findById(@PathVariable Long id) {
+        Optional<UserModels> user = this.userRepository.findById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @PutMapping("/{id}")
+    public ResponseEntity<UserModels> updateUser(@PathVariable("id") Long id, @RequestBody UserModels userModels) {
+        Optional<UserModels> existingUser = this.userRepository.findById(id);
+        if (existingUser.isPresent()) {
+            ClientModels clientModels = userModels.getClientModels();
+            UserModels updatedUser = this.clientServices.updateUserAndClient(userModels, clientModels, id);
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PatchMapping("/{id}")
     public ResponseEntity<String> patchClient(@PathVariable("id") Long id) {
         if (this.clientRepository.existsById(id)) {
