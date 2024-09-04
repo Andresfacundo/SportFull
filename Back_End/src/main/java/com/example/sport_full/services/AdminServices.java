@@ -1,12 +1,13 @@
 package com.example.sport_full.services;
 
 import com.example.sport_full.models.AdminModels;
+import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.ICompanyRepository;
+import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.validations.AdminValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -17,26 +18,30 @@ public class AdminServices {
   ICompanyRepository companyRepository;
 
     @Autowired
+    IUserRepository userRepository;
+
+    @Autowired
     AdminValidations AdminValidations;
 
-    public AdminModels updateAdmin(AdminModels adminModels, Long id) {
-        return companyRepository.findById(id)
-                .map(admin -> {
-                    if (adminModels.getNIT() != null) {
-                        admin.setNIT(adminModels.getNIT());
-                    }
-                    if (adminModels.getCCpropietario() != null) {
-                        admin.setCCpropietario(adminModels.getCCpropietario());
-                    }
-                    admin.setNombreEmpresa(adminModels.getNombreEmpresa());
-                    admin.setTelefonoEmpresa(adminModels.getTelefonoEmpresa());
-                    admin.setEmailEmpresa(adminModels.getEmailEmpresa());
-                    admin.setDireccionEmpresa(adminModels.getDireccionEmpresa());
-                    admin.setTelefonoPropietario(adminModels.getTelefonoPropietario());
-                    admin.setEmailPropietario(adminModels.getEmailPropietario());
-                    return companyRepository.save(admin);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found with id: " + id));
+    public UserModels updateAdminAndUser(AdminModels admin, UserModels user, Long id) {
+        AdminModels existingAdmin = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        UserModels existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
+
+        existingUser.setNombreCompleto(user.getNombreCompleto());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setContraseña(user.getContraseña());
+
+        existingAdmin.setNIT(admin.getNIT());
+        existingAdmin.setNombreEmpresa(admin.getNombreEmpresa());
+        existingAdmin.setTelefonoEmpresa(admin.getTelefonoEmpresa());
+        existingAdmin.setEmailEmpresa(admin.getEmailEmpresa());
+        existingAdmin.setDireccionEmpresa(admin.getDireccionEmpresa());
+        existingAdmin.setCCpropietario(admin.getCCpropietario());
+        existingAdmin.setTelefonoPropietario(admin.getTelefonoPropietario());
+        existingAdmin.setEmailPropietario(admin.getEmailPropietario());
+
+        companyRepository.save(existingAdmin);
+        return userRepository.save(existingUser);
     }
 
     public Optional<AdminModels> getAdmin(Long id) {

@@ -2,7 +2,9 @@ package com.example.sport_full.controllers;
 
 
 import com.example.sport_full.models.AdminModels;
+import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.ICompanyRepository;
+import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,14 +22,18 @@ public class AdminControllers {
     ICompanyRepository companyRepository;
 
     @Autowired
+    IUserRepository userRepository;
+
+    @Autowired
     AdminServices adminServices;
 
     @PutMapping("/{id}")
-    public ResponseEntity<AdminModels> updateClient(@PathVariable("id") Long id, @RequestBody AdminModels request) {
-        Optional<AdminModels> existingAdmin = this.adminServices.getAdmin(id);
+    public ResponseEntity<UserModels> updateAdmin(@PathVariable("id") Long id, @RequestBody UserModels userModels) {
+        Optional<UserModels> existingAdmin = this.userRepository.findById(id);
         if (existingAdmin.isPresent()) {
-            AdminModels updatedAdminModels = this.adminServices.updateAdmin(request, id);
-            return ResponseEntity.ok(updatedAdminModels);
+            AdminModels adminModels = userModels.getAdminModels();
+            UserModels updatedUser = this.adminServices.updateAdminAndUser(adminModels, userModels, id);
+            return ResponseEntity.ok(updatedUser);
         } else {
             return ResponseEntity.notFound().build();
         }
