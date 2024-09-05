@@ -41,6 +41,7 @@ public class ClientControllers {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<UserModels> updateUser(@PathVariable("id") Long id, @RequestBody UserModels userModels) {
         Optional<UserModels> existingUser = this.userRepository.findById(id);
@@ -52,10 +53,21 @@ public class ClientControllers {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PatchMapping("/{id}")
     public ResponseEntity<String> patchClient(@PathVariable("id") Long id) {
-        if (this.clientRepository.existsById(id)) {
+        if (this.userRepository.existsById(id)) {
             this.clientServices.patchClient(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteClient(@PathVariable("id") Long id) {
+        if (this.userRepository.existsById(id)) {
+            this.userRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         }else{
             return ResponseEntity.notFound().build();

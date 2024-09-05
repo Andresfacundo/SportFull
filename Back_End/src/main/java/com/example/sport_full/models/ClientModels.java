@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Perfil_cliente")
-@Where(clause = "estado_cuenta = false")
 public class ClientModels implements Serializable {
 
     @Id
@@ -26,8 +25,6 @@ public class ClientModels implements Serializable {
     @JsonIgnore
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private UserModels userModels;
-
-    private boolean estadoCuenta;
 
     // Getters y Setters
 
@@ -61,13 +58,5 @@ public class ClientModels implements Serializable {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
-    }
-
-    public boolean isEstadoCuenta() {
-        return estadoCuenta;
-    }
-
-    public void setEstadoCuenta(boolean estadoCuenta) {
-        this.estadoCuenta = estadoCuenta;
     }
 }

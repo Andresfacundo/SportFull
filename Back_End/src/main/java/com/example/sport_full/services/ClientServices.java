@@ -6,7 +6,9 @@ import com.example.sport_full.repositories.IClientRepository;
 import com.example.sport_full.repositories.IUserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -33,6 +35,11 @@ public UserModels updateUserAndClient(UserModels user, ClientModels client, Long
 
     existingUser.setNombreCompleto(user.getNombreCompleto());
     existingUser.setEmail(user.getEmail());
+    if (user.getContraseña() == null ||
+            !user.getContraseña().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
+    ){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
     String hashedPassword = BCrypt.hashpw(user.getContraseña(), BCrypt.gensalt());
     user.setContraseña(hashedPassword);
     existingUser.setContraseña(user.getContraseña());
@@ -44,16 +51,15 @@ public UserModels updateUserAndClient(UserModels user, ClientModels client, Long
     return userRepository.save(existingUser);
 }
 
-    public String patchClient(Long id) {
-        Optional<ClientModels> optionalClient = clientRepository.findById(id);
-        if (optionalClient.isPresent()) {
-            ClientModels client = optionalClient.get();
-            client.setEstadoCuenta(true);
-            clientRepository.save(client);
-            return "Cliente con id " + id + " ha sido eliminado";
-
+    public String patchClient(Long id ) {
+        Optional<UserModels> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            UserModels user = optionalUser.get();
+            user.setEstadoCuenta(true);
+            userRepository.save(user);
+            return "Usuario con id " + id + " ha sido eliminado";
         }else{
-            return "Cliente con id " + id + " no existe";
+            return "usuario con id " + id + " no existe";
         }
     }
 }
