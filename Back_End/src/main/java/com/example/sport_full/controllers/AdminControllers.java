@@ -44,11 +44,11 @@ public class AdminControllers {
         return companyRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AdminModels> getAdminById(@PathVariable("id") Long id) {
-        Optional<AdminModels> admin = this.adminServices.getAdmin(id);
-        if (admin.isPresent()) {
-            return ResponseEntity.ok(admin.get());
+    @GetMapping("/find/{id}")
+    public ResponseEntity<UserModels> findById(@PathVariable("id") Long id) {
+        Optional<UserModels> existingUser = this.adminServices.getUser(id);
+        if (existingUser.isPresent()) {
+            return ResponseEntity.ok(existingUser.get());
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -61,6 +61,16 @@ public class AdminControllers {
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAdmin(@PathVariable("id") Long id) {
+        String result = this.adminServices.deleteAdmin(id);
+        if (result.contains("han sido eliminados")) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
 }
