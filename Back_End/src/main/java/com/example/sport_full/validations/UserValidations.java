@@ -25,7 +25,7 @@ public class UserValidations {
 
         // Validación de la contraseña
         if (userModels.getContraseña() == null ||
-           !userModels.getContraseña().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$")
+           !userModels.getContraseña().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
         ){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
