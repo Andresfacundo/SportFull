@@ -2,11 +2,13 @@ package com.example.sport_full.models;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "usuarios")
+@Where(clause = "estado_cuenta = false")
 public class UserModels implements Serializable {
 
     @Id
@@ -33,6 +35,7 @@ public class UserModels implements Serializable {
     @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
     private AdminModels adminModels;
 
+    private boolean estadoCuenta;
     // Getters y Setters
 
     public long getId() {
@@ -89,5 +92,13 @@ public class UserModels implements Serializable {
 
     public void setAdminModels(AdminModels adminModels) {
         this.adminModels = adminModels;
+    }
+
+    public boolean isEstadoCuenta() {
+        return estadoCuenta;
+    }
+
+    public void setEstadoCuenta(boolean estadoCuenta) {
+        this.estadoCuenta = estadoCuenta;
     }
 }
