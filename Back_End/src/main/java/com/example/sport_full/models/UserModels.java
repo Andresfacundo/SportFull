@@ -1,6 +1,7 @@
 package com.example.sport_full.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
@@ -36,6 +37,7 @@ public class UserModels implements Serializable {
     private AdminModels adminModels;
 
     private boolean estadoCuenta;
+
     // Getters y Setters
 
     public long getId() {
