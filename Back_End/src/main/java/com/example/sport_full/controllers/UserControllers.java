@@ -73,8 +73,8 @@ public class UserControllers {
       return ResponseEntity.ok(userModels);
     } catch (Exception e) {
       // Manejar errores
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body("Error en el registro: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
     }
   }
 

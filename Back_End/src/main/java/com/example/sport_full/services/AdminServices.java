@@ -27,7 +27,7 @@ public class AdminServices {
     AdminValidations AdminValidations;
 
     public UserModels updateAdminAndUser(AdminModels admin, UserModels user, Long id) {
-        AdminModels existingAdmin = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        AdminModels existingAdmin = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")).getAdminModels();
         UserModels existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
 
         existingUser.setNombreCompleto(user.getNombreCompleto());
@@ -67,22 +67,6 @@ public class AdminServices {
             return "Admin con id " + id + " ha sido eliminado";
 
         }else{
-            return "Admin con id " + id + " no existe";
-        }
-    }
-
-    public String deleteAdmin(Long id) {
-        Optional<AdminModels> optionalAdmin = companyRepository.findById(id);
-        if (optionalAdmin.isPresent()) {
-            AdminModels admin = optionalAdmin.get();
-            UserModels user = admin.getUserModels();
-
-            // Eliminar primero el usuario y luego el admin
-            userRepository.deleteById(user.getId());
-            companyRepository.deleteById(id);
-
-            return "Admin con id " + id + " y sus datos vinculados han sido eliminados";
-        } else {
             return "Admin con id " + id + " no existe";
         }
     }

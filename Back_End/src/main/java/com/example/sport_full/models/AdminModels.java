@@ -40,7 +40,7 @@ public class AdminModels implements Serializable {
     private String emailPropietario;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id",unique = true)
     @JsonIgnore
     private UserModels userModels;
 

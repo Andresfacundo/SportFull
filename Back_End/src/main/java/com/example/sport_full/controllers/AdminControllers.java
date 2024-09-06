@@ -66,11 +66,11 @@ public class AdminControllers {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAdmin(@PathVariable("id") Long id) {
-        String result = this.adminServices.deleteAdmin(id);
-        if (result.contains("han sido eliminados")) {
-            return ResponseEntity.status(HttpStatus.OK).body(result);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        if (this.userRepository.existsById(id)) {
+            this.userRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.notFound().build();
         }
     }
 }

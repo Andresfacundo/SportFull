@@ -23,7 +23,7 @@ public class ClientModels implements Serializable {
 
     @OneToOne
     @JsonIgnore
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id",unique = true)
     private UserModels userModels;
 
     // Getters y Setters

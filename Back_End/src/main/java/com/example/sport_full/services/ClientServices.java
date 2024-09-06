@@ -31,7 +31,7 @@ public class ClientServices {
 
 public UserModels updateUserAndClient(UserModels user, ClientModels client, Long id) {
     UserModels existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-    ClientModels existingClient = clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
+    ClientModels existingClient = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found")).getClientModels();
 
     existingUser.setNombreCompleto(user.getNombreCompleto());
     existingUser.setEmail(user.getEmail());
