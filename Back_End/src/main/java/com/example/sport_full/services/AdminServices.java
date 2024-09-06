@@ -59,11 +59,11 @@ public class AdminServices {
     }
 
     public String patchAdmin(Long id) {
-        Optional<AdminModels> optionalAdmin = companyRepository.findById(id);
-        if (optionalAdmin.isPresent()) {
-            AdminModels admin = optionalAdmin.get();
+        Optional<UserModels> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            UserModels admin = optionalUser.get();
             admin.setEstadoCuenta(true);
-            companyRepository.save(admin);
+            userRepository.save(admin);
             return "Admin con id " + id + " ha sido eliminado";
 
         }else{

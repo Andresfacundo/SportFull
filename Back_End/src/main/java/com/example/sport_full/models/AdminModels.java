@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Perfil_empresa")
-@Where(clause = "estado_cuenta = false")
 public class AdminModels implements Serializable {
 
     @Id
@@ -39,8 +38,6 @@ public class AdminModels implements Serializable {
 
     @Column(nullable = true, unique = true)
     private String emailPropietario;
-
-    private boolean estadoCuenta;
 
     @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
@@ -126,13 +123,5 @@ public class AdminModels implements Serializable {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
-    }
-
-    public boolean isEstadoCuenta() {
-        return estadoCuenta;
-    }
-
-    public void setEstadoCuenta(boolean estadoCuenta) {
-        this.estadoCuenta = estadoCuenta;
     }
 }

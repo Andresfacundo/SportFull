@@ -56,7 +56,7 @@ public class AdminControllers {
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> patchAdmin(@PathVariable("id") Long id) {
-        if (this.companyRepository.existsById(id)) {
+        if (this.userRepository.existsById(id)) {
             this.adminServices.patchAdmin(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
