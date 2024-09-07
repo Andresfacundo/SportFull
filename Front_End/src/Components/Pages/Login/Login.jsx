@@ -3,6 +3,7 @@ import { Header } from '../../Layouts/Header/Header';
 import { Main } from '../../Layouts/Main/Main';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
+import logo from '../../../assets/Images/logo/3.png'
 import './Login.css';
 
 export const Login = () => {
@@ -24,12 +25,24 @@ export const Login = () => {
 
     ClienteService.login(credentials)
       .then((response) => {
+        const { token, tipoUsuario } = response.data;  // Extrae token y tipoUsuario de la respuesta
         console.log(response.data);
-        // Aquí puedes manejar la respuesta del servidor, por ejemplo:
-        // - Guardar el token en el localStorage
-        // localStorage.setItem('token', response.data.token);
-        // - Redirigir al usuario a la página principal
-        navigate('/Home');
+        console.log(tipoUsuario); 
+
+        
+        // Guarda el token en el localStorage
+        localStorage.setItem('token', token);
+
+        // Redirige al usuario según su tipo de usuario
+        if (tipoUsuario === 'CLIENTE') {
+          navigate('/HomeClient');
+        } else if (tipoUsuario === 'EMPRESA') {
+          navigate('/HomeEmpresa');
+        } else if (tipoUsuario === 'GESTOR') {
+          navigate('/HomeGestor');
+        } else {
+          setError("Tipo de usuario no reconocido.");
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -40,7 +53,7 @@ export const Login = () => {
   return (
     <div className='container-login'>
       <Header>
-        <img className='logo' src='/public/3.png' alt='img'/>
+        <img className='logo' src={logo} alt='img'/>
       </Header> 
 
       <Main>

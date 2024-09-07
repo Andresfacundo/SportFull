@@ -1,0 +1,137 @@
+.tittle{
+    color:red;
+}
+
+.container_home_client{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; 
+}
+.header_home{
+    width: 485px;
+    height: 300px;
+    background-color: #079549af;
+    transform: translate(15px, -120px) rotate(-20.93deg);
+    border-radius: 120px;
+    border: 10px solid #e7e7e78e;
+    box-shadow: -5px 10px 15px rgba(0, 0,0, 0.6);
+}
+
+.container_header{
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 8rem;
+    right: 4rem;
+    transform: rotate(20.93deg);
+
+}
+
+.container_user{
+    width: auto;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container_user>img{
+    width: 8rem;
+}
+
+.container_user>h2{
+    font-size: 2.5rem;
+}
+
+.container_options{
+    width: 80%;
+    height: auto;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 1rem;
+}
+
+.container_options>h4{
+    font-weight: 400;
+}
+
+.icon_options{
+    width: 1.5rem;
+}
+
+
+main{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+
+.icon_1{
+    width: 4rem;
+}
+
+
+.icon_2{
+    width: 6rem;
+    opacity: 0.4; 
+}
+
+.icon_3{
+    width: 4rem;
+    opacity: 0.4; 
+}
+.icon_4{
+    width: 4rem;
+    opacity: 0.4; 
+    margin-left: 6rem;
+}
+
+.shade_perfil {
+    width: 10.8rem;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 21.3rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_historial{
+    width: 15rem;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 38.3rem;
+    right: 10.3rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_field {
+    width: 20rem;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.88rem;
+    left: 10.5rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_support {
+    width: 20rem;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.6rem;
+    left: 13.8rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}

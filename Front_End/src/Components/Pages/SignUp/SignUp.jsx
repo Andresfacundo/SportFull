@@ -3,6 +3,8 @@ import { Header } from '../../Layouts/Header/Header';
 import { Main } from '../../Layouts/Main/Main';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
+import logo from '../../../assets/Images/logo/3.png'
+
 import './SignUp.css';
 
 export const SignUp = () => {
@@ -39,7 +41,7 @@ export const SignUp = () => {
   return (
     <div className='signUp'>
       <Header className='header'>
-        <img className='logo' src='/public/3.png' alt='img' />
+        <img className='logo' src={logo} alt='img' />
       </Header>
 
       <Main>
