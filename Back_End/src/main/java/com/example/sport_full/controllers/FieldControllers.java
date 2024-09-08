@@ -47,6 +47,11 @@ public class FieldControllers {
         }
     }
 
+    @GetMapping("/findAll")
+    public List<FieldModels> findAll() {
+        return fieldRepository.findAll();
+    }
+
     @GetMapping("/list")
     public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
         Optional<UserModels> userOptional = userRepository.findById(empresaId);

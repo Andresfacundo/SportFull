@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "Perfil_empresa")
@@ -43,6 +44,9 @@ public class AdminModels implements Serializable {
     @JoinColumn(name = "usuario_id", referencedColumnName = "id",unique = true)
     @JsonIgnore
     private UserModels userModels;
+
+    @OneToMany(mappedBy = "adminModels")
+    private List<ReservationsModels> reservations;
 
     // Getters y Setters
     public Long getId() {
