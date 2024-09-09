@@ -31,6 +31,9 @@ public class ReservationsServices {
     ICompanyRepository companyRepository;
 
     public ReservationsModels createReservation(ReservationsModels reservation) {
+        if(reservation.getFechaHoraInicio().equals(reservation.getFechaHoraFin())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         return reservationsRepository.save(reservation);
     }
 
