@@ -18,29 +18,26 @@ public class AdminModels implements Serializable {
     @Column(nullable = true, unique = true) // Hacer opcionales los columnas
     private String NIT;
 
-    @Column(nullable = true, unique = true)  // Hacer opcionales las columnas
+    @Column(nullable = true)  // Hacer opcionales las columnas
     private String nombreEmpresa;
 
-    @Column (nullable = true, unique = true)
+    @Column(nullable = true)
     private String telefonoEmpresa;
 
     @Column(nullable = true, unique = true)
     private String emailEmpresa;
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true)
     private String direccionEmpresa;
 
     @Column(nullable = true, unique = true)
     private String CCpropietario;
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true)
     private String telefonoPropietario;
 
-    @Column(nullable = true, unique = true)
-    private String emailPropietario;
-
     @OneToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id",unique = true)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", unique = true)
     @JsonIgnore
     private UserModels userModels;
 
@@ -107,14 +104,6 @@ public class AdminModels implements Serializable {
 
     public void setTelefonoPropietario(String telefonoPropietario) {
         this.telefonoPropietario = telefonoPropietario;
-    }
-
-    public String getEmailPropietario() {
-        return emailPropietario;
-    }
-
-    public void setEmailPropietario(String emailPropietario) {
-        this.emailPropietario = emailPropietario;
     }
 
     public UserModels getUserModels() {

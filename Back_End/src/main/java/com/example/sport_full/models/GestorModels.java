@@ -21,7 +21,7 @@ public class GestorModels implements Serializable {
     @Column(nullable = true, unique = true)
     private String email;
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true)
     private String telefono;
 
     @OneToOne

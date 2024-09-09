@@ -26,16 +26,21 @@ public class GestorControllers {
     ICompanyRepository icompanyRepository;
 
     @PostMapping
-    public ResponseEntity<GestorModels> createGestor(@RequestBody GestorModels gestorModels) {
-
-        Optional<AdminModels> adminEmpresa = icompanyRepository.findById(gestorModels.getAdminempresa().getId());
-        if (adminEmpresa.isPresent()) {
-            gestorModels.setAdminempresa(adminEmpresa.get());
-            GestorModels savedGestor = gestorServices.saveGestor(gestorModels);
-            return new ResponseEntity<>(savedGestor, HttpStatus.CREATED);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    public GestorModels createGestor(
+            @RequestParam String ccgestor,
+            @RequestParam String nombreCompleto,
+            @RequestParam String email,
+            @RequestParam String telefono,
+            @RequestParam Long adminEmpresa_id) {
+        AdminModels admin = icompanyRepository.findById(adminEmpresa_id)
+                .orElseThrow(() -> new RuntimeException("Empresa no encontrada con adminEmpresa_id " + adminEmpresa_id));
+        GestorModels gestor = new GestorModels();
+        gestor.setCCgestor(ccgestor);
+        gestor.setNombreCompleto(nombreCompleto);
+        gestor.setEmail(email);
+        gestor.setTelefono(telefono);
+        gestor.setAdminempresa(admin);
+        return gestorServices.saveGestor(gestor);
     }
 
     @GetMapping("/find/{id}")
