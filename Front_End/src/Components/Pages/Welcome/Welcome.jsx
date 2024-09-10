@@ -1,13 +1,14 @@
 import React from 'react'
 import { Header } from '../../Layouts/Header/Header'
-import fondo from '../../../assets/Images/fondo_01.png'
+import fondo from '../../../assets/Images/fondos/fondo_01.png'
+import logo from '../../../assets/Images/logo/logo_01.png'
 import { Main } from '../../Layouts/Main/Main'
 import { NavLink } from 'react-router-dom'
 import { Footer } from '../../Layouts/Footer/Footer'
 import './Welcome.css'
 
 export const Welcome = () => {
-  const backgroundStyle = {
+  const backgroundStyle_Welcome = {
     backgroundImage: `url(${fondo})`,
     backgroundSize: 'cover', 
     backgroundPosition: 'center', 
@@ -16,10 +17,10 @@ export const Welcome = () => {
   };
   return (
     
-    <div style={backgroundStyle} className='container_welcome'>
+    <div style={backgroundStyle_Welcome} className='container_welcome'>
 
       <Header>
-        <img className='logo_welcome' src='/public/logo_01.png' alt='img'/>
+        <img className='logo_welcome' src={logo} alt='img'/>
       </Header>
 
       <Main>

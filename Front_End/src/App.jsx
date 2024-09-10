@@ -3,12 +3,14 @@ import { Welcome } from './Components/Pages/Welcome/Welcome'
 import { Login } from './Components/Pages/Login/Login'
 import { Guest } from './Components/Pages/Guest/Guest'
 import { SignUp } from './Components/Pages/SignUp/SignUp'
-import { Home } from './Components/Pages/Home/Home'
-import { ListUsers } from './Components/ListUsers'
+import {HomeClient} from './Components/Pages/Home/HomeClient/HomeClient'
+import {HomeEmpresa} from './Components/Pages/Home/HomeEmpresa/HomeEmpresa'
+import {HomeGestor} from './Components/Pages/Home/HomeGestor/HomeGestor'
+
 import './App.css'
 
 function App() {
-
+  
   return (
 
     <Routes >
@@ -16,7 +18,11 @@ function App() {
       <Route path='/Guest' element={<Guest />} />
       <Route path='/Login' element={<Login />} />
       <Route path='/SignUp' element={<SignUp />} />
-      <Route path='/Home' element={<Home />} />
+      <Route path='/HomeClient' element={<HomeClient/>} />      
+      <Route path='/HomeEmpresa' element={<HomeEmpresa />} />
+      <Route path='/HomeGestor' element={<HomeGestor />} />
+
+
 
     </Routes>
   )
