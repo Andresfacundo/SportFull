@@ -1,6 +1,8 @@
 package com.example.sport_full.controllers;
 
 
+import com.example.sport_full.config.JwtUtil;
+import com.example.sport_full.dto.JwtResponse;
 import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.repositories.IClientRepository;
@@ -27,13 +29,15 @@ public class UserControllers {
   private final IClientRepository clientRepository;
   private final ICompanyRepository companyRepository;
   private final UserValidations userValidations;
+  private final JwtUtil jwtUtil;
 
   @Autowired
-  public UserControllers(IUserRepository userRepository, IClientRepository clientRepository, ICompanyRepository companyRepository) {
+  public UserControllers(IUserRepository userRepository, IClientRepository clientRepository, ICompanyRepository companyRepository, JwtUtil jwtUtil) {
       this.userRepository = userRepository;
       this.clientRepository = clientRepository;
       this.companyRepository = companyRepository;
       this.userValidations =  new UserValidations(userRepository);
+    this.jwtUtil = jwtUtil;
   }
 
 
@@ -78,6 +82,18 @@ public class UserControllers {
     }
   }
 
+//@PostMapping("/login")
+//public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+//  if (loginDTO.getEmail() == null || loginDTO.getContraseña() == null) {
+//    return new ResponseEntity<>("Email o contraseña no pueden estar vacíos", HttpStatus.BAD_REQUEST);
+//  }
+//  Optional<UserModels> user = userRepository.findByEmail(loginDTO.getEmail());
+//  if (user.isPresent() && BCrypt.checkpw(loginDTO.getContraseña(), user.get().getContraseña())) {
+//    return new ResponseEntity<>(user.get(), HttpStatus.OK);
+//  } else {
+//    return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
+//  }
+//}
 @PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
   if (loginDTO.getEmail() == null || loginDTO.getContraseña() == null) {
@@ -85,10 +101,10 @@ public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
   }
   Optional<UserModels> user = userRepository.findByEmail(loginDTO.getEmail());
   if (user.isPresent() && BCrypt.checkpw(loginDTO.getContraseña(), user.get().getContraseña())) {
-    return new ResponseEntity<>(user.get(), HttpStatus.OK);
+    String jwt = jwtUtil.generateToken(user.get());
+    return ResponseEntity.ok(new JwtResponse(jwt));
   } else {
     return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
   }
 }
-
 }
