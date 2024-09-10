@@ -29,6 +29,9 @@ export const HomeClient = () => {
   // Eliminar el año del formato
   fechaFormateada = fechaFormateada.replace(/de \d{4}/, '').trim();
 
+
+  const nombreUsuario = localStorage.getItem('nombreUsuario') || 'Usuario';
+
   return (
     <div style={backgroundStyle} className='container_home_client'>
       <header className='header_home'>
@@ -46,7 +49,7 @@ export const HomeClient = () => {
 
           <div className='container_user'>
             <img className='pefil_pic' src={foto_perfil} alt="" />
-            <h2 className='nameUser'>Andres P</h2>
+            <h2 className='nameUser'>{nombreUsuario}</h2>
           </div>
 
         </div>

@@ -3,7 +3,7 @@ import { Header } from '../../Layouts/Header/Header';
 import { Main } from '../../Layouts/Main/Main';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
-import logo from '../../../assets/Images/logo/3.png'
+import logo from '../../../assets/Images/logo/3.png';
 import './Login.css';
 
 export const Login = () => {
@@ -25,20 +25,20 @@ export const Login = () => {
 
     ClienteService.login(credentials)
       .then((response) => {
-        const { token, tipoUsuario } = response.data;  // Extrae token y tipoUsuario de la respuesta
+        const { token, user } = response.data;  // Extrae el token y el objeto user de la respuesta
         console.log(response.data);
-        console.log(tipoUsuario); 
-
         
-        // Guarda el token en el localStorage
+        // Guarda el token y la información del usuario en el localStorage
         localStorage.setItem('token', token);
+        localStorage.setItem('nombreUsuario', user.nombreCompleto);
+        localStorage.setItem('tipoUsuario', user.tipoUsuario);
 
         // Redirige al usuario según su tipo de usuario
-        if (tipoUsuario === 'CLIENTE') {
+        if (user.tipoUsuario === 'CLIENTE') {
           navigate('/HomeClient');
-        } else if (tipoUsuario === 'EMPRESA') {
+        } else if (user.tipoUsuario === 'EMPRESA') {
           navigate('/HomeEmpresa');
-        } else if (tipoUsuario === 'GESTOR') {
+        } else if (user.tipoUsuario === 'GESTOR') {
           navigate('/HomeGestor');
         } else {
           setError("Tipo de usuario no reconocido.");
