@@ -1,0 +1,20 @@
+.menu_options_right{
+    width: 80%;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+.actualizar_perfil_right{
+    width: auto;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #07954A;
+    font-size: 2rem;
+    padding: 0 4.5rem 0 3rem;
+    text-decoration: none;
+    clip-path: polygon(0 0, 100% 0, 87% 100%, 0% 100%);
+    font-weight: 400;
+}
+
