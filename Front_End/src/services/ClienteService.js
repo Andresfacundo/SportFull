@@ -14,19 +14,10 @@ class ClienteService {
         return axios.post(api_base + "/login", credentials);
     }
 
-    // Obtener datos del usuario autenticado usando el token
-    getUserData(token) {
-        return axios.get(api_base + "/user-data", {
-            headers: {
-                Authorization: `Bearer ${token}` // Enviar el token en la cabecera
-            }
-        });
-    }
-
     // Cerrar sesión (opcional, si el backend tiene un endpoint para esto)
     logout() {
         localStorage.removeItem('token'); // Elimina el token del almacenamiento local
-        localStorage.removeItem('nombreUsuario'); // Elimina los datos del usuario
+        localStorage.removeItem('user'); // Elimina los datos del usuario
     }
 
     // Actualizar los datos del usuario autenticado

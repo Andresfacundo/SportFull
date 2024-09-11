@@ -11,6 +11,7 @@ export const SignUp = () => {
   const [nombreCompleto, setNombreCompleto] = useState('');
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
+  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');  // Nuevo estado para confirmación
   const [tipoUsuario, setTipoUsuario] = useState('');
   const [error, setError] = useState('');
 
@@ -20,8 +21,14 @@ export const SignUp = () => {
     e.preventDefault();
 
     // Validación básica
-    if (!nombreCompleto || !email || !contraseña || !tipoUsuario) {
+    if (!nombreCompleto || !email || !contraseña || !confirmacionContraseña || !tipoUsuario) {
       setError("Todos los campos son obligatorios");
+      return;
+    }
+
+    // Validar que las contraseñas coincidan
+    if (contraseña !== confirmacionContraseña) {
+      setError("Las contraseñas no coinciden");
       return;
     }
 
@@ -91,6 +98,8 @@ export const SignUp = () => {
               type='password'
               placeholder=' '
               className='form_input'
+              value={confirmacionContraseña}  // Asignar el estado
+              onChange={(e) => setConfirmacionContraseña(e.target.value)}  // Actualizar el estado
               required
             />
             <span className='form_text'>Confirmar Contraseña</span>
