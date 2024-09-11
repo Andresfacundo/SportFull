@@ -11,6 +11,7 @@ import icon_04 from '../../../../assets/Images/icons/jugador_05.png';
 import OptionMenuLeft from '../../../UI/OptionMenuLeft/OptionMenuLeft';
 import OptionMenuRight from '../../../UI/OptionMenuRight/OptionMenuRight';
 import { NavLink } from 'react-router-dom';
+import Barra from '../../../UI/Barra/Barra';
 
 export const HomeClient = () => {
   const backgroundStyle = {
@@ -64,6 +65,7 @@ export const HomeClient = () => {
       </main>
 
       <footer>
+        <Barra/>
 
       </footer>
       
