@@ -13,6 +13,9 @@ import OptionMenuLeft from '../../../UI/OptionMenuLeft/OptionMenuLeft';
 import OptionMenuRight from '../../../UI/OptionMenuRight/OptionMenuRight';
 import { NavLink } from 'react-router-dom';
 import ClienteService from '../../../../services/ClienteService';
+import { CurrentDate } from '../../../UI/CurrentDate/CurrentDate';
+import { Header } from '../../../Layouts/Header/Header';
+
 
 export const HomeClient = () => {
   const backgroundStyle = {
@@ -22,14 +25,6 @@ export const HomeClient = () => {
     height: '100%',
     width: '100%',
   };
-
-  // Obtener la fecha actual formateada
-  const fechaActual = new Date();
-  const opciones = { weekday: 'long', month: 'long', day: 'numeric' };
-  let fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
-
-  // Eliminar el año del formato
-  fechaFormateada = fechaFormateada.replace(/de \d{4}/, '').trim();
 
   //obtener datos del usuario
   const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
@@ -55,31 +50,7 @@ export const HomeClient = () => {
 
   return (
     <div style={backgroundStyle} className='container_home_client'>
-      <header className='header_home'>
-        <div className='container_header'>
-
-          <div className='container_options'>
-            <h4 className='currentDate'>{fechaFormateada}</h4>
-            <NavLink className={'configuration'}>
-              <img className='icon_options' src={icon_setting} alt="" />
-            </NavLink>
-            <NavLink className={'notifications'}>
-              <img className='icon_options' src={icon_notification} alt="" />
-            </NavLink>
-            <NavLink to='/Login' onClick={handleLogout} className={'logout'}>
-              <img className='icon_logout' src={icon_logout} alt="" />
-            </NavLink>
-          </div>
-
-          <div className='container_user'>
-            <img className='pefil_pic' src={foto_perfil} alt="" />
-            <h2 className='nameUser'>{resultado} </h2>
-          </div>
-
-        </div>
-
-      </header>
-
+      <Header/>
       <main>
         <OptionMenuRight link={'/ActualizarCliente'} shade={'shade_perfil'} classNameImg={'icon_1'} icon={icon_01} content={'Perfil'} />
         <OptionMenuLeft link={'/BuscarCanchas'} shade={'shade_field'} classNameImg={'icon_2'} icon={icon_02} content={'Buscar Canchas'} />

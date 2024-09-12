@@ -3,6 +3,8 @@
     height: auto;
     display: flex;
     align-items: center;
+    position: relative;
+    
 }
 .actualizar_perfil_right{
     width: auto;
