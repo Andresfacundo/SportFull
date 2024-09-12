@@ -17,8 +17,8 @@ import java.util.Optional;
 @Service
 public class AdminServices {
 
-  @Autowired
-  ICompanyRepository companyRepository;
+    @Autowired
+    ICompanyRepository companyRepository;
 
     @Autowired
     IUserRepository userRepository;
@@ -34,7 +34,7 @@ public class AdminServices {
         existingUser.setEmail(user.getEmail());
         if (user.getContraseña() == null ||
                 !user.getContraseña().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
-        ){
+        ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         String hashedPassword = BCrypt.hashpw(user.getContraseña(), BCrypt.gensalt());
@@ -48,7 +48,6 @@ public class AdminServices {
         existingAdmin.setDireccionEmpresa(admin.getDireccionEmpresa());
         existingAdmin.setCCpropietario(admin.getCCpropietario());
         existingAdmin.setTelefonoPropietario(admin.getTelefonoPropietario());
-        existingAdmin.setEmailPropietario(admin.getEmailPropietario());
 
         companyRepository.save(existingAdmin);
         return userRepository.save(existingUser);
@@ -66,7 +65,7 @@ public class AdminServices {
             userRepository.save(admin);
             return "Admin con id " + id + " ha sido eliminado";
 
-        }else{
+        } else {
             return "Admin con id " + id + " no existe";
         }
     }
