@@ -1,0 +1,14 @@
+.container{
+    overflow-x: hidden;
+}
+.tittle_update{
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.tittle_optional_data{
+
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    
+}

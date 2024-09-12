@@ -52,9 +52,8 @@ export const Login = () => {
 
   return (
     <div className='container-login'>
-      <Header>
-        <img className='logo' src={logo} alt='img' />
-      </Header>
+
+      <img className='logo' src={logo} alt='img' />
 
       <Main>
         <h1 className='title-login'>Iniciar sesión</h1>

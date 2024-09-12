@@ -14,7 +14,7 @@
 
 .logo {
     width: 9rem;
-    margin: 3rem 0 3rem 0;
+    margin: 6rem 0 3rem 0;
 }
 
 .title_signUp {
@@ -175,6 +175,7 @@
     align-items: center;
     transform-origin: right center;
     transition: transform .3s;
+    border-radius: 10px;
 }
 
 .form {

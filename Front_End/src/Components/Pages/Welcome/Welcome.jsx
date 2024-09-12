@@ -19,9 +19,9 @@ export const Welcome = () => {
     
     <div style={backgroundStyle_Welcome} className='container_welcome'>
 
-      <Header>
-        <img className='logo_welcome' src={logo} alt='img'/>
-      </Header>
+      
+      <img className='logo_welcome' src={logo} alt='img'/>
+      
 
       <Main>
         <h1 className='title_Welcome'>Bienvenido</h1>

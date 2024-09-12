@@ -3,7 +3,7 @@ import axios from 'axios';
 const api_base = "http://localhost:8080/auth";
 
 class ClienteService {
-    
+
     // Crear un nuevo usuario
     createUser(user) {
         return axios.post(api_base + "/register", user);
@@ -21,28 +21,17 @@ class ClienteService {
     }
 
     // Actualizar los datos del usuario autenticado
-    updateUserData(token, userData) {
-        return axios.put(api_base + "/update-user", userData, {
+    // services/ClienteService.js
+
+    updateUser(id, updatedUser) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.put(`${api_base}/client/${id}`, updatedUser, {
             headers: {
-                Authorization: `Bearer ${token}` // Enviar el token en la cabecera
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
             }
         });
     }
 
-    // Verifica si el usuario está autenticado
-    isAuthenticated() {
-        return !!localStorage.getItem('token'); // Devuelve true si hay un token almacenado
-    }
-
-    // Obtener el token del usuario autenticado
-    getToken() {
-        return localStorage.getItem('token'); // Devuelve el token almacenado
-    }
-
-    // Obtener el nombre del usuario autenticado
-    getUserName() {
-        return localStorage.getItem('nombreUsuario'); // Devuelve el nombre almacenado
-    }
 }
 
 export default new ClienteService();

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ActualizarCliente.css'
 import { Header } from '../../../Layouts/Header/Header';
-import { CurrentDate } from '../../../UI/CurrentDate/CurrentDate';
 import { Main } from '../../../Layouts/Main/Main';
 import { NavLink,useNavigate} from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
@@ -16,30 +15,8 @@ export const ActualizarCliente = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: 'auto',
     width: '100%',
-  };
-
-  //obtener datos del usuario
-  const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
-
-  // Función para obtener la primera palabra y la primera letra de la segunda palabra
-  const showName = user.nombreCompleto;
-
-  const obtenerResultado = (cadena) => {
-    const palabras = cadena.split(" ");
-    if (palabras.length > 1) {
-      return `${palabras[0]} ${palabras[1][0]}`;
-    }
-    return palabras[0]; // Si solo hay una palabra, retornarla
-  };
-
-  const resultado = obtenerResultado(showName);
-
-   // Función para manejar el cierre de sesión
-   const handleLogout = () => {
-    ClienteService.logout(); // Llama al método logout
-    navigate('/Login');  // Redirige al usuario a la página de login
   };
 
 
@@ -48,45 +25,53 @@ export const ActualizarCliente = () => {
   const [nombreCompleto, setNombreCompleto] = useState('');
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
-  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');  // Nuevo estado para confirmación
-  const [tipoUsuario, setTipoUsuario] = useState('');
+  const [cedula, setCedula] = useState(null);
+  const [telefono, setTelefono] = useState(null);
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
   const saveUser = (e) => {
     e.preventDefault();
-
+  
     // Validación básica
-    if (!nombreCompleto || !email || !contraseña || !confirmacionContraseña || !tipoUsuario) {
+    if (!nombreCompleto || !email || !contraseña ) {
       setError("Todos los campos son obligatorios");
       return;
     }
+  //obtener datos del usuario
+  const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
 
-    // Validar que las contraseñas coincidan
-    if (contraseña !== confirmacionContraseña) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
-
-    const user = { nombreCompleto, email, contraseña, tipoUsuario };
-
-    ClienteService.createUser(user)
+    // Obtén el ID del usuario desde localStorage
+    const userId = user.id;
+  
+    // Crea un objeto con los datos del usuario a actualizar
+    const updatedUser = {
+      nombreCompleto,
+      email,
+      contraseña,
+      cedula,
+      telefono
+    };
+  
+    // Llama al servicio para actualizar el usuario
+    ClienteService.updateUser(userId, updatedUser)
       .then((response) => {
         console.log(response.data);
-        navigate('/HomeClient'); // Redirige al login después del registro exitoso
+        navigate('/HomeClient'); // Redirige a la página principal después de la actualización
       })
       .catch((error) => {
         console.log(error);
-        setError("Ocurrió un error al Actualizar el usuario. Inténtalo de nuevo.");
+        setError("Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.");
       });
   };
-
+  
   return (
-    <div style={backgroundStyle}>
+    <div style={backgroundStyle} className='container'>
       <Header/>
 
       <Main>
+        <h2 className='tittle_update'>Actualizar Perfil</h2>
         <form onSubmit={saveUser} className='form'>
           <label className='form_label'>
             <input
@@ -123,49 +108,34 @@ export const ActualizarCliente = () => {
             />
             <span className='form_text'>Contraseña</span>
           </label>
-
+          <h2 className='tittle_optional_data'>Datos Opcionales</h2>
           <label className='form_label'>
             <input
               type='password'
               placeholder=' '
               className='form_input'
-              value={confirmacionContraseña}  // Asignar el estado
-              onChange={(e) => setConfirmacionContraseña(e.target.value)}  // Actualizar el estado
-              required
+              value={cedula}  // Asignar el estado
+              onChange={(e) => setCedula(e.target.value)}  // Actualizar el estado
+              
             />
-            <span className='form_text'>Confirmar Contraseña</span>
+            <span className='form_text'>Cedula</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='password'
+              placeholder=' '
+              className='form_input'
+              value={telefono}  // Asignar el estado
+              onChange={(e) => setTelefono(e.target.value)}  // Actualizar el estado
+              
+            />
+            <span className='form_text'>Telefono</span>
           </label>
 
-          <div className="account-type-container">
-            <p>Seleccione el tipo de cuenta</p>
-            <label className="radio-option">
-              <input
-                type="radio"
-                name="accountType"
-                value="CLIENTE"
-                checked={tipoUsuario === 'CLIENTE'}
-                onChange={(e) => setTipoUsuario(e.target.value)}
-                required
-              />
-              <span className="custom-radio"></span>
-              Cliente
-            </label>
-            <label className="radio-option">
-              <input
-                type="radio"
-                name="accountType"
-                value="EMPRESA"
-                checked={tipoUsuario === 'EMPRESA'}
-                onChange={(e) => setTipoUsuario(e.target.value)}
-                required
-              />
-              <span className="custom-radio"></span>
-              Empresa
-            </label>
-          </div>
 
-          <button type="submit" className='register'>Registrarse</button>
-          <NavLink className='return' to='/'>Volver</NavLink>
+          
+          <button  className='register'>Actualizar Perfil</button>
+          <NavLink className='return' to='/HomeClient'>Volver</NavLink>
         </form>
       </Main>
     </div>
