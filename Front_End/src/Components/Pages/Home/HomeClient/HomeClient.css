@@ -95,6 +95,9 @@ main{
     opacity: 0.4; 
     margin-left: 6rem;
 }
+.icon_logout{
+    width: 1.5rem;
+}
 
 .shade_perfil {
     width: 10.8rem;

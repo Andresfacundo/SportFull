@@ -27,11 +27,11 @@ export const Login = () => {
       .then((response) => {
         const { token, user } = response.data;  // Extrae el token y el objeto user de la respuesta
         console.log(response.data);
-        
+
         // Guarda el token y la información del usuario en el localStorage
         localStorage.setItem('token', token);
-        localStorage.setItem('nombreUsuario', user.nombreCompleto);
-        localStorage.setItem('tipoUsuario', user.tipoUsuario);
+        localStorage.setItem('user', JSON.stringify(user));
+
 
         // Redirige al usuario según su tipo de usuario
         if (user.tipoUsuario === 'CLIENTE') {
@@ -53,8 +53,8 @@ export const Login = () => {
   return (
     <div className='container-login'>
       <Header>
-        <img className='logo' src={logo} alt='img'/>
-      </Header> 
+        <img className='logo' src={logo} alt='img' />
+      </Header>
 
       <Main>
         <h1 className='title-login'>Iniciar sesión</h1>
@@ -87,7 +87,7 @@ export const Login = () => {
           </label>
 
           <NavLink className={'recover_password'} to="/recover-password">¿Olvidó su contraseña?</NavLink>
-        
+
           <button type="submit" className='login'>Iniciar Sesión</button>
           <NavLink className={'return'} to='/'>Volver</NavLink>
         </form>
