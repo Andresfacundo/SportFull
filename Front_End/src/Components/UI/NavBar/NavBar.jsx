@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './Barra.css';
+import './NavBar.css';
 
-const Barra = () => {
+const NavBar = () => {
  
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -28,7 +28,7 @@ const Barra = () => {
             className={`list ${activeIndex === index ? 'active' : ''}`}
             onClick={() => handleClick(index)}
           >
-            <a href='#'>
+            <a className='a_navbar' href='#'>
               <span className='icon'>
                 <ion-icon name={item.icon}></ion-icon>
               </span>
@@ -42,4 +42,4 @@ const Barra = () => {
   );
 };
 
-export default Barra;
+export default NavBar;
