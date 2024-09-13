@@ -107,5 +107,13 @@ public class FieldControllers {
         } else {
             return new ResponseEntity<>("Campo o empresa no encontrados", HttpStatus.NOT_FOUND);
         }
+
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<FieldModels>> searchFieldsByName(@RequestParam String nombre) {
+        List<FieldModels> fields = fieldRepository.findByNombreContainingIgnoreCase(nombre);
+        return new ResponseEntity<>(fields, HttpStatus.OK);
+    }
+
 }

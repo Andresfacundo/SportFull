@@ -8,32 +8,17 @@ const MapaConGPS = () => {
         lat: 4.533889, // Latitud predeterminada de Armenia, Quindío
         lng: -75.681389, // Longitud predeterminada de Armenia, Quindío
     });
-    const [direcciones, setDirecciones] = useState([]); // Para almacenar las direcciones de las empresas
-    const [geocodedLocations, setGeocodedLocations] = useState([]); // Para almacenar las coordenadas de las direcciones
+    const [geocodedFields, setGeocodedFields] = useState([]); // Para las coordenadas de las canchas
+    const [searchQuery, setSearchQuery] = useState(""); // Para almacenar el término de búsqueda
+    const [searchResults, setSearchResults] = useState([]); // Para almacenar los resultados de la búsqueda
 
-    // Opciones para limitar el área de navegación
-    const restriccionesMapa = {
-        restriction: {
-            latLngBounds: {
-                north: 4.637, // Limites norte de Armenia
-                south: 4.423, // Limites sur de Armenia
-                west: -75.774, // Limites oeste de Armenia
-                east: -75.588, // Limites este de Armenia
-            },
-            strictBounds: true,
-        },
-    };
-
-    // Opciones del mapa
     const opcionesMapa = {
         zoom: 14,
         mapTypeId: "roadmap",
-        ...restriccionesMapa,
     };
 
-    // Al montar el componente, obtenemos la ubicación actual y las direcciones
+    // Obtener la ubicación actual del usuario
     useEffect(() => {
-        // Obtener la ubicación actual del usuario
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -47,53 +32,69 @@ const MapaConGPS = () => {
                 }
             );
         }
-
-        // Obtener las direcciones de las empresas desde el backend
-        axios.get("http://localhost:8080/admin/find-all")
-            .then((response) => {
-                setDirecciones(response.data.map((empresa) => empresa.direccionEmpresa));
-            })
-            .catch((error) => {
-                console.error("Error al obtener las direcciones: ", error);
-            });
     }, []);
 
-    // Convertir direcciones a coordenadas (geocodificación)
+    // Realizar la búsqueda de canchas en el backend cuando cambia el término de búsqueda
     useEffect(() => {
-        const geocodeAddresses = async () => {
-            const geocoder = new window.google.maps.Geocoder();
-            const newLocations = await Promise.all(direcciones.map((direccion) => {
-                return new Promise((resolve) => {
-                    geocoder.geocode({ address: direccion }, (results, status) => {
-                        if (status === "OK" && results[0]) {
-                            resolve({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() });
-                        } else {
-                            resolve(null); // Si no se puede geocodificar la dirección
-                        }
-                    });
+        if (searchQuery) {
+            axios.get(`http://localhost:8080/fields/search?nombre=${searchQuery}`)
+                .then((response) => {
+                    const fields = response.data;
+                    geocodeFields(fields);
+                })
+                .catch((error) => {
+                    console.error("Error al buscar las canchas: ", error);
                 });
-            }));
-            setGeocodedLocations(newLocations.filter((location) => location !== null));
-        };
-
-        if (direcciones.length > 0) {
-            geocodeAddresses();
+        } else {
+            setSearchResults([]); // Limpiar los resultados si no hay búsqueda
         }
-    }, [direcciones]);
+    }, [searchQuery]);
+
+    // Convertir las ubicaciones de las canchas en coordenadas usando Geocoding
+    const geocodeFields = async (fields) => {
+        const geocoder = new window.google.maps.Geocoder();
+        const newLocations = await Promise.all(fields.map((field) => {
+            return new Promise((resolve) => {
+                geocoder.geocode({ address: field.ubicacion }, (results, status) => {
+                    if (status === "OK" && results[0]) {
+                        resolve({
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng(),
+                            nombre: field.nombre,
+                        });
+                    } else {
+                        resolve(null); // Si no se puede geocodificar la ubicación
+                    }
+                });
+            });
+        }));
+        setGeocodedFields(newLocations.filter((location) => location !== null));
+        setSearchResults(fields); // Actualizar los resultados de búsqueda
+    };
 
     return (
-        <LoadScript googleMapsApiKey="AIzaSyAwG4iRanUdSFjqS5wbyjDachLL4fqE9NM">
-            <GoogleMap
-                mapContainerStyle={{ height: "400px", width: "100%" }}
-                center={ubicacionActual}
-                options={opcionesMapa}
-            >
-                {geocodedLocations.map((location, index) => (
-                    <Marker key={index} position={location} />
-                ))}
-            </GoogleMap>
-        </LoadScript>
+        <div>
+            <input
+                type="text"
+                placeholder="Buscar cancha"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ marginBottom: "10px", padding: "5px", width: "300px" }}
+            />
+            <LoadScript googleMapsApiKey="TU_API_KEY_DE_GOOGLE_MAPS">
+                <GoogleMap
+                    mapContainerStyle={{ height: "400px", width: "100%" }}
+                    center={ubicacionActual}
+                    options={opcionesMapa}
+                >
+                    {geocodedFields.map((location, index) => (
+                        <Marker key={index} position={location} label={location.nombre} />
+                    ))}
+                </GoogleMap>
+            </LoadScript>
+        </div>
     );
 };
 
 export default MapaConGPS;
+
