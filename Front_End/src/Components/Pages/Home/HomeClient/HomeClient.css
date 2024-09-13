@@ -5,12 +5,16 @@ main{
     display: flex;
     flex-direction: column;
     gap: 4rem;
+    margin-top: 20rem;
+
+
 }
 
 .container_home_client{
     width: auto;
     height: auto;
-    overflow: hidden;
+    padding-bottom: 8rem;
+    overflow-x: hidden;
 }
 
 
@@ -72,4 +76,10 @@ main{
     top: 1.6rem;
     right: -2rem;
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+footer{
+    width: 100%;
+    height: auto;
+    position: fixed; 
 }

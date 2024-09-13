@@ -11,11 +11,8 @@ import icon_03 from '../../../../assets/Images/icons/jugador_01.png';
 import icon_04 from '../../../../assets/Images/icons/jugador_05.png';
 import OptionMenuLeft from '../../../UI/OptionMenuLeft/OptionMenuLeft';
 import OptionMenuRight from '../../../UI/OptionMenuRight/OptionMenuRight';
-import { NavLink } from 'react-router-dom';
-import ClienteService from '../../../../services/ClienteService';
-import { CurrentDate } from '../../../UI/CurrentDate/CurrentDate';
 import { Header } from '../../../Layouts/Header/Header';
-
+import NavBar from '../../../UI/NavBar/NavBar'
 
 export const HomeClient = () => {
   const backgroundStyle = {
@@ -24,28 +21,6 @@ export const HomeClient = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
-  };
-
-  //obtener datos del usuario
-  const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
-
-  // Función para obtener la primera palabra y la primera letra de la segunda palabra
-  const nombreCompleto = user.nombreCompleto;
-
-  const obtenerResultado = (cadena) => {
-    const palabras = cadena.split(" ");
-    if (palabras.length > 1) {
-      return `${palabras[0]} ${palabras[1][0]}`;
-    }
-    return palabras[0]; // Si solo hay una palabra, retornarla
-  };
-
-  const resultado = obtenerResultado(nombreCompleto);
-
-   // Función para manejar el cierre de sesión
-   const handleLogout = () => {
-    ClienteService.logout(); // Llama al método logout
-    navigate('/Login');  // Redirige al usuario a la página de login
   };
 
   return (
@@ -59,7 +34,7 @@ export const HomeClient = () => {
       </main>
 
       <footer>
-
+        <NavBar/>
       </footer>
 
     </div>
