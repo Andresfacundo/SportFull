@@ -33,7 +33,8 @@ public UserModels updateUserAndClient(UserModels user, ClientModels client, Long
     UserModels existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     ClientModels existingClient = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found")).getClientModels();
 
-    existingUser.setNombreCompleto(user.getNombreCompleto());
+    existingUser.setNombres(user.getNombres());
+    existingUser.setApellidos(user.getApellidos());
     existingUser.setEmail(user.getEmail());
     if (user.getContraseña() == null ||
             !user.getContraseña().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
