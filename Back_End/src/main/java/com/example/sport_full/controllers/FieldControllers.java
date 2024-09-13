@@ -26,8 +26,8 @@ public class FieldControllers {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @RequestParam Long empresaId) {
+    @PostMapping("/create/{empresaId}")
+    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @PathVariable Long empresaId) {
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -47,8 +47,8 @@ public class FieldControllers {
         }
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
+    @GetMapping("/list/{empresaId}")
+    public ResponseEntity<?> listFields(@PathVariable Long empresaId) {
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -65,8 +65,8 @@ public class FieldControllers {
         }
     }
 
-    @PutMapping("/update/{fieldId}")
-    public ResponseEntity<?> updateField(@PathVariable Long fieldId, @RequestBody FieldModels fieldDetails, @RequestParam Long empresaId) {
+    @PutMapping("/update/{fieldId}/{empresaId}")
+    public ResponseEntity<?> updateField(@PathVariable Long fieldId, @RequestBody FieldModels fieldDetails, @PathVariable Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
@@ -79,7 +79,6 @@ public class FieldControllers {
 
             FieldModels field = fieldOptional.get();
             field.setNombre(fieldDetails.getNombre());
-            field.setUbicacion(fieldDetails.getUbicacion());
             field.setPrecio(fieldDetails.getPrecio());
             field.setEstado(fieldDetails.getEstado());
 
@@ -90,8 +89,8 @@ public class FieldControllers {
         }
     }
 
-    @DeleteMapping("/delete/{fieldId}")
-    public ResponseEntity<?> deleteField(@PathVariable Long fieldId, @RequestParam Long empresaId) {
+    @DeleteMapping("/delete/{fieldId}/{empresaId}")
+    public ResponseEntity<?> deleteField(@PathVariable Long fieldId, @PathVariable Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
@@ -107,13 +106,5 @@ public class FieldControllers {
         } else {
             return new ResponseEntity<>("Campo o empresa no encontrados", HttpStatus.NOT_FOUND);
         }
-
     }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<FieldModels>> searchFieldsByName(@RequestParam String nombre) {
-        List<FieldModels> fields = fieldRepository.findByNombreContainingIgnoreCase(nombre);
-        return new ResponseEntity<>(fields, HttpStatus.OK);
-    }
-
 }
