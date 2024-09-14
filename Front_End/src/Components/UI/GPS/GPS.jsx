@@ -1,116 +1,121 @@
-import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { GoogleMap, LoadScript, Marker, useJsApiLoader, StandaloneSearchBox } from '@react-google-maps/api';
 
-const MapaConGPS = () => {
-  const [ubicacionActual, setUbicacionActual] = useState({
-    lat: 4.533889, // Latitud predeterminada de Armenia, Quindío
-    lng: -75.681389, // Longitud predeterminada de Armenia, Quindío
+const center = {
+  lat: 4.5356, // Latitud de Armenia
+  lng: -75.6894 // Longitud de Armenia
+};
+
+const mapContainerStyle = {
+  height: '400px',
+  width: '800px'
+};
+
+const options = {
+  disableDefaultUI: true,
+  zoomControl: true
+};
+
+function MapComponent() {
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [searchBox, setSearchBox] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [location, setLocation] = useState(center);
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+    libraries: ['places']
   });
-  const [geocodedFields, setGeocodedFields] = useState([]); // Para las coordenadas de las canchas
-  const [searchQuery, setSearchQuery] = useState(""); // Para almacenar el término de búsqueda
-
-  const opcionesMapa = {
-    zoom: 14,
-    mapTypeId: "roadmap",
-    restriction: {
-      latLngBounds: {
-        north: 4.637, // Limite norte de Armenia
-        south: 4.423, // Limite sur de Armenia
-        west: -75.774, // Limite oeste de Armenia
-        east: -75.588, // Limite este de Armenia
-      },
-      strictBounds: true,
-    },
-  };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUbicacionActual({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        () => {
-          console.log("Error obteniendo ubicación. Cargando Armenia.");
-        }
-      );
-    }
+    // Fetch canchas from the backend
+    axios.get('/admin/find-all')
+        .then(response => {
+          const canchas = response.data;
+          const markers = canchas.map(c => ({
+            address: c.direccionEmpresa,
+            name: c.nombreEmpresa,
+            lat: 0,
+            lng: 0
+          }));
+          setMarkers(markers);
+          // Geocode addresses
+          Promise.all(markers.map(marker => geocodeAddress(marker.address)))
+              .then(results => {
+                setSearchResults(results);
+              });
+        })
+        .catch(error => {
+          console.error('Error fetching canchas:', error);
+        });
   }, []);
 
-  useEffect(() => {
-    if (searchQuery) {
-      axios.get(`http://localhost:8080/fields/search?nombre=${searchQuery}`)
-        .then((response) => {
-          const fields = response.data;
-          geocodeFields(fields);
-        })
-        .catch((error) => {
-          console.error("Error al buscar las canchas: ", error);
-        });
-    }
-  }, [searchQuery]);
-
-  const geocodeFields = async (fields) => {
-    const newLocations = await Promise.all(fields.map(async (field) => {
-      try {
-        const direccionEmpresa = field.adminModels.direccionEmpresa; // Obtener dirección desde AdminModels
-
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json`,
-          {
-            params: {
-              address: direccionEmpresa, // Usar la dirección de la empresa
-              key: "TU_API_KEY_DE_GOOGLE_MAPS", 
-              region: "CO",
-            },
-          }
-        );
-
-        if (response.data.status === "OK") {
-          const location = response.data.results[0].geometry.location;
-          return {
-            lat: location.lat,
-            lng: location.lng,
-            nombre: field.nombre,
-          };
-        } else {
-          console.error(`Error de geocodificación: ${response.data.status}`);
-          return null;
-        }
-      } catch (error) {
-        console.error(`Error en la geocodificación de ${direccionEmpresa}: `, error);
-        return null;
+  const geocodeAddress = (address) => {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+      params: {
+        address: address,
+        key: 'YOUR_GOOGLE_MAPS_API_KEY'
       }
-    }));
+    }).then(response => {
+      const location = response.data.results[0]?.geometry?.location;
+      return {
+        address: address,
+        lat: location.lat,
+        lng: location.lng
+      };
+    }).catch(error => {
+      console.error('Error geocoding address:', error);
+      return {
+        address: address,
+        lat: 0,
+        lng: 0
+      };
+    });
+  };
 
-    setGeocodedFields(newLocations.filter((location) => location !== null));
+  const handlePlacesChanged = () => {
+    const places = searchBox.getPlaces();
+    if (places.length === 0) return;
+
+    const place = places[0];
+    const newLocation = {
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng()
+    };
+    setLocation(newLocation);
+    map.panTo(newLocation);
+    map.setZoom(15);
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Buscar cancha"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: "10px", padding: "5px", width: "300px" }}
-      />
-      <LoadScript googleMapsApiKey="TU_API_KEY_DE_GOOGLE_MAPS">
-        <GoogleMap
-          mapContainerStyle={{ height: "400px", width: "100%" }}
-          center={ubicacionActual}
-          options={opcionesMapa}
-        >
-          {geocodedFields.map((location, index) => (
-            <Marker key={index} position={location} label={location.nombre} />
-          ))}
-        </GoogleMap>
-      </LoadScript>
-    </div>
+      <div>
+        <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY" libraries={['places']}>
+          <StandaloneSearchBox
+              onLoad={ref => setSearchBox(ref)}
+              onPlacesChanged={handlePlacesChanged}
+          >
+            <input
+                type="text"
+                placeholder="Buscar ubicación"
+                style={{ boxSizing: `border-box`, border: `1px solid transparent`, width: `240px`, height: `40px`, padding: `0 12px`, borderRadius: `3px`, fontSize: `14px`, outline: `none`, textOverflow: `ellipses` }}
+            />
+          </StandaloneSearchBox>
+          <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={location}
+              zoom={12}
+              options={options}
+              onLoad={map => setMap(map)}
+          >
+            {searchResults.map((marker, index) => (
+                <Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} />
+            ))}
+          </GoogleMap>
+        </LoadScript>
+      </div>
   );
-};
+}
 
-export default MapaConGPS;
+export default MapComponent;
