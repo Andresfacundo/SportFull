@@ -8,10 +8,11 @@ import logo from '../../../assets/Images/logo/3.png'
 import './SignUp.css';
 
 export const SignUp = () => {
-  const [nombreCompleto, setNombreCompleto] = useState('');
+  const [nombres, setNombres] = useState('');  
+  const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
-  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');  // Nuevo estado para confirmación
+  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');  
   const [tipoUsuario, setTipoUsuario] = useState('');
   const [error, setError] = useState('');
 
@@ -21,7 +22,7 @@ export const SignUp = () => {
     e.preventDefault();
 
     // Validación básica
-    if (!nombreCompleto || !email || !contraseña || !confirmacionContraseña || !tipoUsuario) {
+    if (!nombres || !apellidos ||!email || !contraseña || !confirmacionContraseña || !tipoUsuario) {
       setError("Todos los campos son obligatorios");
       return;
     }
@@ -32,7 +33,7 @@ export const SignUp = () => {
       return;
     }
 
-    const user = { nombreCompleto, email, contraseña, tipoUsuario };
+    const user = { nombres,apellidos, email, contraseña, tipoUsuario };
 
     ClienteService.createUser(user)
       .then((response) => {
@@ -47,9 +48,8 @@ export const SignUp = () => {
 
   return (
     <div className='signUp'>
-      <Header className='header'>
         <img className='logo' src={logo} alt='img' />
-      </Header>
+      
 
       <Main>
         <h1 className='title_signUp'>Registrarse</h1>
@@ -62,11 +62,23 @@ export const SignUp = () => {
               type='text'
               placeholder=' '
               className='form_input'
-              value={nombreCompleto}
-              onChange={(e) => setNombreCompleto(e.target.value)}
+              value={nombres}
+              onChange={(e) => setNombres(e.target.value)}
               required
             />
-            <span className='form_text'>Nombre Completo</span>
+            <span className='form_text'>Nombres</span>
+          </label>
+
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={apellidos}
+              onChange={(e) => setApellidos(e.target.value)}
+              required
+            />
+            <span className='form_text'>Apellidos</span>
           </label>
 
           <label className='form_label'>

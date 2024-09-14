@@ -5,9 +5,6 @@ main{
     display: flex;
     flex-direction: column;
     gap: 4rem;
-    margin-top: 20rem;
-
-
 }
 
 .container_home_client{

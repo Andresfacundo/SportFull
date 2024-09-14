@@ -21,17 +21,25 @@ export const Header = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
 
   // Función para obtener la primera palabra y la primera letra de la segunda palabra
-  const nombreCompleto = user.nombreCompleto;
+  const nombre = user.nombres;
+  const apellido=user.apellidos
 
-  const obtenerResultado = (cadena) => {
-    const palabras = cadena.split(" ");
-    if (palabras.length > 1) {
-      return `${palabras[0]} ${palabras[1][0]}`;
-    }
-    return palabras[0]; // Si solo hay una palabra, retornarla
-  };
+  // Función para obtener la primera palabra del nombre y la primera letra del apellido
+const obtenerResultado = (nombre, apellido) => {
+  const showNombre = nombre.split(" ")[0]; // Tomar la primera palabra del nombre
+  const showApellido = apellido.split(" ")[0][0]; // Tomar la primera letra de la primera palabra del apellido
 
-  const resultado = obtenerResultado(nombreCompleto);
+  // Capitalizar la primera letra del nombre y la primera letra del apellido
+  const nombreCapitalizado = showNombre.charAt(0).toUpperCase() + showNombre.slice(1);
+  const apellidoCapitalizado = showApellido.toUpperCase();
+
+  return `${nombreCapitalizado} ${apellidoCapitalizado}.`; // Devolver el nombre capitalizado y la inicial del apellido
+};
+
+
+const resultado = obtenerResultado(nombre, apellido);
+console.log(resultado);
+
 
   return (
     <header className='header_home'>

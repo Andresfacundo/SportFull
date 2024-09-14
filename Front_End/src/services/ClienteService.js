@@ -25,13 +25,18 @@ class ClienteService {
 
     updateUser(id, updatedUser) {
         const token = localStorage.getItem('token'); // Obtén el token de autenticación
-        return axios.put(`${api_base}/client/${id}`, updatedUser, {
+        return axios.put(`http://localhost:8080/client/${id}`, updatedUser, {
             headers: {
                 'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
             }
         });
     }
 
+    
+    // Método para validar la contraseña
+    validatePassword(data) {
+        return axios.post(`http://localhost:8080/client/validar-contraseña`, data);
+    }
 }
 
 export default new ClienteService();

@@ -1,13 +1,11 @@
 .header_home {
     width: 485px;
     height: 350px;
-    background-color: #079549a3;
+    background-color: #079549a1;
     transform: translate(-12px, -125px) rotate(-20.93deg);
     border-radius: 120px;
     border: 10px solid #e7e7e78e;
     box-shadow: -5px 10px 15px rgba(0, 0, 0, 0.6);
-    position: fixed;
-    z-index: 1;
 }
 
 
