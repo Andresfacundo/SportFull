@@ -107,4 +107,10 @@ public class FieldControllers {
             return new ResponseEntity<>("Campo o empresa no encontrados", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/find-all")
+    public ResponseEntity<List<FieldModels>> findAllFields() {
+        List<FieldModels> fields = fieldRepository.findAll();
+        return new ResponseEntity<>(fields, HttpStatus.OK);
+    }
 }
