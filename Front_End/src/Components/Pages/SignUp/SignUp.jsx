@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { Header } from '../../Layouts/Header/Header';
-import { Main } from '../../Layouts/Main/Main';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
 import logo from '../../../assets/Images/logo/3.png'
@@ -51,7 +49,8 @@ export const SignUp = () => {
         <img className='logo' src={logo} alt='img' />
       
 
-      <Main>
+      <main className='main_SignUp'>
+
         <h1 className='title_signUp'>Registrarse</h1>
 
         {error && <p className="error-message">{error}</p>}
@@ -148,8 +147,7 @@ export const SignUp = () => {
           <button type="submit" className='register'>Registrarse</button>
         <NavLink className='return' to='/'>Volver</NavLink> 
         </form>
-
-      </Main>
+      </main>
     </div>
   );
 };

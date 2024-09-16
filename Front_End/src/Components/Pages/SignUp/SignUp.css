@@ -160,6 +160,7 @@
     background-color: #073b4c;
     transform: translateY(-145%) scale(1.1);
     padding: 0 0.5rem 0 0.5rem;
+    
 }
 
 .form_text {
@@ -193,3 +194,4 @@
     padding: 0.5rem;
     border-radius: 10px;
 }
+

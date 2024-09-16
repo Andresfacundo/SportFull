@@ -46,3 +46,7 @@
     box-shadow: 7px 6px 10px #07954983; 
 
 }
+
+.main_welcome{
+    display: flex;
+}

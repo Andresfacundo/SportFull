@@ -8,6 +8,7 @@
 }
 .tittle_update{
     font-size: 2rem;
+    margin-bottom: 3rem;
 }
 
 .tittle_optional_data{
@@ -106,4 +107,29 @@ main{
     font-size: 0.9rem;
     margin-top: 5px;
   }
+
+  .changePassword{
+    color: #e7e7e7;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    font-weight: 200;
+  }
   
+  .form_input:disabled + .form_text {
+    color: #e7e7e7;
+    cursor: not-allowed;
+    font-size: 1.2rem;
+    background-color:#07954A;
+    border-style: none;
+    padding: 0 1.5rem 0 1.5rem;
+    left: 0;
+  }  
+
+  .form_input:disabled  {
+    color: #e7e7e7;
+    cursor: not-allowed;
+    font-size: 1.2rem;
+    border-style: none;
+
+  }  
+

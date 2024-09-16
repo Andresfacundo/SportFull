@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ActualizarCliente.css'
 import { Header } from '../../../Layouts/Header/Header';
-import { Main } from '../../../Layouts/Main/Main';
 import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
@@ -21,10 +20,12 @@ export const ActualizarCliente = () => {
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
-  const [contraseña, setContraseña] = useState('');
+  const [contraseña,setContraseña]= useState('')
   const [cc, setCedula] = useState(null);
   const [telefono, setTelefono] = useState(null);
   const [error, setError] = useState('');
+  const [isEditable, setIsEditable] = useState(false);
+
 
   const navigate = useNavigate();
     // useEffect para cargar los datos del usuario al montar el componente
@@ -36,7 +37,7 @@ export const ActualizarCliente = () => {
         setNombres(user.nombres || '');
         setApellidos(user.apellidos || '');
         setEmail(user.email || '');
-        setContraseña('');  // La contraseña no debe mostrarse por seguridad
+        setContraseña(user.contraseña); 
         setCedula(user.clientModels?.cc || ''); // Accede al campo cc dentro de clientModels
         setTelefono(user.clientModels?.telefono || ''); // Accede al campo telefono dentro de clientModels
       }
@@ -45,11 +46,14 @@ export const ActualizarCliente = () => {
   const saveUser = (e) => {
     e.preventDefault();
 
+    //___________________________-
     // Validación básica
-    if (!nombres || !apellidos || !email || !contraseña) {
+    if (!nombres || !apellidos || !email ) {
       setError("Todos los campos son obligatorios");
       return;
     }
+
+
     //obtener datos del usuario
     const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
 
@@ -61,7 +65,7 @@ export const ActualizarCliente = () => {
       nombres,
       apellidos,
       email,
-      contraseña,
+    contraseña,
       clientModels: {
         telefono,
         cc
@@ -78,7 +82,8 @@ export const ActualizarCliente = () => {
           ...user, // Mantiene cualquier dato previo en el objeto 'user' que no se esté actualizando
           nombres,  // Actualizar el campo 'nombres' con los nuevos datos
           apellidos, // Actualizar el campo 'apellidos'
-          email,     // Actualizar el campo 'email'
+          email,  
+          contraseña,   // Actualizar el campo 'email'
           clientModels: {
             telefono,
             cc
@@ -111,6 +116,7 @@ export const ActualizarCliente = () => {
               className='form_input'
               value={nombres}
               onChange={(e) => setNombres(e.target.value)}
+              disabled={!isEditable} 
               required
             />
             <span className='form_text'>Nombres</span>
@@ -123,6 +129,7 @@ export const ActualizarCliente = () => {
               className='form_input'
               value={apellidos}
               onChange={(e) => setApellidos(e.target.value)}
+              disabled={!isEditable} 
               required
             />
             <span className='form_text'>Apellidos</span>
@@ -134,22 +141,12 @@ export const ActualizarCliente = () => {
               className='form_input'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={true}
               required
             />
             <span className='form_text'>Correo</span>
           </label>
 
-          <label className='form_label'>
-            <input
-              type='password'
-              placeholder=' '
-              className='form_input'
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
-              required
-            />
-            <span className='form_text'>Contraseña</span>
-          </label>
           <h2 className='tittle_optional_data'>Datos Opcionales</h2>
           <label className='form_label'>
             <input
@@ -158,9 +155,10 @@ export const ActualizarCliente = () => {
               className='form_input'
               value={cc}  // Asignar el estado
               onChange={(e) => setCedula(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable} 
 
             />
-            <span className='form_text'>cc</span>
+            <span className='form_text'>Cedula</span>
           </label>
           <label className='form_label'>
             <input
@@ -169,14 +167,29 @@ export const ActualizarCliente = () => {
               className='form_input'
               value={telefono}  // Asignar el estado
               onChange={(e) => setTelefono(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable} 
 
             />
             <span className='form_text'>Telefono</span>
           </label>
 
+          <NavLink className={'changePassword'} to='/HomeClient'>Configuración Avanzada</NavLink>
 
 
-          <button className='register'>Actualizar Perfil</button>
+          <button
+  className='register'
+  onClick={(e) => {
+    e.preventDefault(); // Evita el envío del formulario de inmediato
+    if (!isEditable) {
+      setIsEditable(true); // Habilita los inputs
+    } else {
+      saveUser(e); // Llama a la función de guardado si ya están habilitados
+    }
+  }}
+>
+  {isEditable ? 'Guardar Cambios' : 'Actualizar Perfil'}
+</button>
+
           <NavLink className='return' to='/HomeClient'>Volver</NavLink>
         </form>
       </main>
