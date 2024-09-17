@@ -1,8 +1,6 @@
 package com.example.sport_full.models;
 
-
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 
 @Entity
@@ -11,13 +9,13 @@ public class UserModels implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id; // Cambiado de static int a Long
 
     @Column(nullable = false)
     private String nombreCompleto;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String email; // Cambiado de static String a String
 
     @Column(nullable = false)
     private String contraseña;
@@ -34,12 +32,11 @@ public class UserModels implements Serializable {
     private AdminModels adminModels;
 
     // Getters y Setters
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -91,3 +88,4 @@ public class UserModels implements Serializable {
         this.adminModels = adminModels;
     }
 }
+
