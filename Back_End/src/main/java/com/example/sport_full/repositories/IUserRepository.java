@@ -8,6 +8,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface IUserRepository extends JpaRepository<UserModels, Long> {
+public interface IUserRepository extends JpaRepository<UserModels, Integer> {
     Optional<UserModels> findByEmail(String email);
+    Optional<UserModels> findByVerificationToken(String token);
 }

@@ -25,6 +25,14 @@ public class UserModels implements Serializable {
     @Column(nullable = false)
     private String tipoUsuario;
 
+    // Nuevo campo para el token de verificación
+    @Column
+    private String verificationToken;
+
+    // Nuevo campo para el estado de verificación
+    @Column(nullable = false)
+    private boolean verified = false;
+
     // Relación opcional con ClientModels
     @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
     private ClientModels clientModels;
@@ -35,7 +43,7 @@ public class UserModels implements Serializable {
 
     // Getters y Setters
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -73,6 +81,22 @@ public class UserModels implements Serializable {
 
     public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public ClientModels getClientModels() {
