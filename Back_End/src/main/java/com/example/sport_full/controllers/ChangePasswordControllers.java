@@ -29,7 +29,7 @@ public class ChangePasswordControllers {
 
             if(BCrypt.checkpw(dto.getContraseña(), userModel.getContraseña())){
             userRepository.save(userModel);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("Contraseña válida");
 
             }else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
