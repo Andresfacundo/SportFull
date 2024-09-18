@@ -104,18 +104,31 @@ public class UserControllers {
     }
   }
 
-
   @PostMapping("/login")
-public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-  if (loginDTO.getEmail() == null || loginDTO.getContraseña() == null) {
-    return new ResponseEntity<>("Email o contraseña no pueden estar vacíos", HttpStatus.BAD_REQUEST);
+  public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+    if (loginDTO.getEmail() == null || loginDTO.getContraseña() == null) {
+      return new ResponseEntity<>("Email o contraseña no pueden estar vacíos", HttpStatus.BAD_REQUEST);
+    }
+
+    Optional<UserModels> user = userRepository.findByEmail(loginDTO.getEmail());
+
+    if (user.isPresent()) {
+      UserModels foundUser = user.get();
+
+      // Verificar si el correo ha sido verificado
+      if (!foundUser.isVerified()) {
+        return new ResponseEntity<>("Debes verificar tu correo antes de iniciar sesión.", HttpStatus.UNAUTHORIZED);
+      }
+
+      // Verificar la contraseña
+      if (BCrypt.checkpw(loginDTO.getContraseña(), foundUser.getContraseña())) {
+        return new ResponseEntity<>(foundUser, HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
+      }
+    } else {
+      return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
+    }
   }
-  Optional<UserModels> user = userRepository.findByEmail(loginDTO.getEmail());
-  if (user.isPresent() && BCrypt.checkpw(loginDTO.getContraseña(), user.get().getContraseña())) {
-    return new ResponseEntity<>(user.get(), HttpStatus.OK);
-  } else {
-    return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
-  }
-}
 
 }
