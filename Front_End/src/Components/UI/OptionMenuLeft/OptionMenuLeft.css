@@ -18,8 +18,8 @@
     text-decoration: none;
     clip-path: polygon(0 0, 100% 0%, 100% 100%, 9% 100%);
     font-weight: 400;
-    font-size: clamp(23px, 5vw, 25px);
-    white-space: nowrap;
+    font-size: clamp(23px, 2vw, 24px);
+        white-space: nowrap;
 }
 .content_option{
     width: auto;

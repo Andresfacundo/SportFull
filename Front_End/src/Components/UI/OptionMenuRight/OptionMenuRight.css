@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: center;
     background-color: #07954A;
-    font-size: 2rem;
+    font-size: clamp(23px, 2vw, 24px);
     padding: 0 4.5rem 0 3rem;
     text-decoration: none;
     clip-path: polygon(0 0, 100% 0, 87% 100%, 0% 100%);

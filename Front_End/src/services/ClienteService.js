@@ -21,11 +21,9 @@ class ClienteService {
     }
 
     // Actualizar los datos del usuario autenticado
-    // services/ClienteService.js
-
     updateUser(id, updatedUser) {
         const token = localStorage.getItem('token'); // Obtén el token de autenticación
-        return axios.put(`http://localhost:8080/client/${id}`, updatedUser, {
+        return axios.patch(`http://localhost:8080/client/actualizar/${id}`, updatedUser, {
             headers: {
                 'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
             }
@@ -34,8 +32,8 @@ class ClienteService {
 
     
     // Método para validar la contraseña
-    validatePassword(data) {
-        return axios.post(`http://localhost:8080/client/validar-contraseña`, data);
+    validatePassword(id,data) {
+        return axios.post(`http://localhost:8080/security?idUser=${id}`, data);
     }
 }
 

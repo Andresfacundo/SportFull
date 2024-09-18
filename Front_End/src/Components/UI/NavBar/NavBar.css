@@ -13,6 +13,8 @@
 
 
 ul {
+    width: 100%;
+    height: auto;
     display: flex;
     width: 350px;
 }
@@ -65,7 +67,7 @@ li.active .icon {
 
 li.active .text {
     opacity: 1;    
-    transform: translateY(10px);
+    transform: translateY(-35px);
 }
 
 .indicator {

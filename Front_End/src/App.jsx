@@ -12,6 +12,10 @@ import { ActualizarGestor } from './Components/Pages/ActualizarPerfil/Actualizar
 import { BuscarCanchas } from './Components/Pages/BuscarCanchas/BuscarCanchas'
 import { HistorialCliente } from './Components/Pages/Historial/HistorialCliente/HistorialCliente'
 import {SoporteCliente} from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
+import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/AdvancedConfiguration'
+import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
+import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
+
 
 import './App.css'
 
@@ -33,6 +37,9 @@ function App() {
       <Route path='/BuscarCanchas' element={<BuscarCanchas />} />
       <Route path='/HistorialCliente' element={<HistorialCliente />} />
       <Route path='/SoporteCliente' element={<SoporteCliente />} />
+      <Route path='/AdvancedConfiguration' element={<AdvancedConfiguration />} />
+      <Route path='/ChangePassword' element={<ChangePassword />} />
+      <Route path='/PaymentMethod' element={<PaymentMethod />} />
 
 
 
