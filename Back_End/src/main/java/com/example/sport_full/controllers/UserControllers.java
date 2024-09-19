@@ -1,6 +1,8 @@
 package com.example.sport_full.controllers;
 
 
+import com.example.sport_full.config.JwtUtil;
+import com.example.sport_full.dto.JwtResponse;
 import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.repositories.IClientRepository;
@@ -16,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -27,13 +31,15 @@ public class UserControllers {
   private final IClientRepository clientRepository;
   private final ICompanyRepository companyRepository;
   private final UserValidations userValidations;
+  private final JwtUtil jwtUtil;
 
   @Autowired
-  public UserControllers(IUserRepository userRepository, IClientRepository clientRepository, ICompanyRepository companyRepository) {
+  public UserControllers(IUserRepository userRepository, IClientRepository clientRepository, ICompanyRepository companyRepository, JwtUtil jwtUtil) {
       this.userRepository = userRepository;
       this.clientRepository = clientRepository;
       this.companyRepository = companyRepository;
       this.userValidations =  new UserValidations(userRepository);
+    this.jwtUtil = jwtUtil;
   }
 
 
@@ -73,22 +79,31 @@ public class UserControllers {
       return ResponseEntity.ok(userModels);
     } catch (Exception e) {
       // Manejar errores
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body("Error en el registro: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
     }
   }
 
-@PostMapping("/login")
-public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-  if (loginDTO.getEmail() == null || loginDTO.getContraseña() == null) {
-    return new ResponseEntity<>("Email o contraseña no pueden estar vacíos", HttpStatus.BAD_REQUEST);
-  }
-  Optional<UserModels> user = userRepository.findByEmail(loginDTO.getEmail());
-  if (user.isPresent() && BCrypt.checkpw(loginDTO.getContraseña(), user.get().getContraseña())) {
-    return new ResponseEntity<>(user.get(), HttpStatus.OK);
-  } else {
-    return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
-  }
-}
 
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+    if (loginDTO.getEmail() == null || loginDTO.getContraseña() == null) {
+      return new ResponseEntity<>("Email o contraseña no pueden estar vacíos", HttpStatus.BAD_REQUEST);
+    }
+
+    Optional<UserModels> user = userRepository.findByEmail(loginDTO.getEmail());
+    if (user.isPresent() && BCrypt.checkpw(loginDTO.getContraseña(), user.get().getContraseña())) {
+      String jwt = jwtUtil.generateToken(user.get());
+
+      // Crear un objeto de respuesta que incluya el JWT y la información del usuario
+      Map<String, Object> response = new HashMap<>();
+      response.put("token", jwt);
+      response.put("user", user.get()); // Incluye toda la información del usuario
+
+      return ResponseEntity.ok(response);
+    } else {
+      return new ResponseEntity<>("Credenciales incorrectas", HttpStatus.UNAUTHORIZED);
+    }
+  }
+  
 }
