@@ -1,0 +1,48 @@
+
+.container-modal-registro {
+    width: 80%;
+    height: 20rem;
+    margin: auto;
+    background-color: #073b4c;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    position: relative;
+    padding: 3rem 2rem;
+    letter-spacing: 1px;
+}
+
+.check {
+    width: 6rem;
+    height: 6rem;
+    background-color: #07954a;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: 38%;     
+    box-shadow: 0 0px 2px 6px rgba(128, 238, 103, 0.2), 0 0 2px 16px rgba(18, 228, 18, 0.40),0  0 2px 24px rgba(15, 168, 28, 0.5);          
+}
+    
+.check img {
+    width: 80%;
+    padding: 10px;    
+    
+}
+.titulo-registro{
+    margin: 2rem;
+    font-size: 1.5rem;
+    text-shadow: 5px 5px 5px black;
+}
+
+.btn-volver {
+    margin: 2rem auto;
+    padding: 10px;
+    width: 8rem;
+    height: 2rem;
+    background-color: #07954a;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 0 10px 1px black;     
+    display: inline-block;
+} 

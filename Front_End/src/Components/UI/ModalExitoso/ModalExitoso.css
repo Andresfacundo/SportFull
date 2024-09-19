@@ -1,0 +1,45 @@
+.container-modal {
+    width: 21rem;
+    height: 13rem;    
+    background-color: #073b4c;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    position: relative;
+    padding-top: 4rem;
+    letter-spacing: 1px;
+    border: 1px solid white;
+    margin: auto;
+}
+
+.check-registro {
+    width: 6rem;
+    height: 6rem;
+    background-color: #07954a;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: 37%;     
+    box-shadow: 0 0px 2px 6px rgba(128, 238, 103, 0.2), 0 0 2px 16px rgba(18, 228, 18, 0.40),0  0 2px 24px rgba(15, 168, 28, 0.5);          
+}
+    
+.imgExito {      
+    width: 80%;
+    padding: 10px; 
+                
+}
+
+.titulo-modal {   
+    font-size: 2rem;    
+    margin: 3rem 1rem;       
+}
+
+.container-modal a {
+    margin-top: 5rem;   
+    background-color: #07954a;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 0 10px 1px;    
+    padding: 10px;
+}   

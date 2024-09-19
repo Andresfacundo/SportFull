@@ -6,18 +6,19 @@ import { SignUp } from './Components/Pages/SignUp/SignUp'
 import { Home } from './Components/Pages/Home/Home'
 import { ListUsers } from './Components/ListUsers'
 import './App.css'
+import Modal from './Components/UI/Modal/Modal'
+import ModalExitoso from './Components/UI/ModalExitoso/ModalExitoso'
+
 
 function App() {
 
   return (
-
-    <Routes >
+   <Routes >
       <Route path='/' element={<Welcome />} />
       <Route path='/Guest' element={<Guest />} />
       <Route path='/Login' element={<Login />} />
       <Route path='/SignUp' element={<SignUp />} />
       <Route path='/Home' element={<Home />} />
-
     </Routes>
   )
 }
