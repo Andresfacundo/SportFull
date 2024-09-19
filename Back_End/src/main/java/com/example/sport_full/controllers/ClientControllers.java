@@ -6,6 +6,7 @@ import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
 import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.ClientServices;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,8 +77,10 @@ public class ClientControllers {
                 existingUser.setEmail(userModels.getEmail());
             }
 
+            // Encripta la contraseña si se envía una nueva
             if (userModels.getContraseña() != null) {
-                existingUser.setContraseña(userModels.getContraseña()); // Asegúrate de encriptarla si es necesario
+                String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
+                existingUser.setContraseña(hashedPassword) ;// Encripta la contraseña antes de guardarla
             }
 
             if (userModels.getClientModels() != null) {
@@ -93,14 +96,13 @@ public class ClientControllers {
                 }
             }
 
-            // Guarda los cambios
+            // Guarda los cambios en la base de datos
             userRepository.save(existingUser);
             return ResponseEntity.ok(existingUser);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> patchClient(@PathVariable("id") Long id) {
