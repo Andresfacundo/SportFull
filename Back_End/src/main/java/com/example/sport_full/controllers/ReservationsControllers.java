@@ -1,12 +1,7 @@
 package com.example.sport_full.controllers;
 
-import com.example.sport_full.models.AdminModels;
-import com.example.sport_full.models.FieldModels;
-import com.example.sport_full.models.ReservationsModels;
-import com.example.sport_full.models.UserModels;
-import com.example.sport_full.repositories.ICompanyRepository;
-import com.example.sport_full.repositories.IFieldRepository;
-import com.example.sport_full.repositories.IReservationsRepository;
+import com.example.sport_full.models.*;
+import com.example.sport_full.repositories.*;
 import com.example.sport_full.services.AdminServices;
 import com.example.sport_full.services.ReservationsServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,28 +31,34 @@ public class ReservationsControllers {
     @Autowired
     AdminServices adminServices;
 
+    @Autowired
+    IGestorRepository gestorRepository;
 
+    @Autowired
+    IClientRepository clientRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<ReservationsModels> create(@RequestBody ReservationsModels reservationsModels, @RequestParam Long fielId  , @RequestParam Long AdminId ) {
+    public ResponseEntity<ReservationsModels> create(@RequestBody ReservationsModels reservationsModels,
+                                                     @RequestParam Long fielId,
+                                                     @RequestParam Long gestorId) {
         try {
-            Optional<UserModels> admin = adminServices.getUser(AdminId);
+            // Verificar si el usuario es un Gestor válido
+            Optional<GestorModels> gestor = gestorRepository.findById(gestorId);
             Optional<FieldModels> field = fieldRepository.findById(fielId);
 
-            if (admin.isPresent() && field.isPresent()) {
-                UserModels user = admin.get();
+            if (gestor.isPresent() && field.isPresent()) {
                 FieldModels fieldModel = field.get();
 
-                reservationsModels.setAdminModels(user.getAdminModels());
+                // Asignar el gestor, campo y usuario a la reserva
+                reservationsModels.setAdminModels(gestor.get().getAdminempresa());
                 reservationsModels.setFieldModels(fieldModel);
 
-            ReservationsModels newReservation = reservationsServices.createReservation(reservationsModels);
-            return ResponseEntity.ok(newReservation);
-
-            }else{
+                // Crear la reserva
+                ReservationsModels newReservation = reservationsServices.createReservation(reservationsModels);
+                return ResponseEntity.ok(newReservation);
+            } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
