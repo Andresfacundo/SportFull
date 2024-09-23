@@ -56,17 +56,28 @@ public class PasswordResetController {
         return ResponseEntity.ok("Correo de recuperación enviado.");
     }
 
+    // Mostrar el formulario de restablecimiento de contraseña
     @GetMapping("/reset-password")
-    public ResponseEntity<String> showResetForm(@RequestParam String token, @RequestParam(required = false) String message) {
-        String messageHtml = "";
-        if (message != null) {
-            messageHtml = "<p style='color:red;'>" + message + "</p>";  // Mostrar el mensaje si hay
+    public ResponseEntity<String> showResetForm(@RequestParam String token) {
+        // Buscar el token en la base de datos
+        PasswordResetToken resetToken = tokenRepository.findByToken(token);
+
+        if (resetToken == null) {
+            return ResponseEntity.badRequest().body("El enlace de restablecimiento es inválido.");
         }
 
+        // Obtener la fecha y hora actual
+        LocalDateTime now = LocalDateTime.now();
+
+        // Verificar si el token ha expirado
+        if (resetToken.getExpiryDate().isBefore(now)) {
+            return ResponseEntity.badRequest().body("El enlace de restablecimiento ha expirado.");
+        }
+
+        // Si el token es válido, mostrar el formulario de restablecimiento de contraseña
         String htmlForm = "<html>" +
                 "<body>" +
                 "<h1>Restablecer contraseña</h1>" +
-                messageHtml +  // Mostrar mensaje de error o éxito
                 "<form action='/password/reset-password' method='POST'>" +
                 "<input type='hidden' name='token' value='" + token + "'/>" +
                 "<label>Nueva contraseña:</label>" +
@@ -78,6 +89,7 @@ public class PasswordResetController {
 
         return ResponseEntity.ok(htmlForm);
     }
+
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
         try {
