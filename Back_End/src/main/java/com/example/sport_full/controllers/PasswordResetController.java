@@ -7,11 +7,13 @@ import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.repositories.TokenRepository;
 import com.example.sport_full.utils.TokenGenerator;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @RestController
@@ -29,11 +31,11 @@ public class PasswordResetController {
     }
 
     @PostMapping("/reset")
-    public String processPasswordResetRequest(@RequestParam String email) {
+    public ResponseEntity<String> processPasswordResetRequest(@RequestParam String email) {
         // Verificar si el usuario existe
         Optional<UserModels> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            return "El correo no está registrado.";
+            return ResponseEntity.badRequest().body("El correo no está registrado.");
         }
 
         // Obtener el usuario
@@ -48,9 +50,13 @@ public class PasswordResetController {
         String resetLink = "http://localhost:8080/reset-password?token=" + token;
 
         // Enviar el correo
-        emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+        try {
+            emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el correo de recuperación.");
+        }
 
-        return "Correo de recuperación enviado.";
+        return ResponseEntity.ok("Correo de recuperación enviado.");
     }
 
     @PutMapping("/reset-password")
@@ -67,7 +73,7 @@ public class PasswordResetController {
             return ResponseEntity.badRequest().body("Token expirado.");
         }
 
-        // Obtener el suario asociado con el token
+        // Obtener el usuario asociado con el token
         Optional<UserModels> optionalUser = userRepository.findById(resetToken.getUserId());
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("Usuario no encontrado.");
@@ -87,5 +93,6 @@ public class PasswordResetController {
 
         return ResponseEntity.ok("Contraseña actualizada exitosamente.");
     }
+
 }
 

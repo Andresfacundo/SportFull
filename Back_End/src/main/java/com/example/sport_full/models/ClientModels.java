@@ -2,8 +2,6 @@ package com.example.sport_full.models;
 
 
 import jakarta.persistence.*;
-import org.apache.catalina.User;
-
 import java.io.Serializable;
 
 @Entity
@@ -12,12 +10,12 @@ public class ClientModels implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;  // Cambiado de int a Long
 
-    @Column(nullable = true, unique = true)  // Hacer opcionales las columnas
+    @Column(nullable = true, unique = true)
     private String CC;
 
-    @Column(nullable = true, unique = true)  // Hacer opcionales las columnas
+    @Column(nullable = true, unique = true)
     private String telefono;
 
     @OneToOne
@@ -25,12 +23,11 @@ public class ClientModels implements Serializable {
     private UserModels userModels;
 
     // Getters y Setters
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,7 +51,8 @@ public class ClientModels implements Serializable {
         return userModels;
     }
 
-    public void setUserModels(UserModels userModels) {
+    public void setUserModels(UserModels userModels) {  // Método que faltaba
         this.userModels = userModels;
     }
 }
+
