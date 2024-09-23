@@ -1,8 +1,6 @@
 package com.example.sport_full.models;
 
 import jakarta.persistence.*;
-
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,13 +26,29 @@ public class PasswordResetToken {
         this.expiryDate = expiryDate;
     }
 
-    public Instant getExpiryDate() {
-        return null;
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;  // Ahora devuelve el valor real de expiryDate
     }
 
     public Long getUserId() {
-        return 0L;
+        return userId;  // Ahora devuelve el valor real de userId
     }
 
-    // Getters y setters
+    // Getters y setters adicionales si es necesario
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setExpiryDate(LocalDateTime expiryDate) {
+        this.expiryDate = expiryDate;
+    }
 }

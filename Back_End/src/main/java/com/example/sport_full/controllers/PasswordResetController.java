@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+
 @RestController
 @RequestMapping("/password")
 public class PasswordResetController {
@@ -30,26 +32,21 @@ public class PasswordResetController {
         this.userRepository = userRepository;
     }
 
+    // Método para solicitar el restablecimiento de contraseña
     @PostMapping("/reset")
     public ResponseEntity<String> processPasswordResetRequest(@RequestParam String email) {
-        // Verificar si el usuario existe
         Optional<UserModels> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("El correo no está registrado.");
         }
 
-        // Obtener el usuario
         UserModels user = optionalUser.get();
-
-        // Generar token y guardarlo
         String token = TokenGenerator.generateToken();
-        PasswordResetToken resetToken = new PasswordResetToken(token, user.getId(), LocalDateTime.now().plusMinutes(30));
+        PasswordResetToken resetToken = new PasswordResetToken(token, user.getId(), now().plusMinutes(30));
         tokenRepository.save(resetToken);
 
-        // Generar el enlace de restablecimiento
-        String resetLink = "http://localhost:8080/reset-password?token=" + token;
+        String resetLink = "http://localhost:8080/password/reset-password?token=" + token;
 
-        // Enviar el correo
         try {
             emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
         } catch (Exception e) {
@@ -59,40 +56,67 @@ public class PasswordResetController {
         return ResponseEntity.ok("Correo de recuperación enviado.");
     }
 
-    @PutMapping("/reset-password")
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> showResetForm(@RequestParam String token, @RequestParam(required = false) String message) {
+        String messageHtml = "";
+        if (message != null) {
+            messageHtml = "<p style='color:red;'>" + message + "</p>";  // Mostrar el mensaje si hay
+        }
+
+        String htmlForm = "<html>" +
+                "<body>" +
+                "<h1>Restablecer contraseña</h1>" +
+                messageHtml +  // Mostrar mensaje de error o éxito
+                "<form action='/password/reset-password' method='POST'>" +
+                "<input type='hidden' name='token' value='" + token + "'/>" +
+                "<label>Nueva contraseña:</label>" +
+                "<input type='password' name='newPassword' required/>" +
+                "<button type='submit'>Restablecer contraseña</button>" +
+                "</form>" +
+                "</body>" +
+                "</html>";
+
+        return ResponseEntity.ok(htmlForm);
+    }
+    @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        // Verificar si el token es válido
-        PasswordResetToken resetToken = tokenRepository.findByToken(token);
-        if (resetToken == null) {
-            return ResponseEntity.badRequest().body("Token inválido.");
+        try {
+            // Buscar el token de restablecimiento
+            PasswordResetToken resetToken = tokenRepository.findByToken(token);
+            if (resetToken == null) {
+                return ResponseEntity.badRequest().body("Token inválido.");
+            }
+
+            // Verificar si el token ha expirado
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime expiryDate = resetToken.getExpiryDate();
+            if (expiryDate.isBefore(now)) {
+                return ResponseEntity.badRequest().body("Token expirado.");
+            }
+
+            // Buscar el usuario asociado al token
+            Optional<UserModels> optionalUser = userRepository.findById(resetToken.getUserId());
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.badRequest().body("Usuario no encontrado.");
+            }
+
+            UserModels user = optionalUser.get();
+            String encodedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+            // Actualizar la contraseña del usuario
+            user.setContraseña(encodedPassword);
+            userRepository.save(user);
+
+            // Eliminar el token después de usarlo
+            tokenRepository.delete(resetToken);
+
+            return ResponseEntity.ok("Contraseña actualizada exitosamente.");
+        } catch (Exception e) {
+            // Registrar el error y devolver un mensaje amigable
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al restablecer la contraseña.");
         }
-
-        // Verificar si el token ha expirado
-        LocalDateTime now = LocalDateTime.now();
-        if (resetToken.getExpiryDate().isBefore(Instant.from(now))) {
-            return ResponseEntity.badRequest().body("Token expirado.");
-        }
-
-        // Obtener el usuario asociado con el token
-        Optional<UserModels> optionalUser = userRepository.findById(resetToken.getUserId());
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("Usuario no encontrado.");
-        }
-
-        UserModels user = optionalUser.get();
-
-        // Cifrar la nueva contraseña
-        String encodedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-
-        // Actualizar la contraseña del usuario
-        user.setContraseña(encodedPassword);
-        userRepository.save(user);
-
-        // Eliminar el token utilizado
-        tokenRepository.delete(resetToken);
-
-        return ResponseEntity.ok("Contraseña actualizada exitosamente.");
     }
 
-}
 
+}
