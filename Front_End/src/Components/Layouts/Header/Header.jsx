@@ -1,5 +1,5 @@
-import React from 'react'
-import './Header.css'
+import React from 'react';
+import './Header.css';
 import icon_logout from '../../../../src/assets/Images/icons/salida.png';
 import foto_perfil from '../../../../src/assets/Images/icons/avatar_01.png';
 import icon_setting from '../../../../src/assets/Images/icons/icon_setting.png';
@@ -7,7 +7,6 @@ import icon_notification from '../../../../src/assets/Images/icons/icon_notifica
 import ClienteService from '../../../services/ClienteService';
 import { CurrentDate } from '../../UI/CurrentDate/CurrentDate';
 import { NavLink } from 'react-router-dom';
-
 
 export const Header = ({ children }) => {
 
@@ -17,29 +16,28 @@ export const Header = ({ children }) => {
     navigate('/Login');  // Redirige al usuario a la página de login
   };
 
-  //obtener datos del usuario
+  // Obtener datos del usuario
   const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
 
-  // Función para obtener la primera palabra y la primera letra de la segunda palabra
-  const nombre = user.nombres;
-  const apellido=user.apellidos
-
   // Función para obtener la primera palabra del nombre y la primera letra del apellido
-const obtenerResultado = (nombre, apellido) => {
-  const showNombre = nombre.split(" ")[0]; // Tomar la primera palabra del nombre
-  const showApellido = apellido.split(" ")[0][0]; // Tomar la primera letra de la primera palabra del apellido
+  const obtenerResultado = (nombre, apellido) => {
+    // Eliminar espacios extra y dividir en palabras
+    const showNombre = nombre.trim().split(" ")[0]; // Tomar la primera palabra del nombre
+    const showApellido = apellido.trim().split(" ")[0][0]; // Tomar la primera letra de la primera palabra del apellido
 
-  // Capitalizar la primera letra del nombre y la primera letra del apellido
-  const nombreCapitalizado = showNombre.charAt(0).toUpperCase() + showNombre.slice(1);
-  const apellidoCapitalizado = showApellido.toUpperCase();
+    // Capitalizar la primera letra del nombre y la primera letra del apellido
+    const nombreCapitalizado = showNombre.charAt(0).toUpperCase() + showNombre.slice(1).toLowerCase();
+    const apellidoCapitalizado = showApellido.toUpperCase();
 
-  return `${nombreCapitalizado} ${apellidoCapitalizado}.`; // Devolver el nombre capitalizado y la inicial del apellido
-};
+    return `${nombreCapitalizado} ${apellidoCapitalizado}.`; // Devolver el nombre capitalizado y la inicial del apellido
+  };
 
+  // Validar que 'user' esté disponible antes de acceder a 'nombres' y 'apellidos'
+  const nombre = user?.nombres || 'Nombre';
+  const apellido = user?.apellidos || 'Apellido';
 
-const resultado = obtenerResultado(nombre, apellido);
-console.log(resultado);
-
+  // Obtener el resultado formateado
+  const resultado = obtenerResultado(nombre, apellido);
 
   return (
     <header className='header_home'>
@@ -60,11 +58,10 @@ console.log(resultado);
 
         <div className='container_user'>
           <img className='pefil_pic' src={foto_perfil} alt="" />
-          <h2 className='nameUser'>{resultado} </h2>
+          <h2 className='nameUser'>{resultado}</h2> {/* Mostrar el nombre capitalizado */}
         </div>
 
       </div>
-
     </header>
-  )
-}
+  );
+};

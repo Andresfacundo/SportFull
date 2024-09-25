@@ -62,7 +62,7 @@ const saveUser = (e) => {
   };
 
   // Llama al servicio para actualizar el usuario
-  ClienteService.updateUser(userId, updatedUser)
+  ClienteService.updateClient(userId, updatedUser)
     .then((response) => {
       console.log(response.data);
 

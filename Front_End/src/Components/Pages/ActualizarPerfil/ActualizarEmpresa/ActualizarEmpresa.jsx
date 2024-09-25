@@ -20,10 +20,15 @@ export const ActualizarEmpresa = () => {
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
-  const [cc, setCedula] = useState(null);
-  const [telefono, setTelefono] = useState(null);
+  const [ccpropietario, setCCadmin] = useState(null);
+  const [telefonoPropietario, setTelefonoPropietario] = useState(null);
   const [error, setError] = useState('');
   const [isEditable, setIsEditable] = useState(false);
+  const [direccionEmpresa, setDireccionEmpresa] = useState(null);
+  const [emailEmpresa, setEmailEmpresa] = useState(null);
+  const [nit, setNit] = useState(null);
+  const [telefonoEmpresa, setTelefonoEmpresa] = useState(null);
+  const [nombreEmpresa, setNombreEmpresa] = useState(null);
 
 
   const navigate = useNavigate();
@@ -31,62 +36,64 @@ export const ActualizarEmpresa = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user')); // Obtiene el usuario almacenado en localStorage
 
-    
+
     if (user) {
       // Cargar los datos del usuario en los estados
       setNombres(user.nombres || '');
       setApellidos(user.apellidos || '');
       setEmail(user.email || '');
-      setCedula(user.clientModels?.cc || ''); // Accede al campo cc dentro de clientModels
-      setTelefono(user.clientModels?.telefono || ''); // Accede al campo telefono dentro de clientModels
+      setCCadmin(user.adminModels?.ccpropietario || ''); // Accede al campo cc dentro de adminModels
+      setTelefonoPropietario(user.adminModels?.telefonoPropietario || ''); // Accede al campo telefono dentro de adminModels
     }
   }, []);
 
-const saveUser = (e) => {
-  e.preventDefault();
+  const saveUser = (e) => {
+    e.preventDefault();
 
-  //obtener datos del usuario
-  const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
+    //obtener datos del usuario
+    const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
 
-  // Obtén el ID del usuario desde localStorage
-  const userId = user.id;
+    // Obtén el ID del usuario desde localStorage
+    const userId = user.id;
 
-  // Crea un objeto con los datos del usuario a actualizar
-  const updatedUser = {
-    nombres,
-    apellidos,
-    clientModels: {
-      telefono,
-      cc
-    }
+    // Crea un objeto con los datos del usuario a actualizar
+    const updatedUser = {
+      nombres,
+      apellidos,
+      email,
+      adminModels: {
+        telefonoEmpresa,
+        ccpropietario
+      }
+    };
+
+    // Llama al servicio para actualizar el usuario
+    ClienteService.updateCompany(userId, updatedUser)
+      .then((response) => {
+        console.log(response.data);
+
+        // Actualizar el objeto user en localStorage con los datos actualizados
+        const newUser = {
+          ...user, // Mantiene cualquier dato previo en el objeto 'user' que no se esté actualizando
+          nombres,
+          apellidos,
+          email,
+          adminModels: {
+            telefonoEmpresa,
+            ccpropietario
+          }
+        };
+
+        // Guardar el nuevo objeto actualizado en localStorage
+        localStorage.setItem('user', JSON.stringify(newUser));
+
+        navigate('/HomeEmpresa'); // Redirige a la página principal después de la actualización
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.");
+      });
   };
-
-  // Llama al servicio para actualizar el usuario
-  ClienteService.updateUser(userId, updatedUser)
-    .then((response) => {
-      console.log(response.data);
-
-      // Actualizar el objeto user en localStorage con los datos actualizados
-      const newUser = {
-        ...user, // Mantiene cualquier dato previo en el objeto 'user' que no se esté actualizando
-        nombres,  // Actualizar el campo 'nombres' con los nuevos datos
-        apellidos, // Actualizar el campo 'apellidos'    // Actualizar el campo 'email'
-        clientModels: {
-          telefono,
-          cc
-        }
-      };
-
-      // Guardar el nuevo objeto actualizado en localStorage
-      localStorage.setItem('user', JSON.stringify(newUser));
-
-      navigate('/HomeClient'); // Redirige a la página principal después de la actualización
-    })
-    .catch((error) => {
-      console.log(error);
-      setError("Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.");
-    });
-};
   // Función para validar la contraseña
 
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
@@ -174,8 +181,8 @@ const saveUser = (e) => {
               type='number'
               placeholder=' '
               className='form_input'
-              value={cc || ''}  // Asignar el estado
-              onChange={(e) => setCedula(e.target.value)}  // Actualizar el estado
+              value={ccpropietario || ''}  // Asignar el estado
+              onChange={(e) => setCCadmin(e.target.value)}  // Actualizar el estado
               disabled={!isEditable}
 
             />
@@ -186,8 +193,8 @@ const saveUser = (e) => {
               type='number'
               placeholder=' '
               className='form_input'
-              value={telefono || ''}  // Asignar el estado
-              onChange={(e) => setTelefono(e.target.value)}  // Actualizar el estado
+              value={telefonoPropietario || ''}  // Asignar el estado
+              onChange={(e) => setTelefonoPropietario(e.target.value)}  // Actualizar el estado
               disabled={!isEditable}
 
             />

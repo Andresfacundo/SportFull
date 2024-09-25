@@ -57,7 +57,7 @@ public class ClientControllers {
 
 
     // PRUEBA PATCH ACTUALIZACION PARCIAL
-    @PatchMapping("/actualizar/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<UserModels> patchUpdateUser(@PathVariable("id") Long id, @RequestBody UserModels userModels) {
         Optional<UserModels> existingUserOpt = userRepository.findById(id);
 
