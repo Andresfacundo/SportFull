@@ -62,7 +62,7 @@ export const ActualizarEmpresa = () => {
       apellidos,
       email,
       adminModels: {
-        telefonoEmpresa,
+        telefonoPropietario,
         ccpropietario
       }
     };
@@ -79,7 +79,7 @@ export const ActualizarEmpresa = () => {
           apellidos,
           email,
           adminModels: {
-            telefonoEmpresa,
+            telefonoPropietario,
             ccpropietario
           }
         };

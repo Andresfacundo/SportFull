@@ -15,56 +15,83 @@ export const ChangePassword = () => {
   };
 
   const [contraseña, setContraseña] = useState('');
-  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');  
+  // const [tipoUsuario, setTipoUsuario]=useState('')
+  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  
+
   const savePassword = (e) => {
     e.preventDefault(); // Evitar el comportamiento por defecto del formulario
-    
+
     // Validar que las contraseñas coincidan
     if (contraseña !== confirmacionContraseña) {
       setError("Las contraseñas no coinciden");
       return;
     }
     // Obtener datos del usuario desde localStorage
-    const user = JSON.parse(localStorage.getItem('user'));  
-    
+    const user = JSON.parse(localStorage.getItem('user'));
+
     if (!user) {
       setError("Error: Usuario no autenticado.");
       return;
     }
-    
+
     const userId = user.id;
-    
+    const tipoUsuario = user.tipoUsuario;
+
     // Crea un objeto con la nueva contraseña
     const updatedUser = {
       contraseña
     };
 
-    // Llama al servicio para actualizar el usuario
-    ClienteService.updateUser(userId, updatedUser)
-      .then((response) => {
-        console.log(response.data);
+    if (tipoUsuario === 'CLIENTE') {
+      // Llama al servicio para actualizar el usuario
+      ClienteService.updateClient(userId, updatedUser)
+        .then((response) => {
+          console.log(response.data);
 
-        // Actualiza el objeto user en localStorage con la nueva contraseña
-        const newUser = {
-          ...user, 
-          contraseña
-        };
+          // Actualiza el objeto user en localStorage con la nueva contraseña
+          const newUser = {
+            ...user,
+            contraseña
+          };
 
-        // Guardar el objeto actualizado en localStorage
-        localStorage.setItem('user', JSON.stringify(newUser));
+          // Guardar el objeto actualizado en localStorage
+          localStorage.setItem('user', JSON.stringify(newUser));
 
-        // Redirigir a la página de actualización de cliente
-        navigate('/ActualizarCliente'); 
-      })
-      .catch((error) => {
-        console.log(error);
-        setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
-      });
+          // Redirigir a la página de actualización de cliente
+          navigate('/ActualizarCliente');
+        })
+        .catch((error) => {
+          console.log(error);
+          setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
+        });
+    }else if (tipoUsuario==='EMPRESA') {
+            // Llama al servicio para actualizar el usuario
+            ClienteService.updateCompany(userId, updatedUser)
+            .then((response) => {
+              console.log(response.data);
+    
+              // Actualiza el objeto user en localStorage con la nueva contraseña
+              const newUser = {
+                ...user,
+                contraseña
+              };
+    
+              // Guardar el objeto actualizado en localStorage
+              localStorage.setItem('user', JSON.stringify(newUser));
+    
+              // Redirigir a la página de actualización de cliente
+              navigate('/ActualizarEmpresa');
+            })
+            .catch((error) => {
+              console.log(error);
+              setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
+            });
+    }
+
   };
 
   return (
@@ -97,7 +124,7 @@ export const ChangePassword = () => {
           </label>
 
           {error && <p className="error_message">{error}</p>} {/* Mostrar mensaje de error si ocurre */}
-          
+
           <button
             className='register'
             type='submit' // Cambié el tipo a 'submit' para manejar el envío del formulario
