@@ -40,6 +40,11 @@ public class UserModels implements Serializable {
 
     private boolean estadoCuenta;
 
+    private boolean emailVerified = false;
+
+    private String verificationToken;  // Campo para el token de verificación
+
+
     // Getters y Setters
 
     public long getId() {
@@ -112,5 +117,21 @@ public class UserModels implements Serializable {
 
     public void setEstadoCuenta(boolean estadoCuenta) {
         this.estadoCuenta = estadoCuenta;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }
