@@ -1,6 +1,6 @@
 package com.example.sport_full.controllers;
 
-import com.example.sport_full.Services.EmailService;
+import com.example.sport_full.services.ResetPasswordService;
 import com.example.sport_full.models.PasswordResetToken;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IUserRepository;
@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -22,20 +20,20 @@ import static java.time.LocalDateTime.now;
 @RequestMapping("/password")
 public class PasswordResetController {
 
-    private final EmailService emailService;
+    private final ResetPasswordService resetPasswordService;
     private final TokenRepository tokenRepository;
     private final IUserRepository userRepository;
 
-    public PasswordResetController(EmailService emailService, TokenRepository tokenRepository, IUserRepository userRepository) {
-        this.emailService = emailService;
+    public PasswordResetController(ResetPasswordService resetPasswordService, TokenRepository tokenRepository, IUserRepository userRepository) {
+        this.resetPasswordService = resetPasswordService;
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
     }
 
     // Método para solicitar el restablecimiento de contraseña
     @PostMapping("/reset")
-    public ResponseEntity<String> processPasswordResetRequest(@RequestParam String email) {
-        Optional<UserModels> optionalUser = userRepository.findByEmail(email);
+    public ResponseEntity<String> processPasswordResetRequest(@RequestBody UserModels email) {
+        Optional<UserModels> optionalUser = userRepository.findByEmail(email.getEmail());
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("El correo no está registrado.");
         }
@@ -48,7 +46,7 @@ public class PasswordResetController {
         String resetLink = "http://localhost:8080/password/reset-password?token=" + token;
 
         try {
-            emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+            resetPasswordService.sendPasswordResetEmail(user.getEmail(), resetLink);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el correo de recuperación.");
         }

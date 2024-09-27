@@ -1,4 +1,4 @@
-package com.example.sport_full.Services;
+package com.example.sport_full.services;
 
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
-public class EmailService {
+public class ResetPasswordService {
 
     @Autowired
     private JavaMailSender javaMailSender;
