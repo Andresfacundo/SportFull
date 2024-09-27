@@ -4,6 +4,8 @@ import { Header } from '../../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
+import ModalExitoso  from '../../../UI/ModalExitoso/ModalExitoso'
+
 
 export const ActualizarCliente = () => {
 
@@ -31,7 +33,7 @@ export const ActualizarCliente = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user')); // Obtiene el usuario almacenado en localStorage
 
-    
+
     if (user) {
       // Cargar los datos del usuario en los estados
       setNombres(user.nombres || '');
@@ -42,51 +44,51 @@ export const ActualizarCliente = () => {
     }
   }, []);
 
-const saveUser = (e) => {
-  e.preventDefault();
+  const saveUser = (e) => {
+    e.preventDefault();
 
-  //obtener datos del usuario
-  const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
+    //obtener datos del usuario
+    const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
 
-  // Obtén el ID del usuario desde localStorage
-  const userId = user.id;
+    // Obtén el ID del usuario desde localStorage
+    const userId = user.id;
 
-  // Crea un objeto con los datos del usuario a actualizar
-  const updatedUser = {
-    nombres,
-    apellidos,
-    clientModels: {
-      telefono,
-      cc
-    }
+    // Crea un objeto con los datos del usuario a actualizar
+    const updatedUser = {
+      nombres,
+      apellidos,
+      clientModels: {
+        telefono,
+        cc
+      }
+    };
+
+    // Llama al servicio para actualizar el usuario
+    ClienteService.updateClient(userId, updatedUser)
+      .then((response) => {
+        console.log(response.data);
+
+        // Actualizar el objeto user en localStorage con los datos actualizados
+        const newUser = {
+          ...user, // Mantiene cualquier dato previo en el objeto 'user' que no se esté actualizando
+          nombres,  // Actualizar el campo 'nombres' con los nuevos datos
+          apellidos, // Actualizar el campo 'apellidos'    // Actualizar el campo 'email'
+          clientModels: {
+            telefono,
+            cc
+          }
+        };
+
+        // Guardar el nuevo objeto actualizado en localStorage
+        localStorage.setItem('user', JSON.stringify(newUser));
+
+        navigate('/HomeClient'); // Redirige a la página principal después de la actualización
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.");
+      });
   };
-
-  // Llama al servicio para actualizar el usuario
-  ClienteService.updateClient(userId, updatedUser)
-    .then((response) => {
-      console.log(response.data);
-
-      // Actualizar el objeto user en localStorage con los datos actualizados
-      const newUser = {
-        ...user, // Mantiene cualquier dato previo en el objeto 'user' que no se esté actualizando
-        nombres,  // Actualizar el campo 'nombres' con los nuevos datos
-        apellidos, // Actualizar el campo 'apellidos'    // Actualizar el campo 'email'
-        clientModels: {
-          telefono,
-          cc
-        }
-      };
-
-      // Guardar el nuevo objeto actualizado en localStorage
-      localStorage.setItem('user', JSON.stringify(newUser));
-
-      navigate('/HomeClient'); // Redirige a la página principal después de la actualización
-    })
-    .catch((error) => {
-      console.log(error);
-      setError("Ocurrió un error al actualizar el usuario. Inténtalo de nuevo.");
-    });
-};
   // Función para validar la contraseña
 
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
@@ -221,20 +223,24 @@ const saveUser = (e) => {
 
         {/* Modal para ingresar la contraseña */}
         {showModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Validar contraseña</h3>
-              <input
-                type="text"
-                placeholder="Ingresa tu contraseña"
-                value={modalPassword || ''}
-                onChange={(e) => setModalPassword(e.target.value)}
-              />
-              {passwordError && <p>{passwordError}</p>}
-              <button onClick={validatePasswordAndUpdate}>Confirmar</button>
-              <button onClick={() => setShowModal(false)}>Cancelar</button>
+          <ModalExitoso>
+            <h3 className='tittle_modal'>Validar contraseña</h3>
+            
+            <input
+            className='input_password'
+              type="password"
+              placeholder="Ingresa tu contraseña"
+              value={modalPassword || ''}
+              onChange={(e) => setModalPassword(e.target.value)}
+            />
+            {passwordError && <p>{passwordError}</p>}
+            <div className='container_button' >
+
+            <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+            <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
             </div>
-          </div>
+          </ModalExitoso>
+
         )}
       </main>
     </div>
