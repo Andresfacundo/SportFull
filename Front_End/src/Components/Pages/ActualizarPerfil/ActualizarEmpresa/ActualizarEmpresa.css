@@ -1,0 +1,153 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    overflow-x: hidden;
+}
+.tittle_update{
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.tittle_optional_data{
+
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    
+}
+
+main{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilos para el contenedor del modal (fondo oscuro) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que el modal esté por encima del resto del contenido */
+  }
+  
+  /* Estilos para el contenido del modal */
+  .modal-content {
+    background-color: white; /* Fondo blanco para el contenido del modal */
+    padding: 20px;
+    border-radius: 10px;
+    color: #07954A;
+    width: 90%;
+    max-width: 400px; /* Ancho máximo para que no sea demasiado grande */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra alrededor del modal */
+    text-align: center;
+    position: relative; /* Para la posición del botón de cerrar */
+  }
+  
+  /* Título del modal */
+  .modal-content h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #07954A;
+
+  }
+  
+  /* Input de contraseña */
+  .modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #d81818;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    color: #07954A;
+
+  }
+  
+  /* Botones del modal */
+  .modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Botón confirmar */
+  .modal-content button:first-of-type {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+
+  }
+  
+  .modal-content button:first-of-type:hover {
+    background-color: #45a049; /* Verde oscuro al pasar el mouse */
+  }
+  
+  /* Botón cancelar */
+  .modal-content button:last-of-type {
+    background-color: #f44336; /* Rojo */
+    color: white;
+  }
+  
+  .modal-content button:last-of-type:hover {
+    background-color: #e53935; /* Rojo oscuro al pasar el mouse */
+  }
+  
+  /* Estilo para el mensaje de error */
+  .modal-content .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
+  .changePassword{
+    color: #e7e7e7;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    font-weight: 200;
+  }
+  
+  .form_input:disabled + .form_text {
+    color: #e7e7e7;
+    cursor: not-allowed;
+    font-size: 1.4rem;
+    background-color: #079549a1;
+    border-style: none;
+    padding: 0 1.5rem 0 1.5rem;
+    display: flex;
+    justify-content: center;
+    width: 80%;
+}
+  .form_input:disabled  {
+    color: #e7e7e7;
+    cursor: not-allowed;
+    font-size: 1.3rem;
+    border-style: none;
+    margin-top: 1rem;
+    text-align: center;
+  }  
+
+  .form_text:disabled{
+    width: 80%;
+  }
+
+  .form-update{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }

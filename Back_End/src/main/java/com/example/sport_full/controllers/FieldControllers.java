@@ -47,8 +47,15 @@ public class FieldControllers {
         }
     }
 
-    @GetMapping("/list/{empresaId}")
-    public ResponseEntity<?> listFields(@PathVariable Long empresaId) {
+
+    @GetMapping("/findAll")
+    public List<FieldModels> findAll() {
+        return fieldRepository.findAll();
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
+
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -106,11 +113,5 @@ public class FieldControllers {
         } else {
             return new ResponseEntity<>("Campo o empresa no encontrados", HttpStatus.NOT_FOUND);
         }
-    }
-
-    @GetMapping("/find-all")
-    public ResponseEntity<List<FieldModels>> findAllFields() {
-        List<FieldModels> fields = fieldRepository.findAll();
-        return new ResponseEntity<>(fields, HttpStatus.OK);
     }
 }

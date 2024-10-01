@@ -2,6 +2,8 @@ package com.example.sport_full.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "canchas-sinteticas")
 public class FieldModels {
@@ -22,6 +24,9 @@ public class FieldModels {
     @ManyToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private AdminModels adminModels;
+
+    @OneToMany(mappedBy = "fieldModels")
+    private List<ReservationsModels> reservations;
 
     // Getters y Setters
 
