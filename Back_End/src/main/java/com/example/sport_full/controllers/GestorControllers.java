@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -47,6 +48,11 @@ public class GestorControllers {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/find-all")
+    public List<GestorModels> findAll() {
+        return igestorRepository.findAll();
     }
 
     @PutMapping("/{id}")

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
@@ -30,6 +31,12 @@ public class UserModels implements Serializable {
     @Column(nullable = false)
     private String tipoUsuario;
 
+    @Column(name = "fecha_inhabilitacion")
+    private LocalDateTime fechaInhabilitacion;
+
+    @Column(name = "tiempo_limite_reactivacion")
+    private long tiempoLimiteReactivacion = 30;
+
     // Relación opcional con ClientModels
     @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
     private ClientModels clientModels;
@@ -46,6 +53,21 @@ public class UserModels implements Serializable {
 
 
     // Getters y Setters
+    public LocalDateTime getFechaInhabilitacion() {
+        return fechaInhabilitacion;
+    }
+
+    public void setFechaInhabilitacion(LocalDateTime fechaInhabilitacion) {
+        this.fechaInhabilitacion = fechaInhabilitacion;
+    }
+
+    public long getTiempoLimiteReactivacion() {
+        return tiempoLimiteReactivacion;
+    }
+
+    public void setTiempoLimiteReactivacion(long tiempoLimiteReactivacion) {
+        this.tiempoLimiteReactivacion = tiempoLimiteReactivacion;
+    }
 
     public long getId() {
         return id;
@@ -119,6 +141,7 @@ public class UserModels implements Serializable {
         this.estadoCuenta = estadoCuenta;
     }
 
+
     public boolean isEmailVerified() {
         return emailVerified;
     }
@@ -134,4 +157,5 @@ public class UserModels implements Serializable {
     public void setVerificationToken(String verificationToken) {
         this.verificationToken = verificationToken;
     }
+
 }

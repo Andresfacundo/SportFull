@@ -26,6 +26,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/auth")
 public class UserControllers {
+
   private final IUserRepository userRepository;
   private final IClientRepository clientRepository;
   private final ICompanyRepository companyRepository;
@@ -53,13 +54,14 @@ public class UserControllers {
 
   @PostMapping("/register")
   public ResponseEntity<?> registry(@RequestBody UserModels userModels) {
-    try {
-      // Validaciones del usuario
-      userValidations.validate(userModels);
+      try {
+          // Validaciones del usuario
+          userValidations.validate(userModels);
 
-      // Encriptar la contraseña
-      String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
-      userModels.setContraseña(hashedPassword);
+          // Encriptar la contraseña
+          String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
+          userModels.setContraseña(hashedPassword);
+
 
       // Generar el token de verificación de correo electrónico
       String verificationToken = UUID.randomUUID().toString();
@@ -90,6 +92,7 @@ public class UserControllers {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
     }
   }
+
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
     // Validar que el email y la contraseña no estén vacíos
@@ -126,7 +129,6 @@ public class UserControllers {
       return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
     }
   }
-
   @GetMapping("/verify")
   public ResponseEntity<?> verifyEmail(@RequestParam String token) {
     Optional<UserModels> userOptional = userRepository.findByVerificationToken(token);
@@ -141,3 +143,4 @@ public class UserControllers {
 
 
 }
+
