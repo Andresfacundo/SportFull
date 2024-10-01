@@ -1,7 +1,6 @@
 package com.example.sport_full.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
@@ -18,7 +17,10 @@ public class UserModels implements Serializable {
     private int id;
 
     @Column(nullable = false)
-    private String nombreCompleto;
+    private String nombres;
+
+    @Column(nullable = false)
+    private String apellidos;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -45,6 +47,11 @@ public class UserModels implements Serializable {
 
     private boolean estadoCuenta;
 
+    private boolean emailVerified = false;
+
+    private String verificationToken;  // Campo para el token de verificación
+
+
     // Getters y Setters
     public LocalDateTime getFechaInhabilitacion() {
         return fechaInhabilitacion;
@@ -70,12 +77,20 @@ public class UserModels implements Serializable {
         this.id = id;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+    public void setNombres(String nombreCompleto) {
+        this.nombres = nombreCompleto;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getEmail() {
@@ -124,6 +139,23 @@ public class UserModels implements Serializable {
 
     public void setEstadoCuenta(boolean estadoCuenta) {
         this.estadoCuenta = estadoCuenta;
+    }
+
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
 }
