@@ -14,7 +14,7 @@
 
 .logo {
     width: 9rem;
-    margin: 3rem 0 3rem 0;
+    margin: 6rem 0 3rem 0;
 }
 
 .title_signUp {
@@ -160,13 +160,13 @@
     background-color: #073b4c;
     transform: translateY(-145%) scale(1.1);
     padding: 0 0.5rem 0 0.5rem;
+    
 }
 
 .form_text {
     z-index: 100;
     width: max-content;
     height: max-content;
-    margin-left: 1rem;
     margin-top: 1rem;
     display: flex;
     position: relative;
@@ -175,6 +175,7 @@
     align-items: center;
     transform-origin: right center;
     transition: transform .3s;
+    border-radius: 10px;
 }
 
 .form {
@@ -192,3 +193,4 @@
     padding: 0.5rem;
     border-radius: 10px;
 }
+
