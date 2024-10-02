@@ -11,7 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -30,7 +34,8 @@ public class AdminServices {
         AdminModels existingAdmin = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")).getAdminModels();
         UserModels existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
 
-        existingUser.setNombreCompleto(user.getNombreCompleto());
+        existingUser.setNombres(user.getNombres());
+        existingUser.setApellidos(user.getApellidos());
         existingUser.setEmail(user.getEmail());
         if (user.getContraseña() == null ||
                 !user.getContraseña().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
@@ -61,12 +66,34 @@ public class AdminServices {
         Optional<UserModels> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             UserModels admin = optionalUser.get();
-            admin.setEstadoCuenta(true);
+            admin.setEstadoCuenta(true); // Cambiar a inactivo
+            admin.setFechaInhabilitacion(LocalDateTime.now()); // Guardar la fecha de inhabilitación
             userRepository.save(admin);
-            return "Admin con id " + id + " ha sido eliminado";
 
+            // Programar la eliminación del usuario después del tiempo límite
+            scheduleAccountDeletion(admin);
+
+            return "Admin con id " + id + " ha sido inhabilitado. Tiene 30 segundos para reactivar su cuenta.";
         } else {
             return "Admin con id " + id + " no existe";
         }
+    }
+
+    // Método para programar la eliminación del usuario si no reactiva la cuenta
+    private void scheduleAccountDeletion(UserModels user) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        long delay = user.getTiempoLimiteReactivacion(); // Tiempo en minutos
+
+        // Programar la tarea para ejecutar después de 'delay' minutos
+        scheduler.schedule(() -> {
+            Optional<UserModels> optionalUser = userRepository.findById(user.getId());
+            if (optionalUser.isPresent()) {
+                UserModels currentUser = optionalUser.get();
+                // Verificar si la cuenta sigue inactiva
+                if (currentUser.isEstadoCuenta()) { // Si sigue inactivo (TRUE)
+                    userRepository.delete(currentUser); // Eliminar la cuenta
+                }
+            }
+        }, delay, TimeUnit.SECONDS);
     }
 }

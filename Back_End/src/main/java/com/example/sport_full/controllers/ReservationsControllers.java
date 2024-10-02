@@ -1,14 +1,9 @@
 package com.example.sport_full.controllers;
 
-import com.example.sport_full.models.FieldModels;
-import com.example.sport_full.models.ReservationsModels;
-import com.example.sport_full.models.UserModels;
-import com.example.sport_full.repositories.ICompanyRepository;
-import com.example.sport_full.repositories.IFieldRepository;
-import com.example.sport_full.repositories.IReservationsRepository;
-import com.example.sport_full.services.AdminServices;
-import com.example.sport_full.services.ConfirmEmailReservationServices;
-import com.example.sport_full.services.ReservationsServices;
+
+import com.example.sport_full.models.*;
+import com.example.sport_full.repositories.*;
+import com.example.sport_full.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,12 +44,13 @@ public class ReservationsControllers {
             Optional<UserModels> admin = adminServices.getUser(adminId);
             Optional<FieldModels> field = fieldRepository.findById(fieldId);
 
+
             if (admin.isPresent() && field.isPresent()) {
-                UserModels user = admin.get();
                 FieldModels fieldModel = field.get();
 
+
                 // Asignar el administrador y la cancha a la reserva
-                reservationsModels.setAdminModels(user.getAdminModels());
+                reservationsModels.setAdminModels(fieldModel.getAdminModels());
                 reservationsModels.setFieldModels(fieldModel);
 
                 // Crear la nueva reserva
@@ -64,11 +60,11 @@ public class ReservationsControllers {
                 String subject = "Confirmación de tu reserva";
                 confirmEmailReservationServices.sendReservationConfirmation(userEmail, subject, newReservation);
 
+
                 return ResponseEntity.ok(newReservation);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }

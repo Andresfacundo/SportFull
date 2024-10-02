@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminControllers {
@@ -38,6 +40,80 @@ public class AdminControllers {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // PATCH actualización parcial
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<UserModels> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
+        Optional<UserModels> existingUserOpt = userRepository.findById(userId);
+
+        if (existingUserOpt.isPresent()) {
+            UserModels existingUser = existingUserOpt.get();
+
+            // Actualiza solo los campos de UserModels que vienen en la solicitud
+            if (userModels.getNombres() != null) {
+                existingUser.setNombres(userModels.getNombres());
+            }
+
+            if (userModels.getApellidos() != null) {
+                existingUser.setApellidos(userModels.getApellidos());
+            }
+
+            if (userModels.getEmail() != null) {
+                existingUser.setEmail(userModels.getEmail());
+            }
+
+            // Encripta la contraseña si se envía una nueva
+            if (userModels.getContraseña() != null) {
+                String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
+                existingUser.setContraseña(hashedPassword);
+            }
+
+            // Actualiza solo los campos de AdminModels que vienen en la solicitud
+                if (userModels.getAdminModels() != null) {
+                    AdminModels adminModels = userModels.getAdminModels();
+
+                    if (adminModels.getNIT() != null) {
+                        existingUser.getAdminModels().setNIT(adminModels.getNIT());
+                    }
+
+                    if (adminModels.getNombreEmpresa() != null) {
+                        existingUser.getAdminModels().setNombreEmpresa(adminModels.getNombreEmpresa());
+                    }
+
+                    if (adminModels.getTelefonoEmpresa() != null) {
+                        existingUser.getAdminModels().setTelefonoEmpresa(adminModels.getTelefonoEmpresa());
+                    }
+
+                    if (adminModels.getEmailEmpresa() != null) {
+                        existingUser.getAdminModels().setEmailEmpresa(adminModels.getEmailEmpresa());
+                    }
+
+                    if (adminModels.getDireccionEmpresa() != null) {
+                        existingUser.getAdminModels().setDireccionEmpresa(adminModels.getDireccionEmpresa());
+                    }
+
+                    if (adminModels.getCCpropietario() != null) {
+                        existingUser.getAdminModels().setCCpropietario(adminModels.getCCpropietario());
+
+                    }
+
+                    if (adminModels.getTelefonoPropietario() != null) {
+                        existingUser.getAdminModels().setTelefonoPropietario(adminModels.getTelefonoPropietario());
+                    }
+
+                    if (adminModels.getEmailPropietario() != null) {
+                        existingUser.getAdminModels().setEmailPropietario(adminModels.getEmailPropietario());
+                    }
+
+                }
+            // Guarda los cambios en la base de datos
+            userRepository.save(existingUser);
+            return ResponseEntity.ok(existingUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @GetMapping("/find-all")
     public List<AdminModels> findAll() {

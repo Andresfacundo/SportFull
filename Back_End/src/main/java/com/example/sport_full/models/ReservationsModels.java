@@ -20,6 +20,10 @@ public class ReservationsModels {
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private AdminModels adminModels;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserModels userModels; // Nueva relación para soporte de reservas por usuarios
+
     @Column(nullable = false, unique = true)
     private LocalDateTime fechaHoraInicio;
 
@@ -114,5 +118,13 @@ public class ReservationsModels {
 
     public void setEstadoReserva(ReservationsModels.estadoReserva estadoReserva) {
         this.estadoReserva = estadoReserva;
+    }
+
+    public UserModels getUserModels() {
+        return userModels;
+    }
+
+    public void setUserModels(UserModels userModels) {
+        this.userModels = userModels;
     }
 }
