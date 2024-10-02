@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 
 @Service
-public class EmailService {
+public class ConfirmEmailReservationServices {
     @Autowired
     private JavaMailSender mailSender;
 

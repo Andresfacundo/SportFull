@@ -7,7 +7,7 @@ import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.repositories.IFieldRepository;
 import com.example.sport_full.repositories.IReservationsRepository;
 import com.example.sport_full.services.AdminServices;
-import com.example.sport_full.services.EmailService;
+import com.example.sport_full.services.ConfirmEmailReservationServices;
 import com.example.sport_full.services.ReservationsServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class ReservationsControllers {
     AdminServices adminServices;
 
     @Autowired
-    EmailService emailService;
+    ConfirmEmailReservationServices confirmEmailReservationServices;
 
     @PostMapping("/create")
     public ResponseEntity<ReservationsModels> create(@RequestBody ReservationsModels reservationsModels,
@@ -62,7 +62,7 @@ public class ReservationsControllers {
 
                 // Enviar el correo de confirmación al usuario
                 String subject = "Confirmación de tu reserva";
-                emailService.sendReservationConfirmation(userEmail, subject, newReservation);
+                confirmEmailReservationServices.sendReservationConfirmation(userEmail, subject, newReservation);
 
                 return ResponseEntity.ok(newReservation);
             } else {
