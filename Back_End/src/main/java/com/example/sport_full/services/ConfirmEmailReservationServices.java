@@ -16,7 +16,7 @@ public class ConfirmEmailReservationServices {
 
     public void sendReservationConfirmation(String to, String subject, ReservationsModels reservation) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("nicog32f@gmail.com");
+        message.setFrom("procanchasarmeniapca@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
 
