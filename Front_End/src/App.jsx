@@ -40,7 +40,7 @@ function App() {
       <Route path='/AdvancedConfiguration' element={<AdvancedConfiguration />} />
       <Route path='/ChangePassword' element={<ChangePassword />} />
       <Route path='/PaymentMethod' element={<PaymentMethod />} />
-      <Route path='/VerifyEmail' element={<VerifyEmail />} />
+      <Route path='/auth/verify' element={<VerifyEmail />} />
 
 +
 ++

@@ -41,14 +41,15 @@ class ClienteService {
     }
 
     //verificar email
-    verifyEmail = (token) => {
-        return axios.get(`${API_URL}/auth/verify-email?token=${token}`);
+    verifyEmail = (verificationToken) => {
+        return axios.get(`http://localhost:8080/auth/verify?token=${verificationToken}`);
     };
 
-    // Método para validar la contraseña
-    validatePassword(id, data) {
-        return axios.post(`http://localhost:8080/security?idUser=${id}`, data);
+    // Método para verificar el correo electrónico usando el token
+    verifyEmail(token) {
+        return axios.post(`http://localhost:8080/verify-email?token=${token}`);
     }
+
 }
 
 export default new ClienteService();
