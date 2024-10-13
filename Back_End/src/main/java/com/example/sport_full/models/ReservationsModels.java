@@ -33,6 +33,9 @@ public class ReservationsModels {
     @Column(nullable = false)
     private LocalDate fechaPago;
 
+    @Column(nullable = false)
+    private String userEmail;
+
 
     @Enumerated(EnumType.STRING)
     private estadoReserva estadoReserva;
@@ -126,5 +129,13 @@ public class ReservationsModels {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

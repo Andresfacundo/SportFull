@@ -26,6 +26,12 @@ public class ReservationsControllers {
     IFieldRepository fieldRepository;
 
     @Autowired
+    IUserRepository userRepository;
+
+    @Autowired
+    UserServices userServices;
+
+    @Autowired
     ICompanyRepository companyRepository;
 
     @Autowired
@@ -60,6 +66,41 @@ public class ReservationsControllers {
                 String subject = "Confirmación de tu reserva";
                 confirmEmailReservationServices.sendReservationConfirmation(userEmail, subject, newReservation);
 
+
+                return ResponseEntity.ok(newReservation);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/createReservation")
+    public ResponseEntity<ReservationsModels> createReservation(@RequestBody ReservationsModels reservationsModels,
+                                                                @RequestParam Long fieldId,
+                                                                @RequestParam Long clientId) {
+        try {
+            // Obtener los modelos de cliente y cancha
+            Optional<UserModels> client = userServices.getUser(clientId);
+            Optional<FieldModels> field = fieldRepository.findById(fieldId);
+
+            if (client.isPresent() && field.isPresent()) {
+                FieldModels fieldModel = field.get();
+                UserModels userModel = client.get();
+
+                // Asignar el cliente, la cancha y el estado de la reserva a la reserva
+                reservationsModels.setFieldModels(fieldModel);
+                reservationsModels.setUserModels(userModel);
+                reservationsModels.setEstadoReserva(ReservationsModels.estadoReserva.PENDIENTE); // Asignar estado por defecto
+                reservationsModels.setCostoTotal(reservationsModels.getCostoHora() * 2); // Ejemplo para calcular el costo total (2 horas)
+
+                // Crear la nueva reserva
+                ReservationsModels newReservation = reservationsServices.createReservation(reservationsModels);
+
+                // Enviar el correo de confirmación al usuario
+                String subject = "Confirmación de tu reserva";
+                confirmEmailReservationServices.sendReservationConfirmation(reservationsModels.getUserEmail(), subject, newReservation);
 
                 return ResponseEntity.ok(newReservation);
             } else {
