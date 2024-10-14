@@ -1,0 +1,42 @@
+.ContainerF {
+    width: 21rem;
+    height: 21rem;
+    background-color: #073b4c;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    position: relative;         
+}
+
+.continuarF{
+    color: white;
+    text-decoration: none;
+    margin: 2rem auto;
+    display: block;
+    background-color: #8B1E1E;
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
+    border-radius: 15px;
+    width: max-content;
+    box-shadow: 0 0 10px 2px rgb(255, 255, 255);
+    
+}
+
+.imgFail {    
+    position: absolute;
+    background-color: #8B1E1E;
+    padding: 1rem;
+    border-radius: 50%;
+    width: 9rem;
+    height: 9rem;
+    top: -25%;
+    left: 30%;
+    box-shadow: 0 0px 2px 6px rgba(101, 49, 49, 0.2), 0 0 2px 16px rgba(105, 28, 13, 0.4),0  0 2px 24px rgba(231, 30, 30, 0.5);
+}
+
+
+.tituloF {
+    padding-top: 7rem;
+    font-size: 2rem;
+    text-shadow: 0 0 5px  red;
+}
