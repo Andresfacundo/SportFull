@@ -7,6 +7,7 @@ import './Login.css';
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export const Login = () => {
 
           <label className='form_label'>
             <input
-              type='password'
+              type={showPassword ? 'text' : 'password'} // Mostrar u ocultar contraseña
               placeholder=' '
               className='form_input'
               value={contraseña}
@@ -82,6 +83,14 @@ export const Login = () => {
               required
             />
             <span className='form_text'>Contraseña</span>
+            {/* Botón del ojo */}
+            <span 
+              className="password-toggle-icon" 
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '53.3%', zIndex: "1000" }}
+            >
+              <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+            </span>
           </label>
 
           <NavLink className={'recover_password'} to="/recover-password">¿Olvidó su contraseña?</NavLink>
