@@ -37,8 +37,7 @@ public class AdminModels implements Serializable {
     @Column(nullable = true, unique = true)
     private String telefonoPropietario;
 
-    @Column(nullable = true, unique = true)
-    private String emailPropietario;
+
 
     @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id",unique = true)
@@ -112,15 +111,7 @@ public class AdminModels implements Serializable {
     public void setTelefonoPropietario(String telefonoPropietario) {
         this.telefonoPropietario = telefonoPropietario;
     }
-
-    public String getEmailPropietario() {
-        return emailPropietario;
-    }
-
-    public void setEmailPropietario(String emailPropietario) {
-        this.emailPropietario = emailPropietario;
-    }
-
+    
     public UserModels getUserModels() {
         return userModels;
     }
