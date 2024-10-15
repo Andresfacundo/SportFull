@@ -16,11 +16,11 @@ import {SoporteCliente} from './Components/Pages/Soporte/SoporteCliente/SoporteC
 import './App.css'
 import Modal from './Components/UI/Modal/Modal'
 import ModalExitoso from './Components/UI/ModalExitoso/ModalExitoso'
-
-
+import ModalFail from './Components/UI/ModalFallido/ModalFallido'
+import VistaEmpresas from './Components/Pages/VistaEmpresas/VistaEmpresas'
 function App() {
   
-  return (
+  return (  
     
       
    <Routes >
@@ -28,6 +28,8 @@ function App() {
       <Route path='/Guest' element={<Guest />} />
       <Route path='/Login' element={<Login />} />
       <Route path='/SignUp' element={<SignUp />} />
+      <Route path='/fallido' element={<ModalFail />} />
+      <Route path='/VistaEmpresa' element={<VistaEmpresas empresa="La bombonera" titulo="Bombonera" />} />
 
  
 

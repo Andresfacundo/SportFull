@@ -5,7 +5,8 @@
     border-radius: 20px;
     color: white;
     text-align: center;
-    position: relative;         
+    position: relative;  
+    margin: auto;       
 }
 
 .continuarF{
@@ -27,8 +28,8 @@
     background-color: #8B1E1E;
     padding: 1rem;
     border-radius: 50%;
-    width: 9rem;
-    height: 9rem;
+    width: 7rem;
+    height: 7rem;
     top: -25%;
     left: 30%;
     box-shadow: 0 0px 2px 6px rgba(101, 49, 49, 0.2), 0 0 2px 16px rgba(105, 28, 13, 0.4),0  0 2px 24px rgba(231, 30, 30, 0.5);

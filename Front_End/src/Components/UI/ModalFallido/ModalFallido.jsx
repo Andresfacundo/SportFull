@@ -1,6 +1,6 @@
 import React from 'react'
-import './ModalFail.css'
-import imgF from '../../assets/whitex.png'
+import './ModalFallido.css'
+import imgF from '../../../assets/Images/whitex.png'
 
 const ModalFail = () => {
   return (
