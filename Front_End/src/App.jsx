@@ -16,6 +16,7 @@ import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
 import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
+import Services from './Components/UI/FieldServices/FieldServices'
 
 import './App.css'
 
@@ -41,6 +42,7 @@ function App() {
       <Route path='/ChangePassword' element={<ChangePassword />} />
       <Route path='/PaymentMethod' element={<PaymentMethod />} />
       <Route path='/VerifyEmail' element={<VerifyEmail />} />
+      <Route path='/FieldServices' element={<Services />} />
 
 +
 ++
