@@ -13,6 +13,8 @@ export const SignUp = () => {
   const [contraseña, setContraseña] = useState('');
   const [confirmacionContraseña, setConfirmacionContraseña] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Controla la visibilidad de la contraseña
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Controla la visibilidad de la confirmación
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
 
@@ -97,9 +99,10 @@ export const SignUp = () => {
             <span className='form_text'>Correo</span>
           </label>
 
+          {/* Campo de contraseña con icono show/hide condicional */}
           <label className='form_label'>
             <input
-              type='password'
+              type={showPassword ? 'text' : 'password'}
               placeholder=' '
               className='form_input'
               value={contraseña}
@@ -107,11 +110,23 @@ export const SignUp = () => {
               required
             />
             <span className='form_text'>Contraseña</span>
+            {/* Mostrar el icono solo si hay algo escrito */}
+            {contraseña && (
+              <span 
+                className="password-toggle-icon" 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '78%', zIndex: '1000'}}
+              >
+                <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+              </span>
+            )}
+            
           </label>
 
+          {/* Campo de confirmación de contraseña con icono show/hide condicional */}
           <label className='form_label'>
             <input
-              type='password'
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder=' '
               className='form_input'
               value={confirmacionContraseña}  
@@ -119,6 +134,16 @@ export const SignUp = () => {
               required
             />
             <span className='form_text'>Confirmar Contraseña</span>
+            {/* Mostrar el icono solo si hay algo escrito */}
+            {confirmacionContraseña && (
+              <span 
+                className="password-toggle-icon" 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '87.6%', zIndex:'1000'}}
+              >
+                <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+              </span>
+            )}
           </label>
 
           <div className="account-type-container">

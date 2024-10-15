@@ -27,7 +27,6 @@ export const ActualizarCliente = () => {
   const [error, setError] = useState('');
   const [isEditable, setIsEditable] = useState(false);
 
-
   const navigate = useNavigate();
   // useEffect para cargar los datos del usuario al montar el componente
   useEffect(() => {
@@ -94,6 +93,7 @@ export const ActualizarCliente = () => {
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
   const [passwordError, setPasswordError] = useState(''); // Mensaje de error del modal
   const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
 
   const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario del localStorage
   const userId = user.id; // Obtener el ID del usuario
@@ -228,11 +228,20 @@ export const ActualizarCliente = () => {
             
             <input
             className='input_password'
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="Ingresa tu contraseña"
               value={modalPassword || ''}
               onChange={(e) => setModalPassword(e.target.value)}
             />
+            {modalPassword && (
+                <span
+                  className='password-toggle-icon'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '52.3%', zIndex: '1000'}}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
             {passwordError && <p>{passwordError}</p>}
             <div className='container_button' >
 
