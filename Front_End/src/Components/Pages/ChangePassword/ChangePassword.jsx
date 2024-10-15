@@ -90,6 +90,29 @@ export const ChangePassword = () => {
               console.log(error);
               setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
             });
+    }else if (tipoUsuario==='GESTOR') {
+            // Llama al servicio para actualizar el usuario
+            ClienteService.updateGestor(userId, updatedUser)
+            .then((response) => {
+              console.log(response.data);
+    
+              // Actualiza el objeto user en localStorage con la nueva contraseña
+              const newUser = {
+                ...user,
+                
+                contraseña
+              };
+    
+              // Guardar el objeto actualizado en localStorage
+              localStorage.setItem('user', JSON.stringify(newUser));
+    
+              // Redirigir a la página de actualización de cliente
+              navigate('/ActualizarGestor');
+            })
+            .catch((error) => {
+              console.log(error);
+              setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
+            });
     }
 
   };

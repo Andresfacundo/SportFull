@@ -40,6 +40,16 @@ class ClienteService {
         });
     }
 
+    //Actualizar datos del Gestor
+    updateGestor(id, updatedUser) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.patch(`http://localhost:8080/admin/gestor/update/${id}`, updatedUser, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
+            }
+        });
+    }
+
     //verificar email
     verifyEmail = (token) => {
         return axios.get(`${API_URL}/auth/verify-email?token=${token}`);
