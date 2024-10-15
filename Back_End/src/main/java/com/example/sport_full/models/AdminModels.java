@@ -111,7 +111,7 @@ public class AdminModels implements Serializable {
     public void setTelefonoPropietario(String telefonoPropietario) {
         this.telefonoPropietario = telefonoPropietario;
     }
-    
+
     public UserModels getUserModels() {
         return userModels;
     }

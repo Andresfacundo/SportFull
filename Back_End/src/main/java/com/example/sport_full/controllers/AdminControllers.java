@@ -102,10 +102,6 @@ public class AdminControllers {
                         existingUser.getAdminModels().setTelefonoPropietario(adminModels.getTelefonoPropietario());
                     }
 
-                    if (adminModels.getEmailPropietario() != null) {
-                        existingUser.getAdminModels().setEmailPropietario(adminModels.getEmailPropietario());
-                    }
-
                 }
             // Guarda los cambios en la base de datos
             userRepository.save(existingUser);
