@@ -225,23 +225,24 @@ export const ActualizarCliente = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
-            
-            <input
-            className='input_password'
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Ingresa tu contraseña"
-              value={modalPassword || ''}
-              onChange={(e) => setModalPassword(e.target.value)}
-            />
-            {modalPassword && (
+            <div className='password_container'>
+              <input
+                className='input_password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Ingresa tu contraseña'
+                value={modalPassword || ''}
+                onChange={(e) => setModalPassword(e.target.value)}
+              />
+              {modalPassword && (
                 <span
                   className='password-toggle-icon'
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '52.3%', zIndex: '1000'}}
+                  style={{ cursor: 'pointer' }}
                 >
                   <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
                 </span>
               )}
+              </div>
             {passwordError && <p>{passwordError}</p>}
             <div className='container_button' >
 
