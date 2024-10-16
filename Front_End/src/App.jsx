@@ -21,6 +21,7 @@ import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
 import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
+import Services from './Components/UI/FieldServices/FieldServices'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
 
@@ -49,9 +50,11 @@ function App() {
       <Route path='/AdvancedConfiguration' element={<AdvancedConfiguration />} />
       <Route path='/ChangePassword' element={<ChangePassword />} />
       <Route path='/PaymentMethod' element={<PaymentMethod />} />
+      <Route path='/FieldServices' element={<Services />} />
       <Route path='/auth/verify' element={<VerifyEmail />} />
       <Route path='/GestionReservas' element={<GestionReservas />} />
       <Route path='/StatusAccount' element={<StatusAccount />} />
+
     </Routes>
   )
 }
