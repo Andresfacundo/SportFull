@@ -1,9 +1,9 @@
 package com.example.sport_full.controllers;
 
+
 import com.example.sport_full.models.*;
 import com.example.sport_full.repositories.*;
-import com.example.sport_full.services.AdminServices;
-import com.example.sport_full.services.ReservationsServices;
+import com.example.sport_full.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,29 +32,35 @@ public class ReservationsControllers {
     AdminServices adminServices;
 
     @Autowired
-    IGestorRepository gestorRepository;
-
-    @Autowired
-    IClientRepository clientRepository;
+    ConfirmEmailReservationServices confirmEmailReservationServices;
 
     @PostMapping("/create")
     public ResponseEntity<ReservationsModels> create(@RequestBody ReservationsModels reservationsModels,
-                                                     @RequestParam Long fielId,
-                                                     @RequestParam Long gestorId) {
+                                                     @RequestParam Long fieldId,
+                                                     @RequestParam Long adminId,
+                                                     @RequestParam String userEmail) {
         try {
-            // Verificar si el usuario es un Gestor válido
-            Optional<GestorModels> gestor = gestorRepository.findById(gestorId);
-            Optional<FieldModels> field = fieldRepository.findById(fielId);
+            // Obtener los modelos de administrador y cancha
+            Optional<UserModels> admin = adminServices.getUser(adminId);
+            Optional<FieldModels> field = fieldRepository.findById(fieldId);
 
-            if (gestor.isPresent() && field.isPresent()) {
+
+            if (admin.isPresent() && field.isPresent()) {
                 FieldModels fieldModel = field.get();
 
-                // Asignar el gestor, campo y usuario a la reserva
-                reservationsModels.setAdminModels(gestor.get().getAdminempresa());
+
+                // Asignar el administrador y la cancha a la reserva
+                reservationsModels.setAdminModels(fieldModel.getAdminModels());
                 reservationsModels.setFieldModels(fieldModel);
 
-                // Crear la reserva
+                // Crear la nueva reserva
                 ReservationsModels newReservation = reservationsServices.createReservation(reservationsModels);
+
+                // Enviar el correo de confirmación al usuario
+                String subject = "Confirmación de tu reserva";
+                confirmEmailReservationServices.sendReservationConfirmation(userEmail, subject, newReservation);
+
+
                 return ResponseEntity.ok(newReservation);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
