@@ -16,6 +16,7 @@ import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
 import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
+import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
 
 import './App.css'
 
@@ -41,12 +42,8 @@ function App() {
       <Route path='/ChangePassword' element={<ChangePassword />} />
       <Route path='/PaymentMethod' element={<PaymentMethod />} />
       <Route path='/auth/verify' element={<VerifyEmail />} />
-
-+
-++
-
-
-
+      <Route path='/GestionReservas' element={<GestionReservas />} />
+      
     </Routes>
   )
 }
