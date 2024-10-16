@@ -17,6 +17,7 @@ import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword
 import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
+import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
 
 import './App.css'
 
@@ -43,7 +44,7 @@ function App() {
       <Route path='/PaymentMethod' element={<PaymentMethod />} />
       <Route path='/auth/verify' element={<VerifyEmail />} />
       <Route path='/GestionReservas' element={<GestionReservas />} />
-      
+      <Route path='/StatusAccount' element={<StatusAccount />} />
     </Routes>
   )
 }

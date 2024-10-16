@@ -1,5 +1,6 @@
 package com.example.sport_full.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -23,6 +24,7 @@ public class GestorModels implements Serializable {
     private AdminModels adminempresa;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private UserModels userModels;  // Relación con UserModels
 

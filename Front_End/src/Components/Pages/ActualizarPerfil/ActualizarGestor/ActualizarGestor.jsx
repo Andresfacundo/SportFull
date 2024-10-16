@@ -4,7 +4,7 @@ import { Header } from '../../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
-import ModalExitoso  from '../../../UI/ModalExitoso/ModalExitoso'
+import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso'
 
 
 export const ActualizarGestor = () => {
@@ -22,7 +22,7 @@ export const ActualizarGestor = () => {
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
-  const [cc, setCedula] = useState(null);
+  const [ccgestor, setCcgestor] = useState(null);
   const [telefono, setTelefono] = useState(null);
   const [error, setError] = useState('');
   const [isEditable, setIsEditable] = useState(false);
@@ -39,8 +39,8 @@ export const ActualizarGestor = () => {
       setNombres(user.nombres || '');
       setApellidos(user.apellidos || '');
       setEmail(user.email || '');
-      setCedula(user.clientModels?.cc || ''); // Accede al campo cc dentro de clientModels
-      setTelefono(user.clientModels?.telefono || ''); // Accede al campo telefono dentro de clientModels
+      setCcgestor(user.gestorModels?.ccgestor || ''); // Accede al campo cc dentro de clientModels
+      setTelefono(user.gestorModels?.telefono || ''); // Accede al campo telefono dentro de clientModels
     }
   }, []);
 
@@ -55,34 +55,34 @@ export const ActualizarGestor = () => {
 
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
-      nombres,
-      apellidos,
-      clientModels: {
-        telefono,
-        cc
+
+      gestorModels: {
+        ...ccgestor,
+
+        telefono
       }
     };
 
     // Llama al servicio para actualizar el usuario
-    ClienteService.updateClient(userId, updatedUser)
+    ClienteService.updateGestor(userId, updatedUser)
       .then((response) => {
         console.log(response.data);
 
         // Actualizar el objeto user en localStorage con los datos actualizados
         const newUser = {
-          ...user, // Mantiene cualquier dato previo en el objeto 'user' que no se esté actualizando
-          nombres,  // Actualizar el campo 'nombres' con los nuevos datos
-          apellidos, // Actualizar el campo 'apellidos'    // Actualizar el campo 'email'
-          clientModels: {
-            telefono,
-            cc
+          ...user,
+
+          gestorModels:{
+            ...user.gestorModels,
+            telefono
           }
+          
         };
 
         // Guardar el nuevo objeto actualizado en localStorage
         localStorage.setItem('user', JSON.stringify(newUser));
 
-        navigate('/HomeClient'); // Redirige a la página principal después de la actualización
+        navigate('/HomeGestor'); // Redirige a la página principal después de la actualización
       })
       .catch((error) => {
         console.log(error);
@@ -143,9 +143,7 @@ export const ActualizarGestor = () => {
               placeholder=' '
               className='form_input'
               value={nombres || ''}
-              onChange={(e) => setNombres(e.target.value)}
-              disabled={!isEditable}
-            />
+              disabled={true}            />
             <span className='form_text'>Nombres</span>
           </label>
 
@@ -155,9 +153,7 @@ export const ActualizarGestor = () => {
               placeholder=' '
               className='form_input'
               value={apellidos || ''}
-              onChange={(e) => setApellidos(e.target.value)}
-              disabled={!isEditable}
-            />
+              disabled={true}            />
             <span className='form_text'>Apellidos</span>
           </label>
           <label className='form_label'>
@@ -177,10 +173,8 @@ export const ActualizarGestor = () => {
               type='number'
               placeholder=' '
               className='form_input'
-              value={cc || ''}  // Asignar el estado
-              onChange={(e) => setCedula(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-
+              value={ccgestor || ''}  // Asignar el estado
+              disabled={true}
             />
             <span className='form_text'>Cedula</span>
           </label>
@@ -217,7 +211,7 @@ export const ActualizarGestor = () => {
             {isEditable ? 'Guardar Cambios' : 'Actualizar Perfil'}
           </button>
 
-          <NavLink className='return' to='/HomeClient'>Volver</NavLink>
+          <NavLink className='return' to='/HomeGestor'>Volver</NavLink>
         </form>
 
 
@@ -225,9 +219,9 @@ export const ActualizarGestor = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
-            
+
             <input
-            className='input_password'
+              className='input_password'
               type="password"
               placeholder="Ingresa tu contraseña"
               value={modalPassword || ''}
@@ -236,8 +230,8 @@ export const ActualizarGestor = () => {
             {passwordError && <p>{passwordError}</p>}
             <div className='container_button' >
 
-            <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
-            <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+              <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+              <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
             </div>
           </ModalExitoso>
 
