@@ -101,49 +101,50 @@ export const SignUp = () => {
 
           {/* Campo de contraseña con icono show/hide condicional */}
           <label className='form_label'>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder=' '
-              className='form_input'
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
-              required
-            />
-            <span className='form_text'>Contraseña</span>
-            {/* Mostrar el icono solo si hay algo escrito */}
-            {contraseña && (
-              <span 
-                className="password-toggle-icon" 
-                onClick={() => setShowPassword(!showPassword)}
-                style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '78%', zIndex: '1000'}}
-              >
-                <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-              </span>
-            )}
-            
+            <div className='password-input-container'>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder=' '
+                className='form_input'
+                value={contraseña}
+                onChange={(e) => setContraseña(e.target.value)}
+                required
+              />
+              <span className='form_text'>Contraseña</span>
+              {contraseña && (
+                <span 
+                  className='password-toggle-icon' 
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right:'18px', top: '32%', transform: 'translateY(-50%)' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
+            </div>
           </label>
 
           {/* Campo de confirmación de contraseña con icono show/hide condicional */}
           <label className='form_label'>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              placeholder=' '
-              className='form_input'
-              value={confirmacionContraseña}  
-              onChange={(e) => setConfirmacionContraseña(e.target.value)}  
-              required
-            />
-            <span className='form_text'>Confirmar Contraseña</span>
-            {/* Mostrar el icono solo si hay algo escrito */}
-            {confirmacionContraseña && (
-              <span 
-                className="password-toggle-icon" 
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '87.6%', zIndex:'1000'}}
-              >
-                <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-              </span>
-            )}
+            <div className='password-input-container'>
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder=' '
+                className='form_input'
+                value={confirmacionContraseña}  
+                onChange={(e) => setConfirmacionContraseña(e.target.value)}  
+                required
+              />
+              <span className='form_text'>Confirmar Contraseña</span>
+              {confirmacionContraseña && (
+                <span 
+                  className="password-toggle-icon" 
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right:'18px', top: '32%', transform: 'translateY(-50%)' }}
+                >
+                  <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
+            </div>
           </label>
 
           <div className="account-type-container">
