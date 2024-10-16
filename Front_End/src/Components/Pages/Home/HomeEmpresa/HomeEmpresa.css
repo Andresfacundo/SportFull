@@ -1,0 +1,58 @@
+.shade_ManageFields{
+    width: 62%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.82rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+.shade_ManageReservations{
+    width: 64%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.4rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_ManageEmployees{
+    width: 69%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.6rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+.shade_ManageReports{
+    width: 64%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.3rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_support{
+    width: 41%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.92rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+.main_homeEmpresa{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}

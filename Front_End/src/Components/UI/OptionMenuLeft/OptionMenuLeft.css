@@ -1,0 +1,27 @@
+.menu_options_left {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    position: relative;
+}
+
+.actualizar_perfil_left {
+    width: auto;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #07954A;
+    padding: 0 3rem 0 4rem;
+    text-decoration: none;
+    clip-path: polygon(0 0, 100% 0%, 100% 100%, 9% 100%);
+    font-weight: 400;
+    font-size: clamp(23px, 2vw, 24px);
+        white-space: nowrap;
+}
+.content_option{
+    width: auto;
+    height: auto;
+}

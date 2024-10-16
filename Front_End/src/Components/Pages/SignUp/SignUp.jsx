@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { Header } from '../../Layouts/Header/Header';
-import { Main } from '../../Layouts/Main/Main';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
+import logo from '../../../assets/Images/logo/3.png';
+import ModalExitoso from '../../UI/ModalExitoso/ModalExitoso';
+
 import './SignUp.css';
 
 export const SignUp = () => {
-  const [nombreCompleto, setNombreCompleto] = useState('');
+  const [nombres, setNombres] = useState('');
+  const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
+  const [confirmacionContraseña, setConfirmacionContraseña] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Controla la visibilidad de la contraseña
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Controla la visibilidad de la confirmación
   const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -18,31 +24,40 @@ export const SignUp = () => {
     e.preventDefault();
 
     // Validación básica
-    if (!nombreCompleto || !email || !contraseña || !tipoUsuario) {
-      setError("Todos los campos son obligatorios");
+    if (!nombres || !apellidos || !email || !contraseña || !confirmacionContraseña || !tipoUsuario) {
+      setError('Todos los campos son obligatorios');
       return;
     }
 
-    const user = { nombreCompleto, email, contraseña, tipoUsuario };
+    // Validar que las contraseñas coincidan
+    if (contraseña !== confirmacionContraseña) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    const user = { nombres, apellidos, email, contraseña, tipoUsuario };
 
     ClienteService.createUser(user)
       .then((response) => {
         console.log(response.data);
-        navigate('/Login'); // Redirige al login después del registro exitoso
+        setShowModal(true); // Mostrar el modal tras un registro exitoso
       })
       .catch((error) => {
         console.log(error);
-        setError("Ocurrió un error al registrar el usuario. Inténtalo de nuevo.");
+        setError('Ocurrió un error al registrar el usuario. Inténtalo de nuevo.');
       });
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate('/Login'); // Redirigir a la ruta de login cuando se cierra el modal
   };
 
   return (
     <div className='signUp'>
-      <Header className='header'>
-        <img className='logo' src='/public/3.png' alt='img' />
-      </Header>
+      <img className='logo' src={logo} alt='img' />
 
-      <Main>
+      <main className='main_SignUp'>
         <h1 className='title_signUp'>Registrarse</h1>
 
         {error && <p className="error-message">{error}</p>}
@@ -53,11 +68,23 @@ export const SignUp = () => {
               type='text'
               placeholder=' '
               className='form_input'
-              value={nombreCompleto}
-              onChange={(e) => setNombreCompleto(e.target.value)}
+              value={nombres}
+              onChange={(e) => setNombres(e.target.value)}
               required
             />
-            <span className='form_text'>Nombre Completo</span>
+            <span className='form_text'>Nombres</span>
+          </label>
+
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={apellidos}
+              onChange={(e) => setApellidos(e.target.value)}
+              required
+            />
+            <span className='form_text'>Apellidos</span>
           </label>
 
           <label className='form_label'>
@@ -72,26 +99,52 @@ export const SignUp = () => {
             <span className='form_text'>Correo</span>
           </label>
 
+          {/* Campo de contraseña con icono show/hide condicional */}
           <label className='form_label'>
-            <input
-              type='password'
-              placeholder=' '
-              className='form_input'
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
-              required
-            />
-            <span className='form_text'>Contraseña</span>
+            <div className='password-input-container'>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder=' '
+                className='form_input'
+                value={contraseña}
+                onChange={(e) => setContraseña(e.target.value)}
+                required
+              />
+              <span className='form_text'>Contraseña</span>
+              {contraseña && (
+                <span 
+                  className='password-toggle-icon' 
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right:'18px', top: '32%', transform: 'translateY(-50%)' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
+            </div>
           </label>
 
+          {/* Campo de confirmación de contraseña con icono show/hide condicional */}
           <label className='form_label'>
-            <input
-              type='password'
-              placeholder=' '
-              className='form_input'
-              required
-            />
-            <span className='form_text'>Confirmar Contraseña</span>
+            <div className='password-input-container'>
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder=' '
+                className='form_input'
+                value={confirmacionContraseña}  
+                onChange={(e) => setConfirmacionContraseña(e.target.value)}  
+                required
+              />
+              <span className='form_text'>Confirmar Contraseña</span>
+              {confirmacionContraseña && (
+                <span 
+                  className="password-toggle-icon" 
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right:'18px', top: '32%', transform: 'translateY(-50%)' }}
+                >
+                  <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
+            </div>
           </label>
 
           <div className="account-type-container">
@@ -123,10 +176,21 @@ export const SignUp = () => {
           </div>
 
           <button type="submit" className='register'>Registrarse</button>
-        <NavLink className='return' to='/'>Volver</NavLink> 
+          <NavLink className='return' to='/'>Volver</NavLink>
         </form>
 
-      </Main>
+        {showModal && (
+          <ModalExitoso>
+            <h3 className='tittle_modal'>Gracias por registrarse</h3>
+            <p>
+              Para completar su registro, por favor verifique su dirección de
+              correo electrónico haciendo clic en el enlace que hemos enviado a:
+            </p>
+            <p><strong>{email}</strong></p>
+            <button className='cancel' onClick={handleCloseModal}>Cerrar</button>
+          </ModalExitoso>
+        )}
+      </main>
     </div>
   );
 };
