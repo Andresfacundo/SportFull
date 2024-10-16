@@ -17,8 +17,13 @@ export const ChangePassword = () => {
   const [contraseña, setContraseña] = useState('');
   // const [tipoUsuario, setTipoUsuario]=useState('')
   const [confirmacionContraseña, setConfirmacionContraseña] = useState('');
+  // Para controlar la visibilidad de la contraseña
+  const [showPassword, setShowPassword] = useState(false); 
+  // Para controlar la visibilidad de la confirmación
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
 
   const [error, setError] = useState('');
+  
   const navigate = useNavigate();
 
 
@@ -90,6 +95,29 @@ export const ChangePassword = () => {
               console.log(error);
               setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
             });
+    }else if (tipoUsuario==='GESTOR') {
+            // Llama al servicio para actualizar el usuario
+            ClienteService.updateGestor(userId, updatedUser)
+            .then((response) => {
+              console.log(response.data);
+    
+              // Actualiza el objeto user en localStorage con la nueva contraseña
+              const newUser = {
+                ...user,
+                
+                contraseña
+              };
+    
+              // Guardar el objeto actualizado en localStorage
+              localStorage.setItem('user', JSON.stringify(newUser));
+    
+              // Redirigir a la página de actualización de cliente
+              navigate('/ActualizarGestor');
+            })
+            .catch((error) => {
+              console.log(error);
+              setError("Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.");
+            });
     }
 
   };
@@ -102,18 +130,28 @@ export const ChangePassword = () => {
         <form onSubmit={savePassword} className='form-update'>
           <label className='form_label'>
             <input
-              type='password' // Cambié el tipo a 'password' para ocultar la entrada
+              type={showPassword ? 'text' : 'password'} // Mostrar u ocultar contraseña
               placeholder=' '
               className='form_input'
               value={contraseña}
               onChange={(e) => setContraseña(e.target.value)}
             />
             <span className='form_text'>Nueva Contraseña</span>
+            {/* Mostrar el ícono solo si hay algo escrito */}
+            {contraseña && (
+              <span 
+                className="password-toggle-icon" 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '51.6%', zIndex: '1000'}}
+              >
+                <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+              </span>
+            )}
           </label>
 
           <label className='form_label'>
             <input
-              type='password'
+              type={showConfirmPassword ? 'text' : 'password'} // Mostrar u ocultar confirmación
               placeholder=' '
               className='form_input'
               value={confirmacionContraseña}  // Asignar el estado
@@ -121,6 +159,16 @@ export const ChangePassword = () => {
               required
             />
             <span className='form_text'>Confirmar Contraseña</span>
+            {/* Mostrar el ícono solo si hay algo escrito */}
+            {confirmacionContraseña && (
+              <span 
+                className="password-toggle-icon" 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={{ cursor: 'pointer', position: 'absolute', right: '60px',top: '61.3%', zIndex: '1000'}}
+              >
+                <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+              </span>
+            )}
           </label>
 
           {error && <p className="error_message">{error}</p>} {/* Mostrar mensaje de error si ocurre */}
