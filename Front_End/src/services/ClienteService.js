@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-const api_base = "http://localhost:8080/auth";
+const API_URL = "http://localhost:8080/auth";
 
 class ClienteService {
 
     // Crear un nuevo usuario
     createUser(user) {
-        return axios.post(api_base + "/register", user);
+        return axios.post(API_URL + "/register", user);
     }
 
     // Iniciar sesión
     login(credentials) {
-        return axios.post(api_base + "/login", credentials);
+        return axios.post(API_URL + "/login", credentials);
     }
 
     // Cerrar sesión (opcional, si el backend tiene un endpoint para esto)
@@ -50,14 +50,14 @@ class ClienteService {
         });
     }
 
-    //verificar email
-    verifyEmail = (verificationToken) => {
-        return axios.get(`http://localhost:8080/auth/verify?token=${verificationToken}`);
+       //verificar email
+       verifyEmail = (token) => {
+        return axios.get(`${API_URL}/verify?token=${token}`);
     };
 
-    // Método para verificar el correo electrónico usando el token
-    verifyEmail(token) {
-        return axios.post(`http://localhost:8080/verify-email?token=${token}`);
+    // Método para validar la contraseña
+    validatePassword(id, data) {
+        return axios.post(`http://localhost:8080/security?idUser=${id}`, data);
     }
 
 }
