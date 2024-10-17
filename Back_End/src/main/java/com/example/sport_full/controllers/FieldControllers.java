@@ -84,6 +84,14 @@ public class FieldControllers {
                 return new ResponseEntity<>("El usuario no es de tipo EMPRESA", HttpStatus.UNAUTHORIZED);
             }
 
+            FieldModels fields = fieldOptional.get();
+
+//          verificar que la cancha pertenece a la empresa
+            // Verificar que la cancha pertenece a la empresa
+            if (!fields.getAdminModels().getId().equals(user.getId())) {
+                return new ResponseEntity<>("La cancha no pertenece a esta empresa", HttpStatus.UNAUTHORIZED);
+            }
+
             FieldModels field = fieldOptional.get();
             field.setNombre(fieldDetails.getNombre());
             field.setPrecio(fieldDetails.getPrecio());
@@ -107,6 +115,14 @@ public class FieldControllers {
             if (!"EMPRESA".equalsIgnoreCase(user.getTipoUsuario())) {
                 return new ResponseEntity<>("El usuario no es de tipo EMPRESA", HttpStatus.UNAUTHORIZED);
             }
+            FieldModels fields = fieldOptional.get();
+
+//          verificar que la cancha pertenece a la empresa
+            // Verificar que la cancha pertenece a la empresa
+            if (!fields.getAdminModels().getId().equals(user.getId())) {
+                return new ResponseEntity<>("La cancha no pertenece a esta empresa", HttpStatus.UNAUTHORIZED);
+            }
+
 
             fieldRepository.deleteById(fieldId);
             return new ResponseEntity<>("Campo eliminado correctamente", HttpStatus.OK);

@@ -25,8 +25,8 @@ public class ClientServices {
         return clientRepository.save(client);
     }
 
-    public Optional<ClientModels> getClientById(Long id) {
-        return clientRepository.findById(id);
+    public Optional<UserModels> getClient(Long id) {
+        return userRepository.findById(id);
     }
 
 public UserModels updateUserAndClient(UserModels user, ClientModels client, Long id) {
