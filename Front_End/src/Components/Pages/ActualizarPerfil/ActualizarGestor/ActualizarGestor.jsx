@@ -131,7 +131,7 @@ export const ActualizarGestor = () => {
   };
   return (
     <div style={backgroundStyle} className='container'>
-      <Header />
+      <Header/>
 
       <main>
 

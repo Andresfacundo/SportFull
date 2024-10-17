@@ -18,6 +18,8 @@ import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
+import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
+import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
 
 import './App.css'
 
@@ -45,6 +47,9 @@ function App() {
       <Route path='/auth/verify' element={<VerifyEmail />} />
       <Route path='/GestionReservas' element={<GestionReservas />} />
       <Route path='/StatusAccount' element={<StatusAccount />} />
+      <Route path='/GestionCanchas' element={<GestionCanchas />} />
+      <Route path='/AgregarCancha' element={<AgregarCancha />} />
+
     </Routes>
   )
 }
