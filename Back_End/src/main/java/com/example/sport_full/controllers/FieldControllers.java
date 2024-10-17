@@ -47,6 +47,7 @@ public class FieldControllers {
         }
     }
 
+
     @GetMapping("/findAll")
     public List<FieldModels> findAll() {
         return fieldRepository.findAll();
@@ -54,6 +55,7 @@ public class FieldControllers {
 
     @GetMapping("/list")
     public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
+
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -70,8 +72,8 @@ public class FieldControllers {
         }
     }
 
-    @PutMapping("/update/{fieldId}")
-    public ResponseEntity<?> updateField(@PathVariable Long fieldId, @RequestBody FieldModels fieldDetails, @RequestParam Long empresaId) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateField(@RequestParam Long fieldId, @RequestBody FieldModels fieldDetails, @RequestParam Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
@@ -84,7 +86,6 @@ public class FieldControllers {
 
             FieldModels field = fieldOptional.get();
             field.setNombre(fieldDetails.getNombre());
-            field.setUbicacion(fieldDetails.getUbicacion());
             field.setPrecio(fieldDetails.getPrecio());
             field.setEstado(fieldDetails.getEstado());
 
@@ -95,8 +96,8 @@ public class FieldControllers {
         }
     }
 
-    @DeleteMapping("/delete/{fieldId}")
-    public ResponseEntity<?> deleteField(@PathVariable Long fieldId, @RequestParam Long empresaId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteField(@RequestParam Long fieldId, @RequestParam Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 

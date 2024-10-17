@@ -45,6 +45,10 @@ public class UserModels implements Serializable {
     @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
     private AdminModels adminModels;
 
+    // Relación opcional con AdminModels
+    @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
+    private GestorModels gestorModels;
+
     private boolean estadoCuenta;
 
     private boolean emailVerified = false;
@@ -158,4 +162,11 @@ public class UserModels implements Serializable {
         this.verificationToken = verificationToken;
     }
 
+    public GestorModels getGestorModels() {
+        return gestorModels;
+    }
+
+    public void setGestorModels(GestorModels gestorModels) {
+        this.gestorModels = gestorModels;
+    }
 }
