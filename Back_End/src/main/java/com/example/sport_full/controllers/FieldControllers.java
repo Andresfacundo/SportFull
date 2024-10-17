@@ -26,8 +26,8 @@ public class FieldControllers {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/create/{empresaId}")
-    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @PathVariable Long empresaId) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @RequestParam Long empresaId) {
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -72,8 +72,8 @@ public class FieldControllers {
         }
     }
 
-    @PutMapping("/update/{fieldId}/{empresaId}")
-    public ResponseEntity<?> updateField(@PathVariable Long fieldId, @RequestBody FieldModels fieldDetails, @PathVariable Long empresaId) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateField(@RequestParam Long fieldId, @RequestBody FieldModels fieldDetails, @RequestParam Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
@@ -96,8 +96,8 @@ public class FieldControllers {
         }
     }
 
-    @DeleteMapping("/delete/{fieldId}/{empresaId}")
-    public ResponseEntity<?> deleteField(@PathVariable Long fieldId, @PathVariable Long empresaId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteField(@RequestParam Long fieldId, @RequestParam Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
