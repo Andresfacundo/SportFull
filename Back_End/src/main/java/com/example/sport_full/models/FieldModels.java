@@ -1,6 +1,5 @@
 package com.example.sport_full.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,16 +16,12 @@ public class FieldModels {
     private String nombre;
 
     @Column(nullable = false)
-    private String ubicacion;
-
-    @Column(nullable = false)
     private Double precio;
 
     @Column(nullable = false)
     private String estado;  // Reservada, Disponible, Fuera de servicio
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private AdminModels adminModels;
 
@@ -49,14 +44,6 @@ public class FieldModels {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
     }
 
     public Double getPrecio() {

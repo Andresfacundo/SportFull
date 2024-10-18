@@ -75,7 +75,7 @@ export const Login = () => {
 
           <label className='form_label'>
             <input
-              type={showPassword ? 'text' : 'password'} // Mostrar u ocultar contraseña
+              type={showPassword ? 'text' : 'password'}
               placeholder=' '
               className='form_input'
               value={contraseña}
@@ -83,16 +83,16 @@ export const Login = () => {
               required
             />
             <span className='form_text'>Contraseña</span>
-            {/* Mostrar el ícono solo si hay algo escrito */}
-          {contraseña && (
-            <span
-              className="password-toggle-icon"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '53.3%', zIndex: '1000' }}
-            >
-              <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-            </span>
-          )}
+            {/* Icono de show/hide para la contraseña */}
+            {contraseña && (
+              <span
+                className="password-toggle-icon"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ cursor: 'pointer', position: 'absolute', right: '5%', top: '30%', zIndex: '1000' }}
+              >
+                <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+              </span>
+            )}
           </label>
 
           <NavLink className={'recover_password'} to="/recover-password">¿Olvidó su contraseña?</NavLink>

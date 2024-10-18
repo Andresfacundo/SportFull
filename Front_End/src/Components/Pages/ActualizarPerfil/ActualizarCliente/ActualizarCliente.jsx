@@ -225,29 +225,27 @@ export const ActualizarCliente = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
-            
-            <input
-            className='input_password'
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Ingresa tu contraseña"
-              value={modalPassword || ''}
-              onChange={(e) => setModalPassword(e.target.value)}
-            />
-            {modalPassword && (
-                <span
-                  className='password-toggle-icon'
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '52.3%', zIndex: '1000'}}
-                >
-                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-                </span>
-              )}
-            {passwordError && <p>{passwordError}</p>}
-            <div className='container_button' >
+            <div className='password_container'>
+  <input
+    className={`input_password ${passwordError ? 'input_error' : ''}`}
+    type={showPassword ? 'text' : 'password'}
+    placeholder='Ingresa tu contraseña'
+    value={modalPassword || ''}
+    onChange={(e) => setModalPassword(e.target.value)}
+  />
+  {modalPassword && (
+    <span
+      className='password-toggle-icon'
+      onClick={() => setShowPassword(!showPassword)}
+      style={{ cursor: 'pointer' }}
+    >
+      <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+    </span>
+  )}
+</div>
 
-            <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
-            <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
-            </div>
+{passwordError && <p className='passwordError error_message'>{passwordError}</p>}
+
           </ModalExitoso>
 
         )}

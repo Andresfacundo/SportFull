@@ -39,7 +39,7 @@ public class GestorControllers {
     private UserValidations userValidations;  // Validaciones del usuario
     
     // Crear un nuevo Gestor, solo por un administrador
-    @PostMapping("/register-gestor")
+    @PostMapping("/register")
     public ResponseEntity<?> createGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long adminEmpresa_Id) {
         try {
             // Extraer los datos del usuario

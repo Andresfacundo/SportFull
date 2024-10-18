@@ -72,11 +72,11 @@ export const ActualizarGestor = () => {
         const newUser = {
           ...user,
 
-          gestorModels:{
+          gestorModels: {
             ...user.gestorModels,
             telefono
           }
-          
+
         };
 
         // Guardar el nuevo objeto actualizado en localStorage
@@ -114,24 +114,25 @@ export const ActualizarGestor = () => {
 
     // Prepara los datos para enviarlos al backend
     ClienteService.validatePassword(userId, requestBody)
-      .then((response) => {
-        console.log(response.data); // Imprime la respuesta para verificar el contenido
-        if (response.data === "Contraseña válida") {
-          // Si la contraseña es válida, permitir la edición
-          navigate('/AdvancedConfiguration');
-          setShowModal(false); // Cerrar el modal
-        } else {
-          setPasswordError('Contraseña incorrecta');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setPasswordError('Ocurrió un error al validar la contraseña');
-      });
+    .then((response) => {
+      console.log("Respuesta de la API:", response.data);
+      if (response.data === "Contraseña válida") {
+        navigate('/AdvancedConfiguration');
+        setShowModal(false);
+      } else {
+        console.log("Contraseña incorrecta detectada");
+        setPasswordError('Contraseña incorrecta');
+      }
+    })
+    .catch((error) => {
+      console.error("Error al validar la contraseña:", error);
+      setPasswordError('Ocurrió un error al validar la contraseña');
+    });
+  
   };
   return (
     <div style={backgroundStyle} className='container'>
-      <Header/>
+      <Header />
 
       <main>
 
@@ -143,7 +144,7 @@ export const ActualizarGestor = () => {
               placeholder=' '
               className='form_input'
               value={nombres || ''}
-              disabled={true}            />
+              disabled={true} />
             <span className='form_text'>Nombres</span>
           </label>
 
@@ -153,7 +154,7 @@ export const ActualizarGestor = () => {
               placeholder=' '
               className='form_input'
               value={apellidos || ''}
-              disabled={true}            />
+              disabled={true} />
             <span className='form_text'>Apellidos</span>
           </label>
           <label className='form_label'>
@@ -219,17 +220,15 @@ export const ActualizarGestor = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
-
+            {passwordError && <p className="error_message">{passwordError}</p>}
             <input
-              className='input_password'
+              className={`input_password ${passwordError ? 'input_error' : ''}`}
               type="password"
               placeholder="Ingresa tu contraseña"
               value={modalPassword || ''}
               onChange={(e) => setModalPassword(e.target.value)}
             />
-            {passwordError && <p>{passwordError}</p>}
-            <div className='container_button' >
-
+            <div className='container_button'>
               <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
               <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
             </div>
