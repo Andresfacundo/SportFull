@@ -18,10 +18,11 @@ import Modal from './Components/UI/Modal/Modal'
 import ModalExitoso from './Components/UI/ModalExitoso/ModalExitoso'
 import ModalFail from './Components/UI/ModalFallido/ModalFallido'
 import VistaEmpresas from './Components/Pages/VistaEmpresas/VistaEmpresas'
+import Canchas from './Components/UI/Canchas/Canchas'
+import VisualizadorCanchas from './Components/UI/VisualizadorCanchas/VisualizadorCanchas'
 function App() {
   
-  return (  
-    
+  return (     
       
    <Routes >
       <Route path='/' element={<Welcome />} />
@@ -29,9 +30,9 @@ function App() {
       <Route path='/Login' element={<Login />} />
       <Route path='/SignUp' element={<SignUp />} />
       <Route path='/fallido' element={<ModalFail />} />
-      <Route path='/VistaEmpresa' element={<VistaEmpresas empresa="La bombonera" titulo="Bombonera" />} />
-
- 
+      <Route path='/canchas' element={<Canchas />} />
+      <Route path='/VistaEmpresa' element={<VistaEmpresas empresa="La bombonera" titulo="Bombonera" />} /> 
+      <Route path='/VisualizarCanchas' element={<VisualizadorCanchas empresa="Bombonera" />} />
 
       <Route path='/HomeClient' element={<HomeClient/>} />      
       <Route path='/HomeEmpresa' element={<HomeEmpresa />} />
@@ -42,10 +43,6 @@ function App() {
       <Route path='/BuscarCanchas' element={<BuscarCanchas />} />
       <Route path='/HistorialCliente' element={<HistorialCliente />} />
       <Route path='/SoporteCliente' element={<SoporteCliente />} />
-
-
-
-
 
     </Routes>
   )

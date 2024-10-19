@@ -80,7 +80,7 @@ img {
     /*background-image: linear-gradient(#07954a, black, #07954a );*/
     background-color: rgba(black, 0.5);
    /* padding: 5px 10px 15px 10px;    */   
-    text-shadow: 0 0 10px  white;    
+      
 }
   
  .row {
@@ -106,7 +106,7 @@ img {
     font-size: 1rem ;
     color: white;
     text-decoration: none;   
-    text-shadow: 0 0 10px  white;       
+         
     }
   
  .item:nth-child(2) {
@@ -117,8 +117,8 @@ img {
   }
 
   .imgStar {
-    width: 25px;
-    height: 25px;       
+    width: 20px;
+    height: 20px;       
   }
 
   .container-star{
