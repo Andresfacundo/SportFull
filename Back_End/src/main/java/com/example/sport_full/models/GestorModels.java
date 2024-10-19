@@ -1,5 +1,6 @@
 package com.example.sport_full.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -15,18 +16,19 @@ public class GestorModels implements Serializable {
     @Column(nullable = true, unique = true)
     private String CCgestor;
 
-    @Column(nullable = true, unique = true)
-    private String nombreCompleto;
-
-    @Column(nullable = true, unique = true)
-    private String email;
-
     @Column(nullable = true)
     private String telefono;
 
     @OneToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id", unique = true)
     private AdminModels adminempresa;
+
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
+    private UserModels userModels;  // Relación con UserModels
+
+    // Getters y setters
 
     public Long getId() {
         return id;
@@ -44,22 +46,6 @@ public class GestorModels implements Serializable {
         this.CCgestor = CCgestor;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
-    }
-
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getTelefono() {
         return telefono;
     }
@@ -74,5 +60,13 @@ public class GestorModels implements Serializable {
 
     public void setAdminempresa(AdminModels adminempresa) {
         this.adminempresa = adminempresa;
+    }
+
+    public UserModels getUserModels() {
+        return userModels;
+    }
+
+    public void setUserModels(UserModels userModels) {
+        this.userModels = userModels;
     }
 }
