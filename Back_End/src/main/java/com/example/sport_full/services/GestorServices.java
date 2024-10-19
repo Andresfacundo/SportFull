@@ -20,8 +20,6 @@ public class GestorServices {
         return igestorRepository.findById(id)
                 .map(gestor -> {
                     gestor.setCCgestor(gestorDetails.getCCgestor());
-                    gestor.setNombreCompleto(gestorDetails.getNombreCompleto());
-                    gestor.setEmail(gestorDetails.getEmail());
                     gestor.setTelefono(gestorDetails.getTelefono());
                     gestor.setAdminempresa(gestorDetails.getAdminempresa());
                     return igestorRepository.save(gestor);

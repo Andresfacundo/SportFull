@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface IFieldRepository extends JpaRepository<FieldModels, Long> {
     List<FieldModels> findByAdminModels_Id(Long empresaId);
+    List<FieldModels> findByNombreContainingIgnoreCase(String nombre);
 }

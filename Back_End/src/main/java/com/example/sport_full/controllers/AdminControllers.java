@@ -29,6 +29,7 @@ public class AdminControllers {
     @Autowired
     AdminServices adminServices;
 
+
     @PutMapping("/{id}")
     public ResponseEntity<UserModels> updateAdmin(@PathVariable("id") Long id, @RequestBody UserModels userModels) {
         Optional<UserModels> existingAdmin = this.userRepository.findById(id);
@@ -101,10 +102,6 @@ public class AdminControllers {
                         existingUser.getAdminModels().setTelefonoPropietario(adminModels.getTelefonoPropietario());
                     }
 
-                    if (adminModels.getEmailPropietario() != null) {
-                        existingUser.getAdminModels().setEmailPropietario(adminModels.getEmailPropietario());
-                    }
-
                 }
             // Guarda los cambios en la base de datos
             userRepository.save(existingUser);
@@ -122,13 +119,20 @@ public class AdminControllers {
 
     @GetMapping("/find/{id}")
     public ResponseEntity<UserModels> findById(@PathVariable("id") Long id) {
-        Optional<UserModels> existingUser = this.adminServices.getUser(id);
-        if (existingUser.isPresent()) {
-            return ResponseEntity.ok(existingUser.get());
+        Optional<AdminModels> existingAdmin = this.companyRepository.findById(id);
+        if (existingAdmin.isPresent()) {
+            AdminModels admin = existingAdmin.get();
+
+            // Asumiendo que AdminModels tiene un método para obtener el UserModels asociado
+            UserModels user = admin.getUserModels();
+
+            // Aquí podrías personalizar la respuesta si necesitas algún formato específico
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> patchAdmin(@PathVariable("id") Long id) {

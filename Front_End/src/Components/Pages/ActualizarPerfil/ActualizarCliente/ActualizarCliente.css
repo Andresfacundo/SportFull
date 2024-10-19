@@ -117,4 +117,22 @@ main{
 
   }
 
-
+  .password_container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .input_password {
+    width: 100%;
+    padding-right: 30px; /* Espacio para el ícono */
+  }
+  
+  .password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+  }
