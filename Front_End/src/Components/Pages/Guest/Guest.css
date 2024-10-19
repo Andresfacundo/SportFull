@@ -1,0 +1,28 @@
+.main_homeGuest{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    margin-top: 3rem;
+}
+
+.shade_consultCourt {
+    width: 65%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.25rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_register{
+    width: 48%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.82rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
