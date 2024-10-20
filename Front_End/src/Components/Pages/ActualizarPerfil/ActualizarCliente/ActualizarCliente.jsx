@@ -4,7 +4,7 @@ import { Header } from '../../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
-import ModalExitoso  from '../../../UI/ModalExitoso/ModalExitoso'
+import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso'
 
 
 export const ActualizarCliente = () => {
@@ -226,29 +226,31 @@ export const ActualizarCliente = () => {
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
             <div className='password_container'>
-  <input
-    className={`input_password ${passwordError ? 'input_error' : ''}`}
-    type={showPassword ? 'text' : 'password'}
-    placeholder='Ingresa tu contraseña'
-    value={modalPassword || ''}
-    onChange={(e) => setModalPassword(e.target.value)}
-  />
-  {modalPassword && (
-    <span
-      className='password-toggle-icon'
-      onClick={() => setShowPassword(!showPassword)}
-      style={{ cursor: 'pointer' }}
-    >
-      <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-    </span>
-  )}
-</div>
-
-{passwordError && <p className='passwordError error_message'>{passwordError}</p>}
-
+              {passwordError && <p className='error_message'>{passwordError}</p>}
+              <input
+                className={`input_password ${passwordError ? 'input_error' : ''}`}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Ingresa tu contraseña'
+                value={modalPassword || ''}
+                onChange={(e) => setModalPassword(e.target.value)}
+              />
+              <div className='container_button'>
+                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+              </div>
+              {modalPassword && (
+                <span
+                  className='password-toggle-icon'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
+            </div>
           </ModalExitoso>
-
         )}
+
       </main>
     </div>
   )

@@ -94,6 +94,7 @@ export const ActualizarGestor = () => {
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
   const [passwordError, setPasswordError] = useState(''); // Mensaje de error del modal
   const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
 
   const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario del localStorage
   const userId = user.id; // Obtener el ID del usuario
@@ -114,21 +115,21 @@ export const ActualizarGestor = () => {
 
     // Prepara los datos para enviarlos al backend
     ClienteService.validatePassword(userId, requestBody)
-    .then((response) => {
-      console.log("Respuesta de la API:", response.data);
-      if (response.data === "Contraseña válida") {
-        navigate('/AdvancedConfiguration');
-        setShowModal(false);
-      } else {
-        console.log("Contraseña incorrecta detectada");
-        setPasswordError('Contraseña incorrecta');
-      }
-    })
-    .catch((error) => {
-      console.error("Error al validar la contraseña:", error);
-      setPasswordError('Ocurrió un error al validar la contraseña');
-    });
-  
+      .then((response) => {
+        console.log("Respuesta de la API:", response.data);
+        if (response.data === "Contraseña válida") {
+          navigate('/AdvancedConfiguration');
+          setShowModal(false);
+        } else {
+          console.log("Contraseña incorrecta detectada");
+          setPasswordError('Contraseña incorrecta');
+        }
+      })
+      .catch((error) => {
+        console.error("Error al validar la contraseña:", error);
+        setPasswordError('Ocurrió un error al validar la contraseña');
+      });
+
   };
   return (
     <div style={backgroundStyle} className='container'>
@@ -220,21 +221,32 @@ export const ActualizarGestor = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
-            {passwordError && <p className="error_message">{passwordError}</p>}
-            <input
-              className={`input_password ${passwordError ? 'input_error' : ''}`}
-              type="password"
-              placeholder="Ingresa tu contraseña"
-              value={modalPassword || ''}
-              onChange={(e) => setModalPassword(e.target.value)}
-            />
-            <div className='container_button'>
-              <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
-              <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+            <div className='password_container'>
+              {passwordError && <p className='error_message'>{passwordError}</p>}
+              <input
+                className={`input_password ${passwordError ? 'input_error' : ''}`}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Ingresa tu contraseña'
+                value={modalPassword || ''}
+                onChange={(e) => setModalPassword(e.target.value)}
+              />
+              <div className='container_button'>
+                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+              </div>
+              {modalPassword && (
+                <span
+                  className='password-toggle-icon'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
             </div>
           </ModalExitoso>
-
         )}
+
       </main>
     </div>
   )

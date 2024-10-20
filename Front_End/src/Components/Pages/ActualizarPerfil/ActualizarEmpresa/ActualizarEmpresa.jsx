@@ -4,7 +4,7 @@ import { Header } from '../../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
-
+import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso';
 export const ActualizarEmpresa = () => {
 
   const backgroundStyle = {
@@ -99,6 +99,7 @@ export const ActualizarEmpresa = () => {
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
   const [passwordError, setPasswordError] = useState(''); // Mensaje de error del modal
   const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
 
   const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario del localStorage
   const userId = user.id; // Obtener el ID del usuario
@@ -227,21 +228,34 @@ export const ActualizarEmpresa = () => {
 
         {/* Modal para ingresar la contraseña */}
         {showModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Validar contraseña</h3>
+          <ModalExitoso>
+            <h3 className='tittle_modal'>Validar contraseña</h3>
+            <div className='password_container'>
+              {passwordError && <p className='error_message'>{passwordError}</p>}
               <input
-                type="text"
-                placeholder="Ingresa tu contraseña"
+                className={`input_password ${passwordError ? 'input_error' : ''}`}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Ingresa tu contraseña'
                 value={modalPassword || ''}
                 onChange={(e) => setModalPassword(e.target.value)}
               />
-              {passwordError && <p>{passwordError}</p>}
-              <button onClick={validatePasswordAndUpdate}>Confirmar</button>
-              <button onClick={() => setShowModal(false)}>Cancelar</button>
+              <div className='container_button'>
+                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+              </div>
+              {modalPassword && (
+                <span
+                  className='password-toggle-icon'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
             </div>
-          </div>
+          </ModalExitoso>
         )}
+
       </main>
     </div>
   )

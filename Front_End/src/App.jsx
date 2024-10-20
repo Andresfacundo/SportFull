@@ -26,7 +26,9 @@ import {GestionReservas} from './Components/Pages/GestionReservas/GestionReserva
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
 import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
 import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
-
+import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
+import { GestionEmpleados } from './Components/Pages/GestionEmpleados/GestionEmpleados.jsx'
+import { GestionReportes } from './Components/Pages/GestionReportes/GestionReportes.jsx'
 
 import './App.css'
 
@@ -58,6 +60,11 @@ function App() {
       <Route path='/StatusAccount' element={<StatusAccount />} />
       <Route path='/GestionCanchas' element={<GestionCanchas />} />
       <Route path='/AgregarCancha' element={<AgregarCancha />} />
+      <Route path='/ShowFields' element={<ShowFields />} />
+      <Route path='/GestionReportes' element={<GestionReportes />} />
+      <Route path='/GestionEmpleados' element={<GestionEmpleados />} />
+
+
     </Routes>
   )
 }

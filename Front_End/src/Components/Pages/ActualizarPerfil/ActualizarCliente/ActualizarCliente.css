@@ -131,7 +131,10 @@ main{
   }
 
   .password_container {
+    display: flex;
+    flex-direction: column;
     position: relative;
+    align-items: center;
     width: 100%;
   }
   
