@@ -1,9 +1,9 @@
 .navigation {
-    width: 100%;
+    width: 46vh;
     height: 5rem;
     background-color: #073b4c;
     position: relative;
-    
+    top: -2.7rem;
     display: flex;
     justify-content: center;
     align-items: center;

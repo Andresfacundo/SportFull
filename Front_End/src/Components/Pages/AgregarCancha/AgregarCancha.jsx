@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './AgregarCancha.css'
 import { Header } from '../../../Components/Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
+import NavBar from '../../UI/NavBar/NavBar'
 
 
 export const AgregarCancha = () => {
@@ -110,12 +111,14 @@ export const AgregarCancha = () => {
                         <span className='form_text'>Valor por hora</span>
                     </label>
 
-                <button type="submit" className='register'>Agregar Cancha</button>
-                <NavLink className='return' to='/GestionCanchas'>Volver</NavLink>
+                    <button type="submit" className='register'>Agregar Cancha</button>
+                    <NavLink className='return' to='/GestionCanchas'>Volver</NavLink>
                 </form>
 
             </main>
-
+            <footer>
+                <NavBar />
+            </footer>
 
 
         </div>

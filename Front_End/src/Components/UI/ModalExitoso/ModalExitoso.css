@@ -72,6 +72,23 @@
     flex-direction: column;
     align-items: center;
     margin: 1.5rem 0 2rem 0;
-    gap: 1rem;
+    gap: 1.5rem;
+
+}
+
+
+.container_children>button{
+    border: none;
+    height: 4rem;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+    width: auto;
+    padding: 0 1rem ;
 
 }

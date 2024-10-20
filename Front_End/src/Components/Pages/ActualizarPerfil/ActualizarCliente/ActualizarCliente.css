@@ -53,6 +53,11 @@ main{
     box-shadow: none;
 
   }
+  footer{
+    width: 100vh;
+    height: auto;
+    position: fixed; 
+}
 
   .input_password:focus{
     border-color:#07954A; /* Borde rojo al hacer clic */

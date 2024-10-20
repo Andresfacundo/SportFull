@@ -4,6 +4,7 @@ import fondo_long from '../../../assets/Images/fondos/fondo_long.png';
 import { Header } from '../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
+import NavBar from '../../UI/NavBar/NavBar'
 
 export const ChangePassword = () => {
   const backgroundStyle = {
@@ -183,6 +184,9 @@ export const ChangePassword = () => {
           <NavLink className='return' to='/AdvancedConfiguration'>Volver</NavLink>
         </form>
       </main>
+      <footer>
+        <NavBar/>
+      </footer>
     </div>
   );
 };

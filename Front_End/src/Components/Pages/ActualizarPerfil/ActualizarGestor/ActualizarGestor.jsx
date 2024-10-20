@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
 import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso'
+import NavBar from '../../../UI/NavBar/NavBar'
 
 
 export const ActualizarGestor = () => {
@@ -248,6 +249,10 @@ export const ActualizarGestor = () => {
         )}
 
       </main>
+
+      <footer>
+        <NavBar/>
+      </footer>
     </div>
   )
 }

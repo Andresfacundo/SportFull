@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
+import ModalExitoso from '../../UI/ModalExitoso/ModalExitoso';
 
 export const VerifyEmail = () => {
   const [mensaje, setMensaje] = useState('');
@@ -22,7 +23,7 @@ export const VerifyEmail = () => {
         .then((response) => {
           console.log(response.data);
           setVerificado(true); // Cambia el estado a verificado si la verificación es exitosa
-          setMensaje('Correo verificado con éxito.');
+          setMensaje('Verificación de correo electrónico exitosa.');
         })
         .catch((error) => {
           console.error('Error al verificar el correo:', error);
@@ -38,14 +39,14 @@ export const VerifyEmail = () => {
   };
 
   return (
-    <div className="verify-email-container">
-      <h2>Verificación de Correo Electrónico</h2>
-      {mensaje && <p>{mensaje}</p>}
-      {verificado ? (
-        <button onClick={handleLoginRedirect}>Ir a iniciar sesión</button>
-      ) : (
-        <p>Verificando tu correo electrónico...</p>
-      )}
-    </div>
+
+    <ModalExitoso>
+        {mensaje && <h2>{mensaje}</h2>}
+        {verificado ? (
+          <button onClick={handleLoginRedirect} className='login_confirmEmail'>Iniciar sesión</button>
+        ) : (
+          <p>Verificando tu correo electrónico...</p>
+        )}
+    </ModalExitoso>
   );
 };

@@ -8,6 +8,7 @@ import icon_01 from '../../../assets/Images/icons/jugador_04.png';
 import icon_02 from '../../../assets/Images/icons/jugador_03.png';
 import icon_03 from '../../../assets/Images/icons/jugador_01.png';
 import { NavLink, useNavigate } from 'react-router-dom';
+import NavBar from '../../UI/NavBar/NavBar';
 
 export const AdvancedConfiguration = () => {
   const backgroundStyle = {
@@ -54,6 +55,10 @@ export const AdvancedConfiguration = () => {
         {/* Usamos un botón que navega dinámicamente según el tipo de usuario */}
         <button className='return' onClick={handleNavigation}>Volver</button>
       </main>
+
+      <footer>
+        <NavBar/>
+      </footer>
     </div>
   );
 };

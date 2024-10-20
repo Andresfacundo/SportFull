@@ -1,9 +1,14 @@
 import React from 'react'
 import './GestionReportes.css'
+import NavBar from '../../UI/NavBar/NavBar'
 
 
 export const GestionReportes = () => {
   return (
-    <div>GestionReportes</div>
+    <div>GestionReportes
+            <footer>
+        <NavBar/>
+      </footer>
+    </div>
   )
 }
