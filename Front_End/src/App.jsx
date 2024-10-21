@@ -24,7 +24,7 @@ import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import Services from './Components/UI/FieldServices/FieldServices'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
-
+import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 
 import './App.css'
 
@@ -54,6 +54,7 @@ function App() {
       <Route path='/auth/verify' element={<VerifyEmail />} />
       <Route path='/GestionReservas' element={<GestionReservas />} />
       <Route path='/StatusAccount' element={<StatusAccount />} />
+      <Route path="/editprofile" element={<EditProfile />} />
 
     </Routes>
   )

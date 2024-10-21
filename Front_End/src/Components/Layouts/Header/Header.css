@@ -58,3 +58,24 @@
 .icon_logout{
     width: 1.5rem;
 }
+
+.edit_icon {
+    margin-top: -30px; /* Ajusta para cambiar la distancia entre la imagen y el icono */
+    margin-left: -17%;
+    border: 3px solid;
+    border-radius: 50%;
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .edit_icon.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .edit_icon.hide {
+    opacity: 0;
+    visibility: hidden;
+  }
