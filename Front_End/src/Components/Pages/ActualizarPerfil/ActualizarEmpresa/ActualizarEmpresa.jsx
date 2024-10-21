@@ -30,10 +30,12 @@ export const ActualizarEmpresa = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [direccionEmpresa, setDireccionEmpresa] = useState(null);
   const [emailEmpresa, setEmailEmpresa] = useState(null);
-  const [nit, setNit] = useState(null);
+  const [NIT, setNit] = useState(null);
   const [telefonoEmpresa, setTelefonoEmpresa] = useState(null);
   const [nombreEmpresa, setNombreEmpresa] = useState(null);
-
+  const [facebook, setFacebook] = useState(null);
+  const [whatsApp, setWhatsApp] = useState(null);
+  const [instagram, setInstagram] = useState(null);
 
   const navigate = useNavigate();
   // useEffect para cargar los datos del usuario al montar el componente
@@ -46,8 +48,17 @@ export const ActualizarEmpresa = () => {
       setNombres(user.nombres || '');
       setApellidos(user.apellidos || '');
       setEmail(user.email || '');
-      setCCadmin(user.adminModels?.ccpropietario || ''); // Accede al campo cc dentro de adminModels
-      setTelefonoPropietario(user.adminModels?.telefonoPropietario || ''); // Accede al campo telefono dentro de adminModels
+      setCCadmin(user.adminModels?.ccpropietario || ''); 
+      setTelefonoPropietario(user.adminModels?.telefonoPropietario || ''); 
+      setEmailEmpresa(user.adminModels?.emailEmpresa || ''); 
+      setDireccionEmpresa(user.adminModels?.direccionEmpresa || ''); 
+      setNit(user.adminModels?.NIT || ''); 
+      setTelefonoEmpresa(user.adminModels?.telefonoEmpresa || ''); 
+      setNombreEmpresa(user.adminModels?.nombreEmpresa || ''); 
+      setFacebook(user.adminModels?.facebook || ''); 
+      setWhatsApp(user.adminModels?.whatsApp || ''); 
+      setInstagram(user.adminModels?.instagram || ''); 
+
     }
   }, []);
 
@@ -67,7 +78,15 @@ export const ActualizarEmpresa = () => {
       email,
       adminModels: {
         telefonoPropietario,
-        ccpropietario
+        ccpropietario,
+        nombreEmpresa,
+        direccionEmpresa,
+        emailEmpresa,
+        telefonoEmpresa,
+        NIT,
+        facebook,
+        whatsApp,
+        instagram
       }
     };
 
@@ -84,7 +103,15 @@ export const ActualizarEmpresa = () => {
           email,
           adminModels: {
             telefonoPropietario,
-            ccpropietario
+            ccpropietario,
+            nombreEmpresa,
+            direccionEmpresa,
+            emailEmpresa,
+            telefonoEmpresa,
+            NIT,
+            facebook,
+            whatsApp,
+            instagram
           }
         };
 
@@ -205,6 +232,102 @@ export const ActualizarEmpresa = () => {
             />
             <span className='form_text'>Telefono</span>
           </label>
+
+          <h3 className='tittle_update'>Datos Empresa</h3>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={nombreEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setNombreEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Nombre Empresa</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={NIT || ''}  // Asignar el estado
+              onChange={(e) => setNit(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>NIT</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='email'
+              placeholder=' '
+              className='form_input'
+              value={emailEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setEmailEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Correo Empresa</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={direccionEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setDireccionEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Dirección</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='number'
+              placeholder=' '
+              className='form_input'
+              value={telefonoEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setTelefonoEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Telefono</span>
+          </label>
+
+          <h3 className='tittle_update'>Redes Sociales</h3>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={facebook || ''}  // Asignar el estado
+              onChange={(e) => setFacebook(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Facebook</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={instagram || ''}  // Asignar el estado
+              onChange={(e) => setInstagram(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Instagram</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={whatsApp || ''}  // Asignar el estado
+              onChange={(e) => setWhatsApp(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>WhatsApp</span>
+          </label>
+
+
+
+
 
           <NavLink
             className={'changePassword'}

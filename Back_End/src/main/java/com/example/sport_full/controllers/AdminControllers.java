@@ -102,6 +102,19 @@ public class AdminControllers {
                         existingUser.getAdminModels().setTelefonoPropietario(adminModels.getTelefonoPropietario());
                     }
 
+                    if (adminModels.getFacebook() != null) {
+                        existingUser.getAdminModels().setFacebook(adminModels.getFacebook());
+                    }
+
+                    if (adminModels.getWhatsApp() != null) {
+                        existingUser.getAdminModels().setWhatsApp(adminModels.getWhatsApp());
+
+                    }
+
+                    if (adminModels.getInstagram() != null) {
+                        existingUser.getAdminModels().setInstagram(adminModels.getInstagram());
+                    }
+
                 }
             // Guarda los cambios en la base de datos
             userRepository.save(existingUser);

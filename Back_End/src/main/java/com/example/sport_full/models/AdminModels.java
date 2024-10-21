@@ -37,6 +37,14 @@ public class AdminModels implements Serializable {
     @Column(nullable = true, unique = true)
     private String telefonoPropietario;
 
+    @Column(nullable = true, unique = true)
+    private String facebook;
+
+    @Column(nullable = true, unique = true)
+    private String whatsApp;
+
+    @Column(nullable = true, unique = true)
+    private String instagram;
 
 
     @OneToOne
@@ -119,4 +127,16 @@ public class AdminModels implements Serializable {
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
     }
+
+    public String getFacebook() {return facebook;}
+
+    public void setFacebook(String facebook) {this.facebook = facebook;}
+
+    public String getWhatsApp() {return whatsApp;}
+
+    public void setWhatsApp(String whatsApp) {this.whatsApp = whatsApp;}
+
+    public String getInstagram() {return instagram;}
+
+    public void setInstagram(String instagram) {this.instagram = instagram;}
 }
