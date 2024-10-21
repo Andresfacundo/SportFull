@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.html.Option;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -42,12 +46,21 @@ public class ReservationsControllers {
     @Autowired
     private ClientServices clientServices;
 
+    @Autowired
+    IClientRepository clientRepository;
+
+    @Autowired
+    IGestorRepository gestorRepository;
+
+    @Autowired
+    SendReservationConfirmation sendReservationConfirmation;
+
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody ReservationsModels reservationsModels,
-                                                     @RequestParam Long fieldId,
-                                                     @RequestParam Long adminId,
-                                                     @RequestParam Long clientId,
-                                                     @RequestParam String userEmail) {
+                                    @RequestParam Long fieldId,
+                                    @RequestParam Long adminId,
+                                    @RequestParam Long clientId,
+                                    @RequestParam String userEmail) {
         try {
 
             Optional<UserModels> user = userRepository.findByEmail(userEmail);
@@ -91,6 +104,98 @@ public class ReservationsControllers {
         }
     }
 
+// gestor realiza reserva a nombre de
+    @PostMapping("/gestor/reserva")
+    public ResponseEntity<?> createReservaByGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long gestorId) {
+        try {
+            // Extraer los datos del cliente desde la solicitud
+            String nombres = (String) requestData.get("nombres");
+            String apellidos = (String) requestData.get("apellidos");
+            String email = (String) requestData.get("email");
+            String telefono = (String) requestData.get("telefono");
+            Long fieldId = Long.parseLong(requestData.get("fieldId").toString());
+            LocalDateTime fechaHoraInicio = LocalDateTime.parse((String) requestData.get("fechaHoraInicio"));
+            LocalDateTime fechaHoraFin = LocalDateTime.parse((String) requestData.get("fechaHoraFin"));
+            Long costoHora = Long.parseLong(requestData.get("costoHora").toString());
+
+            // Validar que los datos requeridos del cliente no sean nulos o vacíos
+            if (nombres == null || apellidos == null || email == null || telefono == null || fieldId == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Todos los datos del cliente y del campo son requeridos.");
+            }
+
+            // Verificar si el gestor existe
+            Optional<GestorModels> gestorOptional = gestorRepository.findById(gestorId);
+            if (!gestorOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El gestor no existe.");
+            }
+            GestorModels gestor = gestorOptional.get();
+
+            // Verificar si la cancha existe
+            Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
+            if (!fieldOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La cancha no existe.");
+            }
+            FieldModels field = fieldOptional.get();
+
+            // Verificar si el usuario ya existe
+            Optional<UserModels> existingUserOptional = userRepository.findByEmail(email);
+            UserModels user;
+            if (existingUserOptional.isPresent()) {
+                // Si el usuario ya existe, usar el existente
+                user = existingUserOptional.get();
+            } else {
+                // Si el usuario no existe, crearlo
+                user = new UserModels();
+                user.setNombres(nombres);
+                user.setApellidos(apellidos);
+                user.setEmail(email);
+                user.setTipoUsuario("No registrado");
+                user.setContraseña("NA"); // Puede ser un valor por defecto ya que no es un usuario registrado formalmente
+                user.setEstadoCuenta(false); // Activado por defecto para este caso específico
+                userRepository.save(user);
+
+                // Crear un nuevo cliente asociado al usuario
+                ClientModels client = new ClientModels();
+                client.setTelefono(telefono);
+                client.setUserModels(user);
+                clientRepository.save(client);
+            }
+
+            // Crear una nueva reserva
+            ReservationsModels reserva = new ReservationsModels();
+            reserva.setFieldModels(field);
+            reserva.setUserModels(user);
+            reserva.setAdminModels(gestor.getAdminempresa());
+            reserva.setFechaHoraInicio(fechaHoraInicio);
+            reserva.setFechaHoraFin(fechaHoraFin);
+            reserva.setFechaPago(LocalDate.now());
+            reserva.setCostoHora(costoHora);
+            reserva.setCostoTotal(costoHora * (Duration.between(fechaHoraInicio, fechaHoraFin).toHours()));
+            reserva.setEstadoReserva(ReservationsModels.estadoReserva.PENDIENTE);
+
+            // Guardar la reserva en la base de datos
+            reservationsRepository.save(reserva);
+
+            String nombreGestor = gestor.getUserModels().getNombres() + " " + gestor.getUserModels().getApellidos();
+
+            String subject = "Confirmación de Reserva";
+            String message = "Estimado/a " + nombres + " " + apellidos + ",\n\n" +
+                    "Su reserva de la cancha '" + field.getNombre() + "' ha sido creada exitosamente.\n" +
+                    "Fecha y hora de inicio: " + fechaHoraInicio + "\n" +
+                    "Fecha y hora de fin: " + fechaHoraFin + "\n" +
+                    "Costo total: " + reserva.getCostoTotal() + "\n" +
+                    "Nombre de quien te realizo la reserva " + nombreGestor + "\n\n" +
+                    "Gracias por confiar en nuestro servicio.";
+            sendReservationConfirmation.sendReservationConfirmation(email, subject, message);
+
+
+            return ResponseEntity.ok("Reserva creada exitosamente a nombre de " + nombres + " " + apellidos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        }
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<ReservationsModels> getReservationById(@PathVariable("id") Long id) {
         return reservationsServices.getReservationById(id)
@@ -124,7 +229,6 @@ public class ReservationsControllers {
         List<ReservationsModels> reservations = reservationsServices.getReservationsByAdmin(admin.get());
         return ResponseEntity.ok(reservations);
     }
-
 
 
     @PutMapping("/{reservationId}")
