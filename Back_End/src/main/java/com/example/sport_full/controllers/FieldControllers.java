@@ -26,6 +26,7 @@ public class FieldControllers {
         this.userRepository = userRepository;
     }
 
+    // Crear una nueva cancha
     @PostMapping("/create")
     public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @RequestParam Long empresaId) {
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
@@ -47,15 +48,15 @@ public class FieldControllers {
         }
     }
 
-
+    // Listar todas las canchas
     @GetMapping("/findAll")
     public List<FieldModels> findAll() {
         return fieldRepository.findAll();
     }
 
+    // Listar canchas por empresa
     @GetMapping("/list")
     public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
-
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -72,6 +73,7 @@ public class FieldControllers {
         }
     }
 
+    // Actualizar una cancha
     @PutMapping("/update")
     public ResponseEntity<?> updateField(@RequestParam Long fieldId, @RequestBody FieldModels fieldDetails, @RequestParam Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
@@ -88,6 +90,8 @@ public class FieldControllers {
             field.setNombre(fieldDetails.getNombre());
             field.setPrecio(fieldDetails.getPrecio());
             field.setEstado(fieldDetails.getEstado());
+            field.setTipoCancha(fieldDetails.getTipoCancha());
+            field.setServicios(fieldDetails.getServicios());
 
             fieldRepository.save(field);
             return new ResponseEntity<>(field, HttpStatus.OK);
@@ -96,6 +100,7 @@ public class FieldControllers {
         }
     }
 
+    // Eliminar una cancha
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteField(@RequestParam Long fieldId, @RequestParam Long empresaId) {
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
@@ -114,4 +119,47 @@ public class FieldControllers {
             return new ResponseEntity<>("Campo o empresa no encontrados", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/servicios")
+    public ResponseEntity<?> getFieldServices(@RequestParam Long fieldId) {
+        Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
+
+        if (fieldOptional.isPresent()) {
+            FieldModels field = fieldOptional.get();
+            return new ResponseEntity<>(field.getServicios(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Campo no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Añadir servicio a una cancha
+    @PostMapping("/servicios/add")
+    public ResponseEntity<?> addServiceToField(@RequestParam Long fieldId, @RequestParam String servicio) {
+        Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
+
+        if (fieldOptional.isPresent()) {
+            FieldModels field = fieldOptional.get();
+            field.getServicios().add(servicio); // Añadir servicio
+            fieldRepository.save(field); // Guardar cambios
+            return new ResponseEntity<>(field.getServicios(), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Campo no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Eliminar un servicio de una cancha
+    @DeleteMapping("/servicios/delete")
+    public ResponseEntity<?> deleteServiceFromField(@RequestParam Long fieldId, @RequestParam String servicio) {
+        Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
+
+        if (fieldOptional.isPresent()) {
+            FieldModels field = fieldOptional.get();
+            field.getServicios().remove(servicio); // Eliminar servicio
+            fieldRepository.save(field); // Guardar cambios
+            return new ResponseEntity<>(field.getServicios(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Campo no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
