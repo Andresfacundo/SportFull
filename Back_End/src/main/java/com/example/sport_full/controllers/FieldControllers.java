@@ -28,7 +28,7 @@ public class FieldControllers {
 
     // Crear una nueva cancha
     @PostMapping("/create")
-    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @RequestParam Long empresaId) {
+    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @RequestParam Long empresaId, @RequestParam List<String> selectedServices) {
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
@@ -39,14 +39,25 @@ public class FieldControllers {
             }
 
             AdminModels admin = user.getAdminModels();
-            fieldModels.setAdminModels(admin);
-            FieldModels savedField = fieldRepository.save(fieldModels);
 
+            // Validar si los servicios seleccionados pertenecen a los servicios generales de la empresa
+            List<String> adminServices = admin.getServiciosGenerales();
+            for (String servicio : selectedServices) {
+                if (!adminServices.contains(servicio)) {
+                    return new ResponseEntity<>("El servicio seleccionado no pertenece a los servicios generales de la empresa", HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            fieldModels.setAdminModels(admin);
+            fieldModels.setServicios(selectedServices); // Asignar los servicios seleccionados a la cancha
+
+            FieldModels savedField = fieldRepository.save(fieldModels);
             return new ResponseEntity<>(savedField, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Empresa no encontrada", HttpStatus.NOT_FOUND);
         }
     }
+
 
     // Listar todas las canchas
     @GetMapping("/findAll")

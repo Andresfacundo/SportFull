@@ -36,6 +36,8 @@ export const ActualizarEmpresa = () => {
   const [facebook, setFacebook] = useState(null);
   const [whatsApp, setWhatsApp] = useState(null);
   const [instagram, setInstagram] = useState(null);
+  const [serviciosGenerales, setServiciosGenerales] = useState(''); // Estado para los servicios generales
+
 
   const navigate = useNavigate();
   // useEffect para cargar los datos del usuario al montar el componente
@@ -58,6 +60,8 @@ export const ActualizarEmpresa = () => {
       setFacebook(user.adminModels?.facebook || ''); 
       setWhatsApp(user.adminModels?.whatsApp || ''); 
       setInstagram(user.adminModels?.instagram || ''); 
+      setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || ''); // Cargar servicios generales separados por comas
+
 
     }
   }, []);
@@ -70,6 +74,9 @@ export const ActualizarEmpresa = () => {
 
     // Obtén el ID del usuario desde localStorage
     const userId = user.id;
+
+    // Convertir la cadena de servicios separados por comas en un array
+    const serviciosArray = serviciosGenerales.split(',').map(servicio => servicio.trim());
 
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
@@ -86,7 +93,8 @@ export const ActualizarEmpresa = () => {
         NIT,
         facebook,
         whatsApp,
-        instagram
+        instagram,
+        serviciosGenerales: serviciosArray
       }
     };
 
@@ -111,7 +119,8 @@ export const ActualizarEmpresa = () => {
             NIT,
             facebook,
             whatsApp,
-            instagram
+            instagram,
+            serviciosGenerales: serviciosArray
           }
         };
 
@@ -324,10 +333,17 @@ export const ActualizarEmpresa = () => {
             />
             <span className='form_text'>WhatsApp</span>
           </label>
-
-
-
-
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={serviciosGenerales} // Asignar el valor del estado
+              onChange={(e) => setServiciosGenerales(e.target.value)} // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Servicios Generales</span>
+          </label>
 
           <NavLink
             className={'changePassword'}
