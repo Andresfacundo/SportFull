@@ -28,30 +28,35 @@ public class FieldControllers {
 
     // Crear una nueva cancha
     @PostMapping("/create")
-    public ResponseEntity<?> createField(@RequestBody FieldModels fieldModels, @RequestParam Long empresaId, @RequestParam List<String> selectedServices) {
+    public ResponseEntity<?> createField(
+            @RequestBody FieldModels fieldModels,
+            @RequestParam Long empresaId) {
+
         Optional<UserModels> userOptional = userRepository.findById(empresaId);
 
         if (userOptional.isPresent()) {
             UserModels user = userOptional.get();
 
+            // Verificar si el usuario es de tipo EMPRESA
             if (!"EMPRESA".equalsIgnoreCase(user.getTipoUsuario())) {
                 return new ResponseEntity<>("El usuario no es de tipo EMPRESA", HttpStatus.UNAUTHORIZED);
             }
 
             AdminModels admin = user.getAdminModels();
-
-            // Validar si los servicios seleccionados pertenecen a los servicios generales de la empresa
             List<String> adminServices = admin.getServiciosGenerales();
+            List<String> selectedServices = fieldModels.getServicios();
+
+            // Validar que los servicios seleccionados pertenezcan a los servicios generales de la empresa
             for (String servicio : selectedServices) {
                 if (!adminServices.contains(servicio)) {
                     return new ResponseEntity<>("El servicio seleccionado no pertenece a los servicios generales de la empresa", HttpStatus.BAD_REQUEST);
                 }
             }
 
+            // Asignar la empresa (admin) a la cancha y guardar los servicios seleccionados
             fieldModels.setAdminModels(admin);
-            fieldModels.setServicios(selectedServices); // Asignar los servicios seleccionados a la cancha
-
             FieldModels savedField = fieldRepository.save(fieldModels);
+
             return new ResponseEntity<>(savedField, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Empresa no encontrada", HttpStatus.NOT_FOUND);

@@ -60,6 +60,12 @@ class ClienteService {
         return axios.post(`http://localhost:8080/security?idUser=${id}`, data);
     }
 
+    // Actualiza este método para enviar los servicios seleccionados en el cuerpo de la solicitud
+    createField(cancha, empresaId) {
+        // Asegúrate de pasar `selectedServices` en el cuerpo junto con los demás datos
+        return axios.post(`http://localhost:8080/fields/create?empresaId=${empresaId}`, cancha);
+    }
+
 }
 
 export default new ClienteService();
