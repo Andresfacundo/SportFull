@@ -91,6 +91,17 @@ public class ReservationsControllers {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El email proporcinado no corresponde  al cliente");
                 }
 
+                // Verificar si ya existe una reserva para la misma cancha en el mismo horario
+                boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
+                        fieldModel,
+                        reservationsModels.getFechaHoraFin(),
+                        reservationsModels.getFechaHoraInicio()
+                );
+
+                if (existeReserva) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una reserva para esta cancha en el horario especificado.");
+                }
+
                 // Obtener el costo por hora de la cancha
                 Double costoHora = fieldModel.getPrecio();
 
@@ -159,6 +170,15 @@ public class ReservationsControllers {
 
             // Obtener el costo por hora de la cancha
             Double costoH = field.getPrecio();
+
+            // Validar si ya existe una reserva en la misma cancha y rango de horario
+            boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
+                    field, fechaHoraInicio, fechaHoraFin
+            );
+
+            if (existeReserva) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una reserva para esta cancha en el horario especificado.");
+            }
 
             // Calcular la duración de la reserva en horas
             long duracionHoras = Duration.between(fechaHoraInicio, fechaHoraFin).toHours();
@@ -273,9 +293,18 @@ public class ReservationsControllers {
 
             Long costoTotal = (long)(costoHo * duracionHoras);
 
-            // Validar que la cancha pertenece a la empresa del administrador
+            // Validar que la cancha pertenece a la empresa del gestor
             if (!field.getAdminModels().getId().equals(admin.getId())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("La cancha no pertenece a esta empresa.");
+            }
+
+            // Validar si ya existe una reserva en la misma cancha y rango de horario
+            boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
+                    field, fechaHoraInicio, fechaHoraFin
+            );
+
+            if (existeReserva) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una reserva para esta cancha en el horario especificado.");
             }
 
             // Verificar si el usuario ya existe
@@ -356,6 +385,17 @@ public class ReservationsControllers {
                         if (!fieldModel.getAdminModels().getId().equals(admin.get().getId())) {
                             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                     .body("Una de las canchas no pertenece a esta empresa.");
+                        }
+
+                        // Validar si ya existe una reserva en la misma cancha y rango de horario
+                        boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
+                                fieldModel, reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()
+                        );
+
+                        if (existeReserva) {
+                            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                    .body("Ya existe una reserva para la cancha " + fieldModel.getNombre() +
+                                            " en el horario especificado.");
                         }
                         // Asignar el administrador y la cancha a la reserva y el usuario
                         reservation.setAdminModels(fieldModel.getAdminModels());

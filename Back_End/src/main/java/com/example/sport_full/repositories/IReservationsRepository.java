@@ -7,6 +7,7 @@ import com.example.sport_full.models.UserModels;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -14,5 +15,11 @@ public interface IReservationsRepository extends JpaRepository<ReservationsModel
     List<ReservationsModels> findByUserModels(UserModels userModels);
     List<ReservationsModels> findByFieldModels_AdminModels(AdminModels adminModels);
 
+    boolean existsByFieldModelsAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
+            FieldModels field,
+            LocalDateTime fechaHoraFin,
+            LocalDateTime fechaHoraInicio
+    );
 
+    boolean existsByFieldModelsAndFechaHoraInicioBetween(FieldModels field, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin);
 }
