@@ -43,7 +43,7 @@ public class ReservationsModels {
         CANCELADA
     }
 
-    private Long costoHora;
+    private Double costoHora;
 
     private Long costoTotal;
 
@@ -96,11 +96,11 @@ public class ReservationsModels {
         this.fechaPago = fechaPago;
     }
 
-    public Long getCostoHora() {
+    public Double getCostoHora() {
         return costoHora;
     }
 
-    public void setCostoHora(Long costoHora) {
+    public void setCostoHora(Double costoHora) {
         this.costoHora = costoHora;
     }
 
