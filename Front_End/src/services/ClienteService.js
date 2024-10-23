@@ -66,6 +66,40 @@ class ClienteService {
         return axios.post(`http://localhost:8080/fields/create?empresaId=${empresaId}`, cancha);
     }
 
+
+    // Eliminar una cancha
+    deleteField(fieldId, empresaId) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.delete(`http://localhost:8080/fields/delete`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
+            },
+            params: {
+                fieldId: fieldId,
+                empresaId: empresaId
+            }
+        });
+    }
+
+    // Método para actualizar una cancha
+    updateField(fieldId, updatedField, empresaId) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.put(`http://localhost:8080/fields/update`, updatedField, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
+            },
+            params: {
+                fieldId: fieldId,
+                empresaId: empresaId
+            }
+        });
+    }
+
+    // Método para consultar cancha por ID
+    getFieldById(fieldId) {
+        return axios.get(`http://localhost:8080/fields/findById/${fieldId}`);
+    }
+
 }
 
 export default new ClienteService();

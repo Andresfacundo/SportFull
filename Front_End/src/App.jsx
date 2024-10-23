@@ -26,9 +26,13 @@ import {GestionReservas} from './Components/Pages/GestionReservas/GestionReserva
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
 import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
 import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
-import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
 import { GestionEmpleados } from './Components/Pages/GestionEmpleados/GestionEmpleados.jsx'
 import { GestionReportes } from './Components/Pages/GestionReportes/GestionReportes.jsx'
+import { SmallCard } from './Components/UI/SmallCard/SmallCard.jsx'
+import { DeleteFields } from './Components/Pages/DeleteFields/DeleteFields.jsx'
+import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
+import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
+import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
 
 import './App.css'
 
@@ -60,9 +64,15 @@ function App() {
       <Route path='/StatusAccount' element={<StatusAccount />} />
       <Route path='/GestionCanchas' element={<GestionCanchas />} />
       <Route path='/AgregarCancha' element={<AgregarCancha />} />
-      <Route path='/ShowFields' element={<ShowFields />} />
+      <Route path='/DeleteFields' element={<DeleteFields />} />
       <Route path='/GestionReportes' element={<GestionReportes />} />
       <Route path='/GestionEmpleados' element={<GestionEmpleados />} />
+      <Route path='/UpdateField/:id' element={<UpdateField />} />
+      <Route path='/ShowFields' element={<ShowFields />} />
+      <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
+
+
+
 
 
     </Routes>

@@ -70,6 +70,18 @@ public class FieldControllers {
         return fieldRepository.findAll();
     }
 
+    // Consultar cancha por ID
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<FieldModels> findById(@PathVariable Long id) {
+        Optional<FieldModels> campoOpt = fieldRepository.findById(id);
+
+        if (campoOpt.isPresent()) {
+            return ResponseEntity.ok(campoOpt.get());
+        } else {
+            return ResponseEntity.notFound().build(); // Devuelve un 404 si no se encuentra la cancha
+        }
+    }
+
     // Listar canchas por empresa
     @GetMapping("/list")
     public ResponseEntity<?> listFields(@RequestParam Long empresaId) {

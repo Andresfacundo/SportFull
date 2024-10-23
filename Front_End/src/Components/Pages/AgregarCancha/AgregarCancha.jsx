@@ -45,7 +45,7 @@ export const AgregarCancha = () => {
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario desde el localStorage
         if (!user) {
             setErrorMsg("No se pudo obtener la información del usuario.");
@@ -53,16 +53,16 @@ export const AgregarCancha = () => {
         }
         
         const empresaId = user.id; // ID de la empresa
-
+    
         // Obtener los servicios seleccionados
         const selectedServices = Object.keys(seleccionados).filter((servicio) => seleccionados[servicio]);
-
+    
         // Validar campos obligatorios
         if (!nombre || !tipoCancha || !precio || selectedServices.length === 0) {
             setErrorMsg('Por favor, completa todos los campos y selecciona al menos un servicio.');
             return;
         }
-
+    
         // Crear el objeto de la cancha
         const cancha = {
             nombre: nombre,
@@ -71,19 +71,31 @@ export const AgregarCancha = () => {
             estado: estado,
             servicios: selectedServices
         };
-
+    
         // Llamar a la API para crear la cancha
         try {
             const response = await ClienteService.createField(cancha, empresaId);
             console.log('Cancha creada exitosamente:', response.data);
+    
+            // Actualizar localStorage con los nuevos datos
+            const updatedUser = {
+                ...user,
+                adminModels: {
+                    ...user.adminModels,
+                    fields: [...user.adminModels.fields, response.data] // Agregar la nueva cancha al array de canchas
+                }
+            };
+            
+            localStorage.setItem('user', JSON.stringify(updatedUser)); // Guardar el nuevo usuario en localStorage
+    
             navigate('/GestionCanchas'); // Redirigir a la página de gestión de canchas
-
             setErrorMsg('');  // Limpiar el mensaje de error
         } catch (error) {
             const mensajeError = error.response && error.response.data ? error.response.data : error.message;
             setErrorMsg(`Error al crear la cancha: ${mensajeError}`);
         }
     };
+    
 
     return (
         <div className='container_agregarCancha'>
