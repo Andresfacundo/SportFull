@@ -112,6 +112,7 @@ public class ReservationsControllers {
                 Long costoTotal = (long) (costoHora * duracionHoras);
                 reservationsModels.setCostoHora(costoHora);
                 reservationsModels.setCostoTotal(costoTotal);
+                reservationsModels.setFechaPago(LocalDate.now());
 
                 // Asignar el administrador, la cancha, y el cliente a la reserva
                 reservationsModels.setAdminModels(fieldModel.getAdminModels());
@@ -138,14 +139,14 @@ public class ReservationsControllers {
 
     // gestor realiza reserva a nombre de
     @PostMapping("/gestor/reserva")
-    public ResponseEntity<?> createReservaByGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long gestorId) {
+    public ResponseEntity<?> createReservaByGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long gestorId,
+                                                   @RequestParam Long fieldId) {
         try {
             // Extraer los datos del cliente desde la solicitud
             String nombres = (String) requestData.get("nombres");
             String apellidos = (String) requestData.get("apellidos");
             String email = (String) requestData.get("email");
             String telefono = (String) requestData.get("telefono");
-            Long fieldId = Long.parseLong(requestData.get("fieldId").toString());
             LocalDateTime fechaHoraInicio = LocalDateTime.parse((String) requestData.get("fechaHoraInicio"));
             LocalDateTime fechaHoraFin = LocalDateTime.parse((String) requestData.get("fechaHoraFin"));
 
@@ -168,8 +169,6 @@ public class ReservationsControllers {
             }
             FieldModels field = fieldOptional.get();
 
-            // Obtener el costo por hora de la cancha
-            Double costoH = field.getPrecio();
 
             // Validar si ya existe una reserva en la misma cancha y rango de horario
             boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
@@ -179,6 +178,9 @@ public class ReservationsControllers {
             if (existeReserva) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una reserva para esta cancha en el horario especificado.");
             }
+
+            // Obtener el costo por hora de la cancha
+            Double costoH = field.getPrecio();
 
             // Calcular la duración de la reserva en horas
             long duracionHoras = Duration.between(fechaHoraInicio, fechaHoraFin).toHours();
@@ -229,6 +231,8 @@ public class ReservationsControllers {
             reserva.setAdminModels(gestor.getAdminempresa());
             reserva.setFechaHoraInicio(fechaHoraInicio);
             reserva.setFechaHoraFin(fechaHoraFin);
+            reserva.setCostoTotal(costoTotal);
+            reserva.setCostoHora(costoH);
             reserva.setFechaPago(LocalDate.now());
             reserva.setEstadoReserva(ReservationsModels.estadoReserva.PENDIENTE);
 
@@ -236,9 +240,11 @@ public class ReservationsControllers {
             reservationsRepository.save(reserva);
 
             String nombreGestor = gestor.getUserModels().getNombres() + " " + gestor.getUserModels().getApellidos();
+            String nombreEmpresa = gestor.getAdminempresa().getNombreEmpresa();
 
             String subject = "Confirmación de Reserva";
             String message = "Estimado/a " + nombres + " " + apellidos + ",\n\n" +
+                    "Nombre Empresa " + nombreEmpresa + "\n\n" +
                     "Su reserva de la cancha '" + field.getNombre() + "' ha sido creada exitosamente.\n" +
                     "Fecha y hora de inicio: " + fechaHoraInicio + "\n" +
                     "Fecha y hora de fin: " + fechaHoraFin + "\n" +
@@ -255,14 +261,15 @@ public class ReservationsControllers {
     }
 
     @PostMapping("/empresa/reserva")
-    public ResponseEntity<?> createReservaByEmpresa(@RequestBody Map<String, Object> requestData, @RequestParam Long adminId) {
+    public ResponseEntity<?> createReservaByEmpresa(@RequestBody Map<String, Object> requestData, @RequestParam Long adminId,
+                                                    @RequestParam Long fieldId) {
         try {
             // Extraer los datos del cliente desde la solicitud
             String nombres = (String) requestData.get("nombres");
             String apellidos = (String) requestData.get("apellidos");
             String email = (String) requestData.get("email");
             String telefono = (String) requestData.get("telefono");
-            Long fieldId = Long.parseLong(requestData.get("fieldId").toString());
+//            Long fieldId = Long.parseLong(requestData.get("fieldId").toString());
             LocalDateTime fechaHoraInicio = LocalDateTime.parse((String) requestData.get("fechaHoraInicio"));
             LocalDateTime fechaHoraFin = LocalDateTime.parse((String) requestData.get("fechaHoraFin"));
 
@@ -338,6 +345,8 @@ public class ReservationsControllers {
             reserva.setAdminModels(admin); // Asignar el administrador a la reserva
             reserva.setFechaHoraInicio(fechaHoraInicio);
             reserva.setFechaHoraFin(fechaHoraFin);
+            reserva.setCostoTotal(costoTotal);
+            reserva.setCostoHora(costoHo);
             reserva.setFechaPago(LocalDate.now());
             reserva.setEstadoReserva(ReservationsModels.estadoReserva.PENDIENTE);
 
@@ -362,11 +371,13 @@ public class ReservationsControllers {
         }
     }
 
+
     @PostMapping("/createReservation")
     public ResponseEntity<?> createTwoReservation(@RequestBody List<ReservationsModels> reservationsList,
                                                   @RequestParam Long adminId,
                                                   @RequestParam Long clientId,
-                                                  @RequestParam String userEmail) {
+                                                  @RequestParam String userEmail,
+                                                  @RequestParam List<Long> fieldIds) {
         try {
             Optional<UserModels> user = userRepository.findByEmail(userEmail);
             if (!user.isPresent()) {
@@ -375,9 +386,23 @@ public class ReservationsControllers {
             Optional<UserModels> admin = adminServices.getUser(adminId);
             Optional<UserModels> client = clientServices.getClient(clientId);
             if (admin.isPresent() && client.isPresent()) {
+                // Validar que el email proporcionado coincida con el email del cliente registrado
+                if (!client.get().getEmail().equals(userEmail)) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .body("El correo proporcionado no coincide con el del cliente registrado.");
+                }
+
                 List<ReservationsModels> createdReservations = new ArrayList<>();
-                for (ReservationsModels reservation : reservationsList) {
-                    Long fieldId = reservation.getFieldModels().getId();
+                for (int i = 0; i < reservationsList.size(); i++) {
+                    ReservationsModels reservation = reservationsList.get(i);
+
+                    // Validar que haya un ID de cancha correspondiente en la lista de IDs
+                    if (i >= fieldIds.size()) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("La cantidad de IDs de canchas no coincide con la cantidad de reservas.");
+                    }
+
+                    Long fieldId = fieldIds.get(i);
                     Optional<FieldModels> field = fieldRepository.findById(fieldId);
                     if (field.isPresent()) {
                         FieldModels fieldModel = field.get();
@@ -386,6 +411,17 @@ public class ReservationsControllers {
                             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                     .body("Una de las canchas no pertenece a esta empresa.");
                         }
+
+                        Double costoHora = fieldModel.getPrecio();
+
+                        // Calcular la duración de la reserva en horas
+                        long duracionHoras = Duration.between(reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()).toHours();
+
+                        Long costoTotal = (long) (costoHora * duracionHoras);
+
+                        reservation.setCostoTotal(costoTotal);
+                        reservation.setCostoHora(costoHora);
+                        reservation.setFechaPago(LocalDate.now());
 
                         // Validar si ya existe una reserva en la misma cancha y rango de horario
                         boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
@@ -397,17 +433,20 @@ public class ReservationsControllers {
                                     .body("Ya existe una reserva para la cancha " + fieldModel.getNombre() +
                                             " en el horario especificado.");
                         }
+
                         // Asignar el administrador y la cancha a la reserva y el usuario
                         reservation.setAdminModels(fieldModel.getAdminModels());
                         reservation.setFieldModels(fieldModel);
                         reservation.setUserModels(client.get());
-                        // Agregar la reserva a la lista de creadas
+
+                        // Crear la reserva y agregarla a la lista de reservas creadas
                         ReservationsModels newReservation = reservationsServices.createReservation(reservation);
                         createdReservations.add(newReservation);
                     } else {
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cancha no encontrada.");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cancha no encontrada para el ID " + fieldId);
                     }
                 }
+
                 // Enviar el correo de confirmación al usuario para todas las reservas
                 String subject = "Confirmación de tus reservas";
                 confirmReservationServices.ReservationConfirmation(userEmail, subject, createdReservations);
@@ -420,8 +459,6 @@ public class ReservationsControllers {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
     }
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationsModels> getReservationById(@PathVariable("id") Long id) {

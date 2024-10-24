@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IReservationsRepository extends JpaRepository<ReservationsModels,Long> {
@@ -22,4 +23,6 @@ public interface IReservationsRepository extends JpaRepository<ReservationsModel
     );
 
     boolean existsByFieldModelsAndFechaHoraInicioBetween(FieldModels field, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin);
+
+    Optional<ReservationsModels> findTopByFieldModelsAndUserModelsOrderByFechaHoraInicioDesc(FieldModels fieldModel, UserModels userModels);
 }

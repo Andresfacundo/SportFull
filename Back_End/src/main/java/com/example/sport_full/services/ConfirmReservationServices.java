@@ -1,5 +1,6 @@
 package com.example.sport_full.services;
 
+import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.ReservationsModels;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,10 +22,13 @@ public class ConfirmReservationServices {
         message.setTo(to);
         message.setSubject(subject);
 
+        String nombreEmpresa = reservationsList.get(0).getAdminModels().getNombreEmpresa();
+
         // Construir el mensaje de correo
         StringBuilder text = new StringBuilder();
         text.append("¡Gracias por reservar con nosotros!\n\n")
-                .append("Detalles de tus reservas:\n\n");
+                .append("Detalles de tus reservas:\n")
+                .append("Nombre Empresa: " + nombreEmpresa + "\n\n" );
 
         for (ReservationsModels reservation : reservationsList) {
             String canchaNombre = reservation.getFieldModels().getNombre();
