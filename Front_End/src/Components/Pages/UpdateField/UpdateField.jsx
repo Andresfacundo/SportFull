@@ -16,6 +16,7 @@ export const UpdateField = () => {
     const [estado, setEstado] = useState('Disponible');
     const [errorMsg, setErrorMsg] = useState('');
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
     // Cargar cancha y servicios generales
     useEffect(() => {
@@ -64,72 +65,78 @@ export const UpdateField = () => {
         }));
     };
 
-// Función para manejar el envío del formulario
-const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    // Recolectar los servicios seleccionados
-    const serviciosActualizados = Object.keys(seleccionados).filter(servicio => seleccionados[servicio]);
-
-    const updatedField = {
-        nombre,
-        tipoCancha,
-        precio: parseFloat(precio),  // Asegúrate de que el precio sea numérico
-        estado,
-        servicios: serviciosActualizados // Solo los servicios seleccionados
-    };
-
-    try {
-        const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario desde el localStorage
-        if (!user) {
-            setErrorMsg("No se pudo obtener la información del usuario.");
+        // Obtener el objeto usuario desde el localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user.adminModels) {
+            setError("No se pudo obtener la información del usuario.");
             return;
         }
 
-        const empresaId = user.adminModels.id; // ID de la empresa
+        // Obtener el ID de la empresa
+        const empresaId = user.adminModels.id;
 
-        // Llamar al servicio de actualización
-        const response = await ClienteService.updateField(id, updatedField, empresaId);
+        // Recolectar los servicios seleccionados y convertirlos en un array
+        const serviciosActualizados = Object.keys(seleccionados).filter(servicio => seleccionados[servicio]);
 
-        // Verificar si la respuesta es exitosa
-        if (response && response.data) {
-            console.log('Respuesta de la API:', response.data); // Ver la respuesta
+        // Crear el objeto de cancha actualizado
+        const updatedField = {
+            id: id,  // Asegúrate de incluir el ID del campo que estás actualizando
+            nombre,
+            tipoCancha,
+            precio: parseFloat(precio),  // Asegúrate de que el precio sea un número
+            estado,
+            servicios: serviciosActualizados, // Solo los servicios seleccionados
+        };
 
-            // Actualizar la lista de campos en el localStorage
-            const updatedFields = user.adminModels.fields.map(field => {
-                // Solo actualiza el campo que coincide con el id
-                return field.id === id ? { ...field, ...updatedField } : field;
-            });
+        console.log('Objeto actualizado:', updatedField); // Ver el objeto que se va a enviar
 
-            // Verifica que el campo ha sido actualizado
-            console.log('Campos actualizados:', updatedFields);
+        try {
+            // Llamar al servicio para actualizar la cancha, incluyendo el ID de la empresa
+            const response = await ClienteService.updateField(id, updatedField, empresaId);
 
-            // Actualizar el usuario en el localStorage
-            const updatedUser = {
-                ...user,
-                adminModels: {
-                    ...user.adminModels,
-                    fields: updatedFields // Actualiza las canchas en el usuario
-                }
-            };
+            if (response && response.data) {
+                console.log('Respuesta de la API:', response.data); // Ver la respuesta de la API
 
-            // Guarda el usuario actualizado en el localStorage
-            localStorage.setItem('user', JSON.stringify(updatedUser));
+                const updatedUser = {
+                    ...user,
+                    adminModels: {
+                        ...user.adminModels,
+                        fields: user.adminModels.fields.map(field => {
+                            // Verifica si el ID del campo actual coincide con el ID de la cancha que quieres actualizar
+                            if (field.id === response.data.id) { // Asumiendo que `response` es la respuesta de la API
+                                return {
+                                    ...field,
+                                    // Actualiza los campos necesarios usando la respuesta de la API
+                                    nombre: response.data.nombre,
+                                    precio: response.data.precio,
+                                    estado: response.data.estado,
+                                    tipoCancha: response.data.tipoCancha,
+                                    servicios: response.data.servicios, // Puedes mantener esto como un array
+                                };
+                            }
+                            // Retorna el campo original si no se actualiza
+                            return field;
+                        })
+                    }
+                };
 
-            // Imprimir el usuario actualizado para verificar
-            console.log('Usuario actualizado:', updatedUser);
+                // Guardar el objeto actualizado en localStorage
+                localStorage.setItem('user', JSON.stringify(updatedUser));
 
-            // Redirigir después de la actualización
-            navigate('/GestionCanchas');
-        } else {
-            setErrorMsg("No se pudo obtener una respuesta válida del servidor.");
+                // Redirigir después de la actualización
+                navigate('/GestionCanchas');
+            } else {
+                setError("No se pudo obtener una respuesta válida del servidor.");
+            }
+        } catch (error) {
+            console.error("Error en la solicitud:", error); // Imprimir el error completo
+            const mensajeError = error.response && error.response.data ? error.response.data : error.message;
+            setError(`Error al actualizar la cancha: ${mensajeError}`);
         }
-    } catch (error) {
-        const mensajeError = error.response && error.response.data ? error.response.data : error.message;
-        setErrorMsg(`Error al actualizar la cancha: ${mensajeError}`);
-    }
-};
-
+    };
 
 
     return (
@@ -139,7 +146,7 @@ const handleSubmit = async (e) => {
                 <h2 className='tittle_agregarCancha'>Actualizar Cancha</h2>
                 <form onSubmit={handleSubmit} className='form'>
                     {errorMsg && <p className="error-message">{errorMsg}</p>}  {/* Mostrar mensaje de error */}
-                    
+
                     <label className='form_label'>
                         <input
                             type='text'

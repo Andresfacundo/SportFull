@@ -50,16 +50,16 @@ export const ActualizarEmpresa = () => {
       setNombres(user.nombres || '');
       setApellidos(user.apellidos || '');
       setEmail(user.email || '');
-      setCCadmin(user.adminModels?.ccpropietario || ''); 
-      setTelefonoPropietario(user.adminModels?.telefonoPropietario || ''); 
-      setEmailEmpresa(user.adminModels?.emailEmpresa || ''); 
-      setDireccionEmpresa(user.adminModels?.direccionEmpresa || ''); 
-      setNit(user.adminModels?.NIT || ''); 
-      setTelefonoEmpresa(user.adminModels?.telefonoEmpresa || ''); 
-      setNombreEmpresa(user.adminModels?.nombreEmpresa || ''); 
-      setFacebook(user.adminModels?.facebook || ''); 
-      setWhatsApp(user.adminModels?.whatsApp || ''); 
-      setInstagram(user.adminModels?.instagram || ''); 
+      setCCadmin(user.adminModels?.ccpropietario || '');
+      setTelefonoPropietario(user.adminModels?.telefonoPropietario || '');
+      setEmailEmpresa(user.adminModels?.emailEmpresa || '');
+      setDireccionEmpresa(user.adminModels?.direccionEmpresa || '');
+      setNit(user.adminModels?.NIT || '');
+      setTelefonoEmpresa(user.adminModels?.telefonoEmpresa || '');
+      setNombreEmpresa(user.adminModels?.nombreEmpresa || '');
+      setFacebook(user.adminModels?.facebook || '');
+      setWhatsApp(user.adminModels?.whatsApp || '');
+      setInstagram(user.adminModels?.instagram || '');
       setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || ''); // Cargar servicios generales separados por comas
 
 
@@ -110,6 +110,7 @@ export const ActualizarEmpresa = () => {
           apellidos,
           email,
           adminModels: {
+            ...user.adminModels,
             telefonoPropietario,
             ccpropietario,
             nombreEmpresa,
@@ -402,7 +403,7 @@ export const ActualizarEmpresa = () => {
       </main>
 
       <footer>
-        <NavBar/>
+        <NavBar />
       </footer>
     </div>
   )
