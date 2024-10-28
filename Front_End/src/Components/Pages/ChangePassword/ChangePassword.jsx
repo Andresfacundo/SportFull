@@ -128,9 +128,10 @@ export const ChangePassword = () => {
       <main>
         <h2 className='tittle_update'>Cambiar Contraseña</h2>
         <form onSubmit={savePassword} className='form-update'>
-          <label className='form_label'>
+           {/* Input de nueva contraseña */}
+           <label className='form_label'>
             <input
-              type={showPassword ? 'text' : 'password'} // Mostrar u ocultar contraseña
+              type={showPassword ? 'text' : 'password'}
               placeholder=' '
               className='form_input'
               value={contraseña}
@@ -142,20 +143,21 @@ export const ChangePassword = () => {
               <span 
                 className="password-toggle-icon" 
                 onClick={() => setShowPassword(!showPassword)}
-                style={{ cursor: 'pointer', position: 'absolute', right: '60px', top: '51.6%', zIndex: '1000'}}
+                style={{ cursor: 'pointer', position: 'absolute', right: '5%', top: '30%', zIndex: '1000' }}
               >
                 <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
               </span>
             )}
           </label>
 
-          <label className='form_label'>
+           {/* Input de confirmar contraseña */}
+           <label className='form_label'>
             <input
-              type={showConfirmPassword ? 'text' : 'password'} // Mostrar u ocultar confirmación
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder=' '
               className='form_input'
-              value={confirmacionContraseña}  // Asignar el estado
-              onChange={(e) => setConfirmacionContraseña(e.target.value)}  // Actualizar el estado
+              value={confirmacionContraseña}
+              onChange={(e) => setConfirmacionContraseña(e.target.value)}
               required
             />
             <span className='form_text'>Confirmar Contraseña</span>
@@ -164,7 +166,7 @@ export const ChangePassword = () => {
               <span 
                 className="password-toggle-icon" 
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                style={{ cursor: 'pointer', position: 'absolute', right: '60px',top: '61.3%', zIndex: '1000'}}
+                style={{ cursor: 'pointer', position: 'absolute', right: '5%', top: '30%', zIndex: '1000' }}
               >
                 <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
               </span>

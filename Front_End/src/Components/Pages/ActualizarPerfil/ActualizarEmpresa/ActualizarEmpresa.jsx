@@ -99,6 +99,7 @@ export const ActualizarEmpresa = () => {
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
   const [passwordError, setPasswordError] = useState(''); // Mensaje de error del modal
   const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
 
   const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario del localStorage
   const userId = user.id; // Obtener el ID del usuario
@@ -230,12 +231,24 @@ export const ActualizarEmpresa = () => {
           <div className="modal">
             <div className="modal-content">
               <h3>Validar contraseña</h3>
-              <input
-                type="text"
-                placeholder="Ingresa tu contraseña"
-                value={modalPassword || ''}
-                onChange={(e) => setModalPassword(e.target.value)}
-              />
+              <div className='password_container'>
+                <input
+                  className='input_password'
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='Ingresa tu contraseña'
+                  value={modalPassword || ''}
+                  onChange={(e) => setModalPassword(e.target.value)}
+                />
+                {modalPassword && (
+                  <span
+                    className='password-toggle-icon'
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                  </span>
+                )}
+              </div>
               {passwordError && <p>{passwordError}</p>}
               <button onClick={validatePasswordAndUpdate}>Confirmar</button>
               <button onClick={() => setShowModal(false)}>Cancelar</button>

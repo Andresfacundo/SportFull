@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-google-maps/api": "^2.20.3",
     "axios": "^1.7.4",
+    "esqueleto-react": "file:",
     "ionicons": "^7.4.0",
     "js-cookie": "^3.0.5",
     "node": "^22.9.0",
