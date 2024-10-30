@@ -66,7 +66,6 @@ class ClienteService {
         return axios.post(`http://localhost:8080/fields/create?empresaId=${empresaId}`, cancha);
     }
 
-
     // Eliminar una cancha
     deleteField(fieldId, empresaId) {
         const token = localStorage.getItem('token'); // Obtén el token de autenticación
