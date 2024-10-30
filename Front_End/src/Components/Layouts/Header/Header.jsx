@@ -6,11 +6,21 @@ import icon_reservation from '../../../../src/assets/Images/icons/Icon_Reservati
 import icon_notification from '../../../../src/assets/Images/icons/icon_notificacion.png';
 import ClienteService from '../../../services/ClienteService';
 import { CurrentDate } from '../../UI/CurrentDate/CurrentDate';
-import { NavLink, useLocation } from 'react-router-dom';  // Importa useLocation
+import { NavLink } from 'react-router-dom';  // Importa useLocation
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export const Header = ({ children }) => {
   
   const location = useLocation();  // Hook para obtener la ruta actual
+  const navigate = useNavigate();  // Hook para navegar entre rutas
+
+  // Función para redirigir a la página de edición de perfil
+  const handleEditProfile = () => {
+    navigate('/editprofile');  // Redirige a la ruta /editprofile
+  };
 
   // Función para manejar el cierre de sesión
   const handleLogout = () => {
@@ -39,6 +49,12 @@ export const Header = ({ children }) => {
   // Obtener el resultado formateado solo si la ruta no es /Guest
   const resultado = location.pathname === '/Guest' ? 'Invitado' : obtenerResultado(nombre, apellido);
 
+  // Lista de rutas donde queremos que se muestre el ícono de edición
+  const validPaths = ['/ActualizarCliente', '/ActualizarEmpresa', '/ActualizarGestor'];
+
+  // Definimos una clase condicional para mostrar u ocultar el ícono
+  const editIconClass = validPaths.includes(location.pathname) ? 'edit_icon show' : 'edit_icon hide';
+
   return (
     <header className='header_home'>
       <div className='container_header'>
@@ -65,6 +81,10 @@ export const Header = ({ children }) => {
         <div className='container_user'>
           <img className='pefil_pic' src={foto_perfil} alt="Foto de perfil" />
           <h2 className='nameUser'>{resultado}</h2> {/* Mostrar el nombre o "Invitado" si está en /Guest */}
+        </div>
+        {/* Aplicamos la clase condicional al ícono de edición */}
+        <div className={editIconClass} onClick={handleEditProfile}>
+          <FontAwesomeIcon icon={faPencilAlt} />
         </div>
 
       </div>

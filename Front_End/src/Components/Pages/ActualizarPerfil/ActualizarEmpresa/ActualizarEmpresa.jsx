@@ -396,6 +396,7 @@ export const ActualizarEmpresa = () => {
                   <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
                 </span>
               )}
+
             </div>
           </ModalExitoso>
         )}

@@ -33,6 +33,7 @@ import { DeleteFields } from './Components/Pages/DeleteFields/DeleteFields.jsx'
 import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
 import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
 import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
+import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 
 import './App.css'
 
@@ -70,10 +71,7 @@ function App() {
       <Route path='/UpdateField/:id' element={<UpdateField />} />
       <Route path='/ShowFields' element={<ShowFields />} />
       <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
-
-
-
-
+      <Route path="/editprofile" element={<EditProfile />} />
 
     </Routes>
   )
