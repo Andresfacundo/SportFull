@@ -44,7 +44,25 @@ main{
     border-radius: 5px;
     font-size: 1rem;
     box-sizing: border-box;
-    color: #07954A;
+    color: #E7E7E7;
+    padding-right: 30px;
+    width: 100%;
+    padding-right: 30px;
+    background-color: transparent;
+    border: 1px solid #e7e7e7;
+    box-shadow: none;
+
+  }
+  footer{
+    width: 100vh;
+    height: auto;
+    position: fixed; 
+}
+
+  .input_password:focus{
+    border-color:#07954A; /* Borde rojo al hacer clic */
+    outline: none; /* Quitar el contorno predeterminado */
+    box-shadow: none;
   }
   
   /* Botones del modal */
@@ -118,14 +136,17 @@ main{
   }
 
   .password_container {
+    display: flex;
+    flex-direction: column;
     position: relative;
+    align-items: center;
     width: 100%;
   }
   
-  .input_password {
-    width: 100%;
-    padding-right: 30px; /* Espacio para el ícono */
+  .passwordError{
+    color: #07954A;
   }
+ 
   
   .password-toggle-icon {
     position: absolute;
@@ -136,3 +157,15 @@ main{
     color: #333;
     cursor: pointer;
   }
+
+
+  .input_error {
+    border-color: red; /* Borde rojo cuando hay un error */
+  }
+  
+  .error_message {
+    color: red; /* Mensaje de error en rojo */
+    font-size: 0.9rem; /* Ajustar tamaño si es necesario */
+    margin-top: 0.5rem;
+  }
+  

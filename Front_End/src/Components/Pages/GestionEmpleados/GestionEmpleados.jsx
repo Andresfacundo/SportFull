@@ -1,11 +1,11 @@
 import React from 'react'
-import './PaymentMethod.css';
+import './GestionEmpleados.css'
 import NavBar from '../../UI/NavBar/NavBar'
 
 
-export const PaymentMethod = () => {
+export const GestionEmpleados = () => {
   return (
-    <div>PaymentMethod
+    <div>GestionEmpleados
             <footer>
         <NavBar/>
       </footer>

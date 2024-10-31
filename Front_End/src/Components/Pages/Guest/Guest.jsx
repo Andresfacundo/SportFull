@@ -1,5 +1,6 @@
 import React from 'react'
 import './Guest.css'
+import NavBar from '../../UI/NavBar/NavBar'
 import fondo_long from '../../../assets/Images/fondos/fondo_long.png';
 import icon_01 from '../../../assets/Images/icons/jugador_04.png';
 import icon_02 from '../../../assets/Images/icons/jugador_03.png';
@@ -19,6 +20,7 @@ export const Guest = () => {
     width: '100%',
   };
   return (
+
     <div style={backgroundStyle} className='container_home_client'>
       <Header />
       <main className='main_homeGuest'>

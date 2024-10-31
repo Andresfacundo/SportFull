@@ -2,7 +2,7 @@ import React from 'react';
 import './Header.css';
 import icon_logout from '../../../../src/assets/Images/icons/salida.png';
 import foto_perfil from '../../../../src/assets/Images/icons/avatar_01.png';
-import icon_setting from '../../../../src/assets/Images/icons/icon_setting.png';
+import icon_reservation from '../../../../src/assets/Images/icons/Icon_Reservation.png';
 import icon_notification from '../../../../src/assets/Images/icons/icon_notificacion.png';
 import ClienteService from '../../../services/ClienteService';
 import { CurrentDate } from '../../UI/CurrentDate/CurrentDate';
@@ -66,7 +66,7 @@ export const Header = ({ children }) => {
           {location.pathname !== '/Guest' && (
             <>
               <NavLink className={'configuration'}>
-                <img className='icon_options' src={icon_setting} alt="Configuración" />
+                <img className='icon_options' src={icon_reservation} alt="Configuración" />
               </NavLink>
               <NavLink className={'notifications'}>
                 <img className='icon_options' src={icon_notification} alt="Notificaciones" />

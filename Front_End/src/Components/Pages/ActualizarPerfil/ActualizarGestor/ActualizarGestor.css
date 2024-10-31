@@ -1,0 +1,28 @@
+/*Estilo normal del input*/
+.input_password {
+    height: 4rem;
+    border: 3px solid #e7e7e7;
+    padding: 8px;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  
+  /* Estilo del input cuando hay error */
+  .input_error {
+    border: 3px solid #914747; /* Borde en rojo si hay error */
+  }
+  
+  /* Estilo del mensaje de error */
+  .error_message {
+    width: 70%;
+    height: auto;
+    text-align: center;
+    background-color: #914747;
+    padding: 0.5rem;
+    border-radius: 10px;
+    color: #e7e7e7;
+  }
+  

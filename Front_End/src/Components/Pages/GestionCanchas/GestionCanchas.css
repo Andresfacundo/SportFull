@@ -1,0 +1,51 @@
+
+.main_gestionCanchas{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    margin-bottom: 5rem;
+}
+.shade_consultfield{
+    width: 67%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.5rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+        
+.shade_updatefield{
+    width: 66%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.35rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+        
+.shade_dropfield{
+    width: 62%;
+    height: 3rem;
+    display: flex;
+    justify-content: end;
+    position: absolute;
+    top: 0.8rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+        
+.shade_addfield{
+    width: 62%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.2rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+
+    
+}

@@ -8,6 +8,10 @@ import icon_03 from '../../../../assets/Images/icons/jugador_01.png';
 import icon_04 from '../../../../assets/Images/icons/jugador_05.png';
 import OptionMenuLeft from '../../../UI/OptionMenuLeft/OptionMenuLeft';
 import OptionMenuRight from '../../../UI/OptionMenuRight/OptionMenuRight';
+import NavBar from '../../../UI/NavBar/NavBar'
+
+
+
 export const HomeGestor = () => {
 
   const backgroundStyle = {
@@ -30,7 +34,9 @@ export const HomeGestor = () => {
 
       </main>
 
-
+      <footer>
+        <NavBar/>
+      </footer>
 
     </div>
 
