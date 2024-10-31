@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -61,8 +62,14 @@ public class AdminModels implements Serializable {
     @OneToMany(mappedBy = "adminModels")
     private List<ReservationsModels> reservations;
 
+
+    @OneToMany(mappedBy = "adminempresa", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<GestorModels> gestores = new ArrayList<>();
+
     @OneToMany(mappedBy = "adminModels")
     private List<FieldModels> fields;
+
 
     // Getters y Setters
     public Long getId() {
@@ -169,6 +176,16 @@ public class AdminModels implements Serializable {
         this.userModels = userModels;
     }
 
+
+    public List<GestorModels> getGestores() {
+        return gestores;
+    }
+
+    public void setGestores(List<GestorModels> gestores) {
+        this.gestores = gestores;
+    }
+
+
     public List<ReservationsModels> getReservations() {
         return reservations;
     }
@@ -185,4 +202,5 @@ public class AdminModels implements Serializable {
         this.fields = fields;
     }
 }
+
 

@@ -13,4 +13,6 @@ public interface IUserRepository extends JpaRepository<UserModels, Long> {
 
     // Nuevo método para buscar por token de verificación
     Optional<UserModels> findByVerificationToken(String verificationToken);
+
+    boolean existsByEmail(String email);
 }

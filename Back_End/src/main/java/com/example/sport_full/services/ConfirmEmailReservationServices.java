@@ -25,9 +25,11 @@ public class ConfirmEmailReservationServices {
         LocalDateTime fechaHoraInicio = reservation.getFechaHoraInicio();
         LocalDateTime fechaHoraFin = reservation.getFechaHoraFin();
         Long costoTotal = reservation.getCostoTotal();
+        String nombreEmpresa = reservation.getAdminModels().getNombreEmpresa();
 
         // Construir el mensaje de correo
-        String text = "¡Gracias por reservar con nosotros!\n\n" +
+        String text = "¡Gracias por reservar con nosotros!\n" +
+                "Nombre Empresa " + nombreEmpresa + "\n" +
                 "Detalles de tu reserva:\n" +
                 "Cancha: " + canchaNombre + "\n" +
                 "Hora de inicio: " + fechaHoraInicio + "\n" +
