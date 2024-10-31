@@ -1,9 +1,13 @@
 import React from 'react'
 import './HistorialCliente.css';
-
+import NavBar from '../../../UI/NavBar/NavBar'
 
 export const HistorialCliente = () => {
   return (
-    <div>HistorialCliente</div>
+    <div>HistorialCliente
+            <footer>
+        <NavBar/>
+      </footer>
+    </div>
   )
 }
