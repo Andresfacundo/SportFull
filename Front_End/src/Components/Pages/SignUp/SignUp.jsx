@@ -182,7 +182,7 @@ export const SignUp = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Gracias por registrarse</h3>
-            <p>
+            <p className='message'>
               Para completar su registro, por favor verifique su dirección de
               correo electrónico haciendo clic en el enlace que hemos enviado a:
             </p>

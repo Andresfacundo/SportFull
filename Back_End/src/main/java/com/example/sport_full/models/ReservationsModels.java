@@ -24,10 +24,10 @@ public class ReservationsModels {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserModels userModels; // Nueva relación para soporte de reservas por usuarios
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDateTime fechaHoraInicio;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDateTime fechaHoraFin;
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class ReservationsModels {
         CANCELADA
     }
 
-    private Long costoHora;
+    private Double costoHora;
 
     private Long costoTotal;
 
@@ -96,11 +96,11 @@ public class ReservationsModels {
         this.fechaPago = fechaPago;
     }
 
-    public Long getCostoHora() {
+    public Double getCostoHora() {
         return costoHora;
     }
 
-    public void setCostoHora(Long costoHora) {
+    public void setCostoHora(Double costoHora) {
         this.costoHora = costoHora;
     }
 

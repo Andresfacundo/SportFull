@@ -4,6 +4,10 @@ import { Header } from '../../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
+import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso';
+import NavBar from '../../../UI/NavBar/NavBar'
+
+
 
 export const ActualizarEmpresa = () => {
 
@@ -26,9 +30,13 @@ export const ActualizarEmpresa = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [direccionEmpresa, setDireccionEmpresa] = useState(null);
   const [emailEmpresa, setEmailEmpresa] = useState(null);
-  const [nit, setNit] = useState(null);
+  const [NIT, setNit] = useState(null);
   const [telefonoEmpresa, setTelefonoEmpresa] = useState(null);
   const [nombreEmpresa, setNombreEmpresa] = useState(null);
+  const [facebook, setFacebook] = useState(null);
+  const [whatsApp, setWhatsApp] = useState(null);
+  const [instagram, setInstagram] = useState(null);
+  const [serviciosGenerales, setServiciosGenerales] = useState(''); // Estado para los servicios generales
 
 
   const navigate = useNavigate();
@@ -42,8 +50,19 @@ export const ActualizarEmpresa = () => {
       setNombres(user.nombres || '');
       setApellidos(user.apellidos || '');
       setEmail(user.email || '');
-      setCCadmin(user.adminModels?.ccpropietario || ''); // Accede al campo cc dentro de adminModels
-      setTelefonoPropietario(user.adminModels?.telefonoPropietario || ''); // Accede al campo telefono dentro de adminModels
+      setCCadmin(user.adminModels?.ccpropietario || '');
+      setTelefonoPropietario(user.adminModels?.telefonoPropietario || '');
+      setEmailEmpresa(user.adminModels?.emailEmpresa || '');
+      setDireccionEmpresa(user.adminModels?.direccionEmpresa || '');
+      setNit(user.adminModels?.NIT || '');
+      setTelefonoEmpresa(user.adminModels?.telefonoEmpresa || '');
+      setNombreEmpresa(user.adminModels?.nombreEmpresa || '');
+      setFacebook(user.adminModels?.facebook || '');
+      setWhatsApp(user.adminModels?.whatsApp || '');
+      setInstagram(user.adminModels?.instagram || '');
+      setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || ''); // Cargar servicios generales separados por comas
+
+
     }
   }, []);
 
@@ -56,6 +75,9 @@ export const ActualizarEmpresa = () => {
     // Obtén el ID del usuario desde localStorage
     const userId = user.id;
 
+    // Convertir la cadena de servicios separados por comas en un array
+    const serviciosArray = serviciosGenerales.split(',').map(servicio => servicio.trim());
+
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
       nombres,
@@ -63,7 +85,16 @@ export const ActualizarEmpresa = () => {
       email,
       adminModels: {
         telefonoPropietario,
-        ccpropietario
+        ccpropietario,
+        nombreEmpresa,
+        direccionEmpresa,
+        emailEmpresa,
+        telefonoEmpresa,
+        NIT,
+        facebook,
+        whatsApp,
+        instagram,
+        serviciosGenerales: serviciosArray
       }
     };
 
@@ -79,8 +110,18 @@ export const ActualizarEmpresa = () => {
           apellidos,
           email,
           adminModels: {
+            ...user.adminModels,
             telefonoPropietario,
-            ccpropietario
+            ccpropietario,
+            nombreEmpresa,
+            direccionEmpresa,
+            emailEmpresa,
+            telefonoEmpresa,
+            NIT,
+            facebook,
+            whatsApp,
+            instagram,
+            serviciosGenerales: serviciosArray
           }
         };
 
@@ -99,6 +140,7 @@ export const ActualizarEmpresa = () => {
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
   const [passwordError, setPasswordError] = useState(''); // Mensaje de error del modal
   const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
 
   const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario del localStorage
   const userId = user.id; // Obtener el ID del usuario
@@ -201,6 +243,109 @@ export const ActualizarEmpresa = () => {
             <span className='form_text'>Telefono</span>
           </label>
 
+          <h3 className='tittle_update'>Datos Empresa</h3>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={nombreEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setNombreEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Nombre Empresa</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={NIT || ''}  // Asignar el estado
+              onChange={(e) => setNit(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>NIT</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='email'
+              placeholder=' '
+              className='form_input'
+              value={emailEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setEmailEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Correo Empresa</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={direccionEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setDireccionEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Dirección</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='number'
+              placeholder=' '
+              className='form_input'
+              value={telefonoEmpresa || ''}  // Asignar el estado
+              onChange={(e) => setTelefonoEmpresa(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Telefono</span>
+          </label>
+
+          <h3 className='tittle_update'>Redes Sociales</h3>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={facebook || ''}  // Asignar el estado
+              onChange={(e) => setFacebook(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Facebook</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={instagram || ''}  // Asignar el estado
+              onChange={(e) => setInstagram(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Instagram</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={whatsApp || ''}  // Asignar el estado
+              onChange={(e) => setWhatsApp(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>WhatsApp</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={serviciosGenerales} // Asignar el valor del estado
+              onChange={(e) => setServiciosGenerales(e.target.value)} // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Servicios Generales</span>
+          </label>
+
           <NavLink
             className={'changePassword'}
             to='/AdvancedConfiguration'
@@ -227,22 +372,40 @@ export const ActualizarEmpresa = () => {
 
         {/* Modal para ingresar la contraseña */}
         {showModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Validar contraseña</h3>
+          <ModalExitoso>
+            <h3 className='tittle_modal'>Validar contraseña</h3>
+            <div className='password_container'>
+              {passwordError && <p className='error_message'>{passwordError}</p>}
               <input
-                type="text"
-                placeholder="Ingresa tu contraseña"
+                className={`input_password ${passwordError ? 'input_error' : ''}`}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Ingresa tu contraseña'
                 value={modalPassword || ''}
                 onChange={(e) => setModalPassword(e.target.value)}
               />
-              {passwordError && <p>{passwordError}</p>}
-              <button onClick={validatePasswordAndUpdate}>Confirmar</button>
-              <button onClick={() => setShowModal(false)}>Cancelar</button>
+              <div className='container_button'>
+                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+              </div>
+              {modalPassword && (
+                <span
+                  className='password-toggle-icon'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
+
             </div>
-          </div>
+          </ModalExitoso>
         )}
+
       </main>
+
+      <footer>
+        <NavBar />
+      </footer>
     </div>
   )
 }

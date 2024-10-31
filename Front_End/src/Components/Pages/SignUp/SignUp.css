@@ -192,6 +192,7 @@
     background-color: #914747;
     padding: 0.5rem;
     border-radius: 10px;
+    color: #e7e7e7;
 }
 
 /* Contenedor del input de contraseña */
@@ -204,5 +205,9 @@
   .password-input-container .form_input {
     width: 18rem; /* O el tamaño que estés utilizando */
     padding-right: 1rem; /* Espacio suficiente para el icono */
+  }
+
+  .message{
+    text-align: justify;
   }
   

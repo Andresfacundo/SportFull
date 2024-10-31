@@ -1,11 +1,12 @@
 package com.example.sport_full.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "canchas-sinteticas")
+@Table(name = "canchas_sinteticas")
 public class FieldModels {
 
     @Id
@@ -19,14 +20,23 @@ public class FieldModels {
     private Double precio;
 
     @Column(nullable = false)
-    private String estado;  // Reservada, Disponible, Fuera de servicio
+    private String estado;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private AdminModels adminModels;
 
-    @OneToMany(mappedBy = "fieldModels")
-    private List<ReservationsModels> reservations;
+    @ElementCollection
+    @CollectionTable(name = "field_servicios", joinColumns = @JoinColumn(name = "field_id"))
+    @Column(name = "servicio")
+    private List<String> servicios = new ArrayList<>();
+
+    @Column(nullable = false)
+    private String tipoCancha;
+
+    // Constructor por defecto
+    public FieldModels() {}
 
     // Getters y Setters
 
@@ -68,5 +78,21 @@ public class FieldModels {
 
     public void setAdminModels(AdminModels adminModels) {
         this.adminModels = adminModels;
+    }
+
+    public List<String> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(List<String> servicios) {
+        this.servicios = servicios;
+    }
+
+    public String getTipoCancha() {
+        return tipoCancha;
+    }
+
+    public void setTipoCancha(String tipoCancha) {
+        this.tipoCancha = tipoCancha;
     }
 }

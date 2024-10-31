@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ClienteService from '../../../../services/ClienteService';
 import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso'
+import NavBar from '../../../UI/NavBar/NavBar'
 
 
 export const ActualizarGestor = () => {
@@ -72,11 +73,11 @@ export const ActualizarGestor = () => {
         const newUser = {
           ...user,
 
-          gestorModels:{
+          gestorModels: {
             ...user.gestorModels,
             telefono
           }
-          
+
         };
 
         // Guardar el nuevo objeto actualizado en localStorage
@@ -94,6 +95,7 @@ export const ActualizarGestor = () => {
   const [modalPassword, setModalPassword] = useState(''); // Contraseña ingresada en el modal
   const [passwordError, setPasswordError] = useState(''); // Mensaje de error del modal
   const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+  const [showPassword, setShowPassword] = useState(false); // Para controlar la visibilidad de la contraseña
 
   const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario del localStorage
   const userId = user.id; // Obtener el ID del usuario
@@ -115,19 +117,20 @@ export const ActualizarGestor = () => {
     // Prepara los datos para enviarlos al backend
     ClienteService.validatePassword(userId, requestBody)
       .then((response) => {
-        console.log(response.data); // Imprime la respuesta para verificar el contenido
+        console.log("Respuesta de la API:", response.data);
         if (response.data === "Contraseña válida") {
-          // Si la contraseña es válida, permitir la edición
           navigate('/AdvancedConfiguration');
-          setShowModal(false); // Cerrar el modal
+          setShowModal(false);
         } else {
+          console.log("Contraseña incorrecta detectada");
           setPasswordError('Contraseña incorrecta');
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error al validar la contraseña:", error);
         setPasswordError('Ocurrió un error al validar la contraseña');
       });
+
   };
   return (
     <div style={backgroundStyle} className='container'>
@@ -143,7 +146,7 @@ export const ActualizarGestor = () => {
               placeholder=' '
               className='form_input'
               value={nombres || ''}
-              disabled={true}            />
+              disabled={true} />
             <span className='form_text'>Nombres</span>
           </label>
 
@@ -153,7 +156,7 @@ export const ActualizarGestor = () => {
               placeholder=' '
               className='form_input'
               value={apellidos || ''}
-              disabled={true}            />
+              disabled={true} />
             <span className='form_text'>Apellidos</span>
           </label>
           <label className='form_label'>
@@ -219,24 +222,37 @@ export const ActualizarGestor = () => {
         {showModal && (
           <ModalExitoso>
             <h3 className='tittle_modal'>Validar contraseña</h3>
-
-            <input
-              className='input_password'
-              type="password"
-              placeholder="Ingresa tu contraseña"
-              value={modalPassword || ''}
-              onChange={(e) => setModalPassword(e.target.value)}
-            />
-            {passwordError && <p>{passwordError}</p>}
-            <div className='container_button' >
-
-              <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
-              <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+            <div className='password_container'>
+              {passwordError && <p className='error_message'>{passwordError}</p>}
+              <input
+                className={`input_password ${passwordError ? 'input_error' : ''}`}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Ingresa tu contraseña'
+                value={modalPassword || ''}
+                onChange={(e) => setModalPassword(e.target.value)}
+              />
+              <div className='container_button'>
+                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
+                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+              </div>
+              {modalPassword && (
+                <span
+                  className='password-toggle-icon'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
+                </span>
+              )}
             </div>
           </ModalExitoso>
-
         )}
+
       </main>
+
+      <footer>
+        <NavBar/>
+      </footer>
     </div>
   )
 }

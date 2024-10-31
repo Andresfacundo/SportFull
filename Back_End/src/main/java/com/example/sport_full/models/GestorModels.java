@@ -19,8 +19,9 @@ public class GestorModels implements Serializable {
     @Column(nullable = true)
     private String telefono;
 
-    @OneToOne
-    @JoinColumn(name = "empresa_id", referencedColumnName = "id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = false)
+    @JsonIgnore
     private AdminModels adminempresa;
 
     @OneToOne

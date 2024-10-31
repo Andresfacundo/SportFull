@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IGestorRepository extends JpaRepository<GestorModels, Long> {
+    boolean existsByCCgestor(String ccgestor);
+
+    boolean existsByTelefono(String telefono);
 }

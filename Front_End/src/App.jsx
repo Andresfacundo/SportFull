@@ -24,7 +24,16 @@ import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import Services from './Components/UI/FieldServices/FieldServices'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
-
+import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
+import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
+import { GestionEmpleados } from './Components/Pages/GestionEmpleados/GestionEmpleados.jsx'
+import { GestionReportes } from './Components/Pages/GestionReportes/GestionReportes.jsx'
+import { SmallCard } from './Components/UI/SmallCard/SmallCard.jsx'
+import { DeleteFields } from './Components/Pages/DeleteFields/DeleteFields.jsx'
+import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
+import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
+import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
+import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 
 import './App.css'
 
@@ -54,6 +63,15 @@ function App() {
       <Route path='/auth/verify' element={<VerifyEmail />} />
       <Route path='/GestionReservas' element={<GestionReservas />} />
       <Route path='/StatusAccount' element={<StatusAccount />} />
+      <Route path='/GestionCanchas' element={<GestionCanchas />} />
+      <Route path='/AgregarCancha' element={<AgregarCancha />} />
+      <Route path='/DeleteFields' element={<DeleteFields />} />
+      <Route path='/GestionReportes' element={<GestionReportes />} />
+      <Route path='/GestionEmpleados' element={<GestionEmpleados />} />
+      <Route path='/UpdateField/:id' element={<UpdateField />} />
+      <Route path='/ShowFields' element={<ShowFields />} />
+      <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
+      <Route path="/editprofile" element={<EditProfile />} />
 
     </Routes>
   )

@@ -8,6 +8,7 @@ import com.example.sport_full.repositories.IGestorRepository;
 import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.EmailServices;
 import com.example.sport_full.validations.UserValidations;
+import jakarta.transaction.Transactional;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,32 @@ public class GestorControllers {
             String apellidos = (String) requestData.get("apellidos");
             String contraseña = (String) requestData.get("contraseña");
 
+            // Extraer datos del gestor
+            Map<String, String> gestorData = (Map<String, String>) requestData.get("gestorModels");
+            String ccgestor = gestorData.get("ccgestor");
+            String telefono = gestorData.get("telefono");
+
+            // Buscar la empresa a la que se va a asociar el gestor
+            Optional<AdminModels> empresa = companyRepository.findById(adminEmpresa_Id);
+            if (!empresa.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La empresa no existe.");
+            }
+
+            // Verificar si el email ya está en uso
+            if (userRepository.existsByEmail(email)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El correo ya está en uso.");
+            }
+
+            // Verificar si el ccgestor ya está en uso
+            if (gestorRepository.existsByCCgestor(ccgestor)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La cédula ya está registrada.");
+            }
+
+            // Verificar si el teléfono ya está en uso
+            if (gestorRepository.existsByTelefono(telefono)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El teléfono ya está en uso.");
+            }
+
             // Crear un nuevo objeto UserModels
             UserModels userModels = new UserModels();
             userModels.setEmail(email);
@@ -66,41 +93,30 @@ public class GestorControllers {
             // Establecer el tipo de usuario como "GESTOR"
             userModels.setTipoUsuario("GESTOR");
 
-            // Extraer datos del gestor
-            Map<String, String> gestorData = (Map<String, String>) requestData.get("gestorModels");
-            String ccgestor = gestorData.get("ccgestor");
-            String telefono = gestorData.get("telefono");
+            // Guardar el usuario en la tabla 'usuarios'
+            userRepository.save(userModels);
 
             // Crear un nuevo objeto GestorModels
             GestorModels gestorModels = new GestorModels();
             gestorModels.setCCgestor(ccgestor);
             gestorModels.setTelefono(telefono);
+            gestorModels.setUserModels(userModels);
+            gestorModels.setAdminempresa(empresa.get());
 
-            // Buscar la empresa a la que se va a asociar el gestor
-            Optional<AdminModels> empresa = companyRepository.findById(adminEmpresa_Id);
-            if (empresa.isPresent()) {
-                // Guardar el usuario en la tabla 'usuarios'
-                userRepository.save(userModels);
+            // Guardar el gestor en la tabla de gestores
+            gestorRepository.save(gestorModels);
 
-                // Asociar el usuario con el gestor
-                gestorModels.setUserModels(userModels); // Vincular usuario con el perfil de gestor
-                gestorModels.setAdminempresa(empresa.get()); // Asociar con la empresa
-                gestorRepository.save(gestorModels); // Guardar el gestor en la tabla de gestores
+            // Enviar el correo de verificación
+            emailService.sendVerificationEmail(userModels.getEmail(), verificationToken);
 
-                // Enviar el correo de verificación
-                emailService.sendVerificationEmail(userModels.getEmail(), verificationToken);
+            // Retornar el modelo de usuario registrado (sin mostrar la contraseña)
+            userModels.setContraseña(null);
+            return ResponseEntity.ok(userModels);
 
-                // Retornar el modelo de usuario registrado (sin mostrar la contraseña)
-                userModels.setContraseña(null);
-                return ResponseEntity.ok(userModels);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La empresa no existe.");
-            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
-
 
     // Obtener un gestor por ID
     @GetMapping("/find/{id}")
