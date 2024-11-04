@@ -1,0 +1,79 @@
+.calendario-container {
+  width: 90%;
+  height: max-content;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin: auto;    
+}
+
+.calendario-container h1 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.calendario-horas {
+  display: flex;  
+   flex-wrap: wrap;
+   justify-content: center;   
+}
+
+.horarios { 
+   display: flex;  
+   flex-wrap: wrap;
+   justify-content: space-between;
+   align-items: flex-end;
+   width: 95%;         
+}
+
+.hora {
+  cursor: pointer;  
+  border: 1px solid #ccc;
+  width: 20%;
+  transition: background-color 0.3s;
+  padding: 5px;
+  margin: 5px;
+  background-color: #07954a;
+  color: white;
+}
+
+.hora:hover {
+  background-color: #f0f0f0;
+}
+
+.horarios .horarios-disponibles {
+  color: white; 
+  margin: 1rem;
+  width: 100%;
+}
+
+.horarios-disponibles {
+  color: white;
+  font-size: 1.5rem;
+ margin: 1rem;
+  border-top: 1px solid white;
+  padding: 1rem;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid white;
+  padding: 1rem;
+}
+
+li {
+  list-style: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid white;
+  margin: 1rem;
+}
+
+li button {  
+  width: max-content;
+  margin: 1rem;
+}

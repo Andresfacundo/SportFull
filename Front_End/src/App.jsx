@@ -20,6 +20,7 @@ import ModalFail from './Components/UI/ModalFallido/ModalFallido'
 import VistaEmpresas from './Components/Pages/VistaEmpresas/VistaEmpresas'
 import Canchas from './Components/UI/Canchas/Canchas'
 import VisualizadorCanchas from './Components/UI/VisualizadorCanchas/VisualizadorCanchas'
+
 function App() {
   
   return (     

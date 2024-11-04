@@ -1,7 +1,7 @@
 import React from 'react'
 import img from '../../../assets/Images/cancha.jpg'
 import './VisualizadorCanchas.css'
-
+import Calendario from '../Calendario/Calendario'
 
 const VisualizadorCanchas = (props) => {
     return (
@@ -32,12 +32,11 @@ const VisualizadorCanchas = (props) => {
                           <button> Agua </button>
                           <button> Arbitraje </button>
                           <button> medallas </button>
-                          <button> iluminacion </button>
-                          
+                          <button> iluminacion </button>                          
                      </div>                     
                 </section>
 
-                
+                <Calendario/> 
 
                 <section className='btn'>
                     <button className='btn-reservar'>Reservar</button>

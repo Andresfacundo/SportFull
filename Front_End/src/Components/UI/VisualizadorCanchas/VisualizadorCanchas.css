@@ -11,7 +11,7 @@
 }
 
 .visualizadorTitulo::before {
-    content: "";
+  content: "";
   position: absolute;
   width: 15px;
   height: 15px;  
@@ -78,7 +78,7 @@
 }
 
 .descripcion {
-    font-size: 20px;
+    font-size: 1rem;   
     padding: 1rem;
     color: white;
     text-align: left;
@@ -91,6 +91,8 @@
     align-items: center;    
 }
 
+
+
 .servicios{
     display: flex;
     justify-content: space-between;
@@ -99,8 +101,7 @@
     color: white;
     margin-bottom: 1rem;
    background-color: rgba(0, 0, 0, 0.4);
-   border-bottom: 1px solid white;
-   width: 100%;
+   border-bottom: 1px solid white;   
    height: max-content;   
 }
 
@@ -113,10 +114,10 @@
 }
 
 .servicios button {
-    width: 40%;
+    width: 45%;
     font-size: 20px;  
     color: black;
-    border-radius: 15px;
+    border-radius: 15px;     
     
 }
 
