@@ -374,7 +374,6 @@ public class ReservationsControllers {
 
     @PostMapping("/createReservation")
     public ResponseEntity<?> createTwoReservation(@RequestBody List<ReservationsModels> reservationsList,
-                                                  @RequestParam Long adminId,
                                                   @RequestParam Long clientId,
                                                   @RequestParam String userEmail,
                                                   @RequestParam List<Long> fieldIds) {
@@ -383,10 +382,8 @@ public class ReservationsControllers {
             if (!user.isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado.");
             }
-            Optional<UserModels> admin = adminServices.getUser(adminId);
             Optional<UserModels> client = clientServices.getClient(clientId);
-            if (admin.isPresent() && client.isPresent()) {
-                // Validar que el email proporcionado coincida con el email del cliente registrado
+            if (client.isPresent()) {
                 if (!client.get().getEmail().equals(userEmail)) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body("El correo proporcionado no coincide con el del cliente registrado.");
@@ -396,7 +393,6 @@ public class ReservationsControllers {
                 for (int i = 0; i < reservationsList.size(); i++) {
                     ReservationsModels reservation = reservationsList.get(i);
 
-                    // Validar que haya un ID de cancha correspondiente en la lista de IDs
                     if (i >= fieldIds.size()) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                 .body("La cantidad de IDs de canchas no coincide con la cantidad de reservas.");
@@ -406,24 +402,14 @@ public class ReservationsControllers {
                     Optional<FieldModels> field = fieldRepository.findById(fieldId);
                     if (field.isPresent()) {
                         FieldModels fieldModel = field.get();
-                        // Verificar que la cancha pertenece al administrador (empresa)
-                        if (!fieldModel.getAdminModels().getId().equals(admin.get().getId())) {
-                            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                    .body("Una de las canchas no pertenece a esta empresa.");
-                        }
-
                         Double costoHora = fieldModel.getPrecio();
-
-                        // Calcular la duración de la reserva en horas
                         long duracionHoras = Duration.between(reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()).toHours();
-
                         Long costoTotal = (long) (costoHora * duracionHoras);
 
                         reservation.setCostoTotal(costoTotal);
                         reservation.setCostoHora(costoHora);
                         reservation.setFechaPago(LocalDate.now());
 
-                        // Validar si ya existe una reserva en la misma cancha y rango de horario
                         boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
                                 fieldModel, reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()
                         );
@@ -434,12 +420,11 @@ public class ReservationsControllers {
                                             " en el horario especificado.");
                         }
 
-                        // Asignar el administrador y la cancha a la reserva y el usuario
+                        // Asignar la cancha, el usuario y el administrador a la reserva
                         reservation.setAdminModels(fieldModel.getAdminModels());
                         reservation.setFieldModels(fieldModel);
                         reservation.setUserModels(client.get());
 
-                        // Crear la reserva y agregarla a la lista de reservas creadas
                         ReservationsModels newReservation = reservationsServices.createReservation(reservation);
                         createdReservations.add(newReservation);
                     } else {
@@ -447,15 +432,14 @@ public class ReservationsControllers {
                     }
                 }
 
-                // Enviar el correo de confirmación al usuario para todas las reservas
                 String subject = "Confirmación de tus reservas";
                 confirmReservationServices.ReservationConfirmation(userEmail, subject, createdReservations);
                 return ResponseEntity.ok(createdReservations);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrador o cliente no encontrado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado.");
             }
         } catch (RuntimeException e) {
-            e.printStackTrace(); // Esto imprimirá el stacktrace completo en los logs del servidor.
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
     }
