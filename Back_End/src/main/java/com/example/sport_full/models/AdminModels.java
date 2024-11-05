@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,13 @@ public class AdminModels implements Serializable {
 
     @Column(nullable = true, unique = true)
     private String instagram;
+
+    // Horarios de atención
+    @Column(nullable = true)
+    private LocalTime horaApertura;
+
+    @Column(nullable = true)
+    private LocalTime horaCierre;
 
     // Nueva colección para los servicios generales
     @ElementCollection
@@ -200,6 +208,22 @@ public class AdminModels implements Serializable {
 
     public void setFields(List<FieldModels> fields) {
         this.fields = fields;
+    }
+
+    public LocalTime getHoraApertura() {
+        return horaApertura;
+    }
+
+    public void setHoraApertura(LocalTime horaApertura) {
+        this.horaApertura = horaApertura;
+    }
+
+    public LocalTime getHoraCierre() {
+        return horaCierre;
+    }
+
+    public void setHoraCierre(LocalTime horaCierre) {
+        this.horaCierre = horaCierre;
     }
 }
 

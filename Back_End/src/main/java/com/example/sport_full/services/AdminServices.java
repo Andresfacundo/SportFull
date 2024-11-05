@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -95,5 +96,18 @@ public class AdminServices {
                 }
             }
         }, delay, TimeUnit.SECONDS);
+    }
+
+    public void actualizarHorario(AdminModels empresa, LocalTime horaApertura, LocalTime horaCierre) {
+        if (horaApertura.isAfter(horaCierre)) {
+            throw new IllegalArgumentException("La hora de apertura debe ser antes de la hora de cierre.");
+        }
+        empresa.setHoraApertura(horaApertura);
+        empresa.setHoraCierre(horaCierre);
+        // Aquí se guardarían los cambios en la base de datos
+    }
+
+    public boolean validarDisponibilidad(AdminModels empresa, LocalTime horaReserva) {
+        return !horaReserva.isBefore(empresa.getHoraApertura()) && !horaReserva.isAfter(empresa.getHoraCierre());
     }
 }

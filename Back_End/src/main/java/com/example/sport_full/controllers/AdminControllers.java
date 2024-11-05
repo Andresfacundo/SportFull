@@ -50,7 +50,7 @@ public class AdminControllers {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<UserModels> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
+    public ResponseEntity<?> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
         Optional<UserModels> existingUserOpt = userRepository.findById(userId);
 
         if (existingUserOpt.isPresent()) {
@@ -69,13 +69,11 @@ public class AdminControllers {
                 existingUser.setEmail(userModels.getEmail());
             }
 
-            // Encripta la contraseña si se envía una nueva
             if (userModels.getContraseña() != null) {
                 String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
                 existingUser.setContraseña(hashedPassword);
             }
 
-            // Actualiza solo los campos de AdminModels que vienen en la solicitud
             if (userModels.getAdminModels() != null) {
                 AdminModels adminModels = userModels.getAdminModels();
 
@@ -119,7 +117,23 @@ public class AdminControllers {
                     existingUser.getAdminModels().setInstagram(adminModels.getInstagram());
                 }
 
-                // Actualiza o agrega los servicios generales sin duplicados
+                // Validar y actualizar los horarios de apertura y cierre
+                if (adminModels.getHoraApertura() != null && adminModels.getHoraCierre() != null) {
+                    if (adminModels.getHoraCierre().isBefore(adminModels.getHoraApertura())) {
+                        return ResponseEntity.badRequest().body("La hora de cierre no puede ser antes de la hora de apertura.");
+                    }
+                    existingUser.getAdminModels().setHoraApertura(adminModels.getHoraApertura());
+                    existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
+                } else {
+                    // Actualizar solo la hora de apertura o cierre si no están ambos en la solicitud
+                    if (adminModels.getHoraApertura() != null) {
+                        existingUser.getAdminModels().setHoraApertura(adminModels.getHoraApertura());
+                    }
+                    if (adminModels.getHoraCierre() != null) {
+                        existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
+                    }
+                }
+
                 if (adminModels.getServiciosGenerales() != null) {
                     List<String> existingServicios = existingUser.getAdminModels().getServiciosGenerales();
 

@@ -36,6 +36,8 @@ export const ActualizarEmpresa = () => {
   const [facebook, setFacebook] = useState(null);
   const [whatsApp, setWhatsApp] = useState(null);
   const [instagram, setInstagram] = useState(null);
+  const [horaApertura, setHoraApertura] = useState(null);
+  const [horaCierre, setHoraCierre] = useState(null);
   const [serviciosGenerales, setServiciosGenerales] = useState(''); // Estado para los servicios generales
 
 
@@ -60,6 +62,8 @@ export const ActualizarEmpresa = () => {
       setFacebook(user.adminModels?.facebook || '');
       setWhatsApp(user.adminModels?.whatsApp || '');
       setInstagram(user.adminModels?.instagram || '');
+      setHoraApertura(user.adminModels?.horaApertura || '');
+      setHoraCierre(user.adminModels?.horaCierre || '');
       setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || ''); // Cargar servicios generales separados por comas
 
 
@@ -94,6 +98,8 @@ export const ActualizarEmpresa = () => {
         facebook,
         whatsApp,
         instagram,
+        horaApertura,
+        horaCierre,
         serviciosGenerales: serviciosArray
       }
     };
@@ -121,6 +127,8 @@ export const ActualizarEmpresa = () => {
             facebook,
             whatsApp,
             instagram,
+            horaApertura,
+            horaCierre,
             serviciosGenerales: serviciosArray
           }
         };
@@ -299,6 +307,29 @@ export const ActualizarEmpresa = () => {
             />
             <span className='form_text'>Telefono</span>
           </label>
+                    {/* horarios de atencion */}
+                    <label className='form_label'>
+            <input
+              type='time'
+              placeholder=' '
+              className='form_input'
+              value={horaApertura || ''}  // Asignar el estado
+              onChange={(e) => setHoraApertura(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Hora Apertura</span>
+          </label>
+          <label className='form_label'>
+            <input
+              type='time'
+              placeholder=' '
+              className='form_input'
+              value={horaCierre || ''}  // Asignar el estado
+              onChange={(e) => setHoraCierre(e.target.value)}  // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Hora Cierre</span>
+          </label>
 
           <h3 className='tittle_update'>Redes Sociales</h3>
           <label className='form_label'>
@@ -334,6 +365,8 @@ export const ActualizarEmpresa = () => {
             />
             <span className='form_text'>WhatsApp</span>
           </label>
+
+
           <label className='form_label'>
             <input
               type='text'
