@@ -478,6 +478,22 @@ public class ReservationsControllers {
         return ResponseEntity.ok(reservations);
     }
 
+    // Endpoint para obtener el valor total de reservas filtrado por empresa, estado y/o cancha
+    @GetMapping("/valorTotal")
+    public ResponseEntity<?> getTotalReservationsValue(
+            @RequestParam Long empresaId,
+            @RequestParam(required = false) ReservationsModels.estadoReserva estado,
+            @RequestParam(required = false) Long canchaId) {
+
+        try {
+            Double totalValue = reservationsServices.getTotalReservationsValue(empresaId, estado, canchaId);
+            return new ResponseEntity<>(totalValue, HttpStatus.OK);
+        }catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
     @PutMapping("/{reservationId}")
     public ResponseEntity<ReservationsModels> updateReservation(
@@ -491,20 +507,36 @@ public class ReservationsControllers {
         }
     }
 
-    @PutMapping("/cancelReservation")
-    public ResponseEntity<?> cancelReservation(@RequestParam Long reservationId) {
-        try {
-            // Llamar al servicio para cancelar la reserva
-            ReservationsModels canceledReservation = reservationsServices.cancelReservation(reservationId);
-            return ResponseEntity.ok("Reserva cancelada exitosamente. Estado actual: " + canceledReservation.getEstadoReserva());
-        } catch (ResponseStatusException e) {
-            // Manejar error si la reserva no se encuentra
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada.");
-        } catch (Exception e) {
-            // Manejar otros errores
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cancelar la reserva.");
-        }
+//    @PutMapping("/cancelReservation")
+//    public ResponseEntity<?> cancelReservation(@RequestParam Long reservationId) {
+//        try {
+//            // Llamar al servicio para cancelar la reserva
+//            ReservationsModels canceledReservation = reservationsServices.cancelReservation(reservationId);
+//            return ResponseEntity.ok("Reserva cancelada exitosamente. Estado actual: " + canceledReservation.getEstadoReserva());
+//        } catch (ResponseStatusException e) {
+//            // Manejar error si la reserva no se encuentra
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada.");
+//        } catch (Exception e) {
+//            // Manejar otros errores
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cancelar la reserva.");
+//        }
+//    }
+@PatchMapping("/{id}/cancelar")
+public ResponseEntity<String> cancelReservation(@PathVariable Long id) {
+    Optional<ReservationsModels> reservationOptional = reservationsRepository.findById(id);
+
+    if (reservationOptional.isPresent()) {
+        ReservationsModels reservation = reservationOptional.get();
+
+        // Cambiar el estado de la reserva a CANCELADA
+        reservation.setEstadoReserva(ReservationsModels.estadoReserva.CANCELADA);
+        reservationsRepository.save(reservation);
+
+        return ResponseEntity.ok("Reserva cancelada exitosamente.");
+    } else {
+        return ResponseEntity.status(404).body("Reserva no encontrada.");
     }
+}
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long reservationId) {

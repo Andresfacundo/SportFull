@@ -55,6 +55,32 @@ public class ReservationsServices {
         return reservationsRepository.findByFieldModels_AdminModels(admin);
     }
 
+    // Método para obtener el valor total de reservas de una empresa, filtrado por estado y/o cancha
+    public Double getTotalReservationsValue(Long empresaId, ReservationsModels.estadoReserva estado, Long canchaId) {
+
+        if (canchaId != null  && !reservationsRepository.existsByAdminModels_IdAndFieldModels_Id(empresaId, canchaId)){
+            throw new IllegalArgumentException("La cancha no pertenece a la empresa");
+        }
+
+        List<ReservationsModels> reservations;
+        // Filtrar según los parámetros que no sean null
+        if (estado != null && canchaId != null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndFieldModels_IdAndEstadoReserva(empresaId, canchaId, estado);
+        } else if (estado != null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndEstadoReserva(empresaId, estado);
+        } else if (canchaId != null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndFieldModels_Id(empresaId, canchaId);
+        } else {
+            reservations = reservationsRepository.findByAdminModels_Id(empresaId);
+
+        }
+
+        // Calcular el valor total sumando el costo de cada reserva filtrada
+        return reservations.stream()
+                .mapToDouble(ReservationsModels::getCostoTotal)
+                .sum();
+    }
+
     public ReservationsModels updateReservation(Long reservationId, ReservationsModels updatedReservation) {
         Optional<ReservationsModels> existingReservation = reservationsRepository.findById(reservationId);
 

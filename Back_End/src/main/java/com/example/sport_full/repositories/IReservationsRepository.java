@@ -25,4 +25,22 @@ public interface IReservationsRepository extends JpaRepository<ReservationsModel
     boolean existsByFieldModelsAndFechaHoraInicioBetween(FieldModels field, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin);
 
     Optional<ReservationsModels> findTopByFieldModelsAndUserModelsOrderByFechaHoraInicioDesc(FieldModels fieldModel, UserModels userModels);
+
+    // Método para encontrar reservas de una empresa filtrando por estado y cancha
+    List<ReservationsModels> findByAdminModels_IdAndFieldModels_IdAndEstadoReserva(
+            Long empresaId, Long canchaId, ReservationsModels.estadoReserva estadoReserva);
+
+    // Sobrecarga para permitir filtrar solo por empresa y estado
+    List<ReservationsModels> findByAdminModels_IdAndEstadoReserva(
+            Long empresaId, ReservationsModels.estadoReserva estadoReserva);
+
+    // Sobrecarga para permitir filtrar solo por empresa y cancha
+    List<ReservationsModels> findByAdminModels_IdAndFieldModels_Id(
+            Long empresaId, Long canchaId);
+
+    // Método para verificar si una cancha pertenece a una empresa
+    boolean existsByAdminModels_IdAndFieldModels_Id(Long empresaId, Long canchaId);
+
+    List<ReservationsModels> findByAdminModels_Id(Long empresaId);
+
 }
