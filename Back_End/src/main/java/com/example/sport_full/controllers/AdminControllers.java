@@ -48,9 +48,8 @@ public class AdminControllers {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<?> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
+        @PatchMapping("/update/{id}")
+    public ResponseEntity<UserModels> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
         Optional<UserModels> existingUserOpt = userRepository.findById(userId);
 
         if (existingUserOpt.isPresent()) {
@@ -117,22 +116,15 @@ public class AdminControllers {
                     existingUser.getAdminModels().setInstagram(adminModels.getInstagram());
                 }
 
-                // Validar y actualizar los horarios de apertura y cierre
-                if (adminModels.getHoraApertura() != null && adminModels.getHoraCierre() != null) {
-                    if (adminModels.getHoraCierre().isBefore(adminModels.getHoraApertura())) {
-                        return ResponseEntity.badRequest().body("La hora de cierre no puede ser antes de la hora de apertura.");
-                    }
+                // Actualiza los horarios de apertura y cierre si se envían en la solicitud
+                if (adminModels.getHoraApertura() != null) {
                     existingUser.getAdminModels().setHoraApertura(adminModels.getHoraApertura());
-                    existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
-                } else {
-                    // Actualizar solo la hora de apertura o cierre si no están ambos en la solicitud
-                    if (adminModels.getHoraApertura() != null) {
-                        existingUser.getAdminModels().setHoraApertura(adminModels.getHoraApertura());
-                    }
-                    if (adminModels.getHoraCierre() != null) {
-                        existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
-                    }
                 }
+
+                if (adminModels.getHoraCierre() != null) {
+                    existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
+                }
+
 
                 if (adminModels.getServiciosGenerales() != null) {
                     List<String> existingServicios = existingUser.getAdminModels().getServiciosGenerales();
@@ -174,16 +166,6 @@ public class AdminControllers {
         }
     }
 
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> patchAdmin(@PathVariable("id") Long id) {
-        if (this.userRepository.existsById(id)) {
-            this.adminServices.patchAdmin(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAdmin(@PathVariable("id") Long id) {

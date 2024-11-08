@@ -26,13 +26,18 @@ import {GestionReservas} from './Components/Pages/GestionReservas/GestionReserva
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
 import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
 import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
-import { GestionEmpleados } from './Components/Pages/GestionEmpleados/GestionEmpleados.jsx'
+import { GestionEmpleados } from './Components/Pages/GestionEmpleados/MenuGestionEmpleados/GestionEmpleados.jsx'
 import { GestionReportes } from './Components/Pages/GestionReportes/GestionReportes.jsx'
 import { SmallCard } from './Components/UI/SmallCard/SmallCard.jsx'
 import { DeleteFields } from './Components/Pages/DeleteFields/DeleteFields.jsx'
 import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
 import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
 import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
+import { AgregarEmpleado } from './Components/Pages/GestionEmpleados/AgregarEmpleado/AgregarEmpleado.jsx'
+import { ActualizarEmpleado } from './Components/Pages/GestionEmpleados/ActualizarEmpleado/ActualizarEmpleado.jsx'
+import { ConsultarEmpleados } from './Components/Pages/GestionEmpleados/ConsultarEmpleados/ConsultarEmpleados.jsx'
+import { EliminarEmpleado } from './Components/Pages/GestionEmpleados/EliminarEmpleado/EliminarEmpleado.jsx'
+
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 
 import './App.css'
@@ -72,6 +77,11 @@ function App() {
       <Route path='/ShowFields' element={<ShowFields />} />
       <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
       <Route path="/editprofile" element={<EditProfile />} />
+      <Route path="/AddEmployee" element={<AgregarEmpleado />} />
+      <Route path="/DeleteEmployee" element={<EliminarEmpleado />} />
+      <Route path="/UpdateEmployee" element={<ActualizarEmpleado />} />
+      <Route path="/ShowEmployee" element={<ConsultarEmpleados />} />
+
 
     </Routes>
   )

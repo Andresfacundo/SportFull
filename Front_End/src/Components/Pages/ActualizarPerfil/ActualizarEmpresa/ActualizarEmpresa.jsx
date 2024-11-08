@@ -116,7 +116,6 @@ export const ActualizarEmpresa = () => {
           apellidos,
           email,
           adminModels: {
-            ...user.adminModels,
             telefonoPropietario,
             ccpropietario,
             nombreEmpresa,
