@@ -40,6 +40,24 @@ class ClienteService {
         });
     }
 
+    // Crear un nuevo Gestor
+    createGestor(user, adminEmpresaId) {
+        // Obtén el token de autenticación si es necesario
+        const token = localStorage.getItem('token');
+
+        // Realiza una solicitud POST para crear el gestor
+        return axios.post(
+            `http://localhost:8080/admin/gestor/register?adminEmpresa_Id=${adminEmpresaId}`,
+            user,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Incluye el token si es necesario
+                    'Content-Type': 'application/json'   // Asegura que el contenido sea JSON
+                }
+            }
+        );
+    }
+
     //Actualizar datos del Gestor
     updateGestor(id, updatedUser) {
         const token = localStorage.getItem('token'); // Obtén el token de autenticación

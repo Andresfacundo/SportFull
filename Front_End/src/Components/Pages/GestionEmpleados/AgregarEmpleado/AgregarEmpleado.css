@@ -12,3 +12,10 @@
     background-color: #073B4C;
     overflow-x: hidden;
 }
+
+.title_register {
+    font-size: 2.4rem;
+    font-weight: 400;
+    margin-bottom: 4rem;
+    text-align: center;
+}
