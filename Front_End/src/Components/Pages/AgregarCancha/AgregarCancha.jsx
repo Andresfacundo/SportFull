@@ -13,6 +13,7 @@ export const AgregarCancha = () => {
     const [precio, setPrecio] = useState('');
     const [estado, setEstado] = useState('Disponible'); // Estado de la cancha (inicialmente "Disponible")
     const [errorMsg, setErrorMsg] = useState(''); // Para manejar los errores
+    const [selectedImages, setSelectedImages] = useState(["src/assets/images/Default.Picture.Field.jpg", "src/assets/images/Default.Picture.Field.jpg", "src/assets/images/Default.Picture.Field.jpg"]);
     const navigate = useNavigate(); // Inicializar el hook useNavigate
 
     // Función para cargar los servicios generales desde localStorage
@@ -69,7 +70,8 @@ export const AgregarCancha = () => {
             tipoCancha: tipoCancha,
             precio: parseFloat(precio),  // Asegurarse de que el precio sea numérico
             estado: estado,
-            servicios: selectedServices
+            servicios: selectedServices,
+            imagenes: imagenes.filter(img => img !== null) // Solo incluye imágenes que hayan sido subidas
         };
     
         // Llamar a la API para crear la cancha
@@ -95,7 +97,28 @@ export const AgregarCancha = () => {
             setErrorMsg(`Error al crear la cancha: ${mensajeError}`);
         }
     };
-    
+
+    const handleFileChange = (index, e) => {
+        const file = e.target.files[0];
+        
+        try {
+            // Verificar si el archivo es JPG o PNG
+            if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const updatedImages = [...selectedImages];
+                    updatedImages[index] = reader.result;
+                    setSelectedImages(updatedImages);
+                    setErrorMsg(''); // Limpiar cualquier mensaje de error previo
+                };
+                reader.readAsDataURL(file);
+            } else {
+                throw new Error("Formato de archivo no soportado. Solo se permiten imágenes JPG y PNG.");
+            }
+        } catch (error) {
+            setErrorMsg(error.message); // Mostrar mensaje de error en caso de formato no válido
+        }
+    };
 
     return (
         <div className='container_agregarCancha'>
@@ -104,7 +127,26 @@ export const AgregarCancha = () => {
             <main className='main_agregarCancha'>
                 <h2 className='tittle_agregarCancha'>Agregar Cancha</h2>
                 <form onSubmit={handleSubmit} className='form'>
-                    {errorMsg && <p className="error-message">{errorMsg}</p>}  {/* Mostrar mensaje de error */}
+                {errorMsg && <p className="error-message">{errorMsg}</p>} {/* Mensaje de error encima de la sección */}
+
+                    {/* Campo para subir imágenes */}
+                <div className="image-upload-wrapper">
+                    <div className="image-upload-section">
+                        <p>Agrega Imágenes Para La Cancha</p>
+                        <div className="image-upload-container">
+                            {selectedImages.map((image, index) => (
+                                <div key={index} className="image-upload">
+                                    <img src={image} alt={`Imagen ${index + 1}`} className="preview-image" />
+                                    <input 
+                                        type="file" 
+                                        accept=".jpg, .jpeg, .png"
+                                        onChange={(e) => handleFileChange(index, e)} 
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
 
                     <label className='form_label'>
                         <input
