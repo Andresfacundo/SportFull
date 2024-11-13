@@ -68,6 +68,9 @@ class ClienteService {
         });
     }
 
+
+
+
     //verificar email
     verifyEmail = (token) => {
         return axios.get(`${API_URL}/verify?token=${token}`);
@@ -117,6 +120,22 @@ class ClienteService {
         return axios.get(`http://localhost:8080/fields/findById/${fieldId}`);
     }
 
+    // Método para consultar cancha por ID
+    getManagerById(managerId) {
+        return axios.get(` http://localhost:8080/admin/gestor/find/${managerId}`);
+    }
+    //eliminar gestor
+
+    deletedManager(gestorId) {
+        return axios.delete(`http://localhost:8080/admin/gestor/${gestorId}`);
+
+    }
+    updatedManager(id, updatedManager) {
+        return axios.patch(`http://localhost:8080/admin/gestor/update/${id}`, updatedManager);;
+
+    };
 }
+
+
 
 export default new ClienteService();

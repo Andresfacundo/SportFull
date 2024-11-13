@@ -191,12 +191,12 @@ public class ReservationsControllers {
 
 
             // Validar que la cancha pertenece a la empresa del gestor
-            if (!field.getAdminModels().getId().equals(gestor.getAdminempresa().getId())) {
+            if (!field.getAdminModels().getId().equals(gestor.getAdminModels().getId())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("La cancha no pertenece a la empresa del gestor.");
             }
 
             // Verificar que el gestor pertenece a la misma empresa que la cancha
-            if (!gestor.getAdminempresa().getId().equals(field.getAdminModels().getId())) {
+            if (!gestor.getAdminModels().getId().equals(field.getAdminModels().getId())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("El gestor no pertenece a la misma empresa que la cancha.");
             }
 
@@ -228,7 +228,7 @@ public class ReservationsControllers {
             ReservationsModels reserva = new ReservationsModels();
             reserva.setFieldModels(field);
             reserva.setUserModels(user);
-            reserva.setAdminModels(gestor.getAdminempresa());
+            reserva.setAdminModels(gestor.getAdminModels());
             reserva.setFechaHoraInicio(fechaHoraInicio);
             reserva.setFechaHoraFin(fechaHoraFin);
             reserva.setCostoTotal(costoTotal);
@@ -240,7 +240,7 @@ public class ReservationsControllers {
             reservationsRepository.save(reserva);
 
             String nombreGestor = gestor.getUserModels().getNombres() + " " + gestor.getUserModels().getApellidos();
-            String nombreEmpresa = gestor.getAdminempresa().getNombreEmpresa();
+            String nombreEmpresa = gestor.getAdminModels().getNombreEmpresa();
 
             String subject = "Confirmación de Reserva";
             String message = "Estimado/a " + nombres + " " + apellidos + ",\n\n" +

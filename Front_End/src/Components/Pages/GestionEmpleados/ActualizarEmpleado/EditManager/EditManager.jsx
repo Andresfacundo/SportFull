@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import './EditManager.css'
+import { useParams } from 'react-router-dom';
+import { Header } from '../../../../Layouts/Header/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
-import ClienteService from '../../../../services/ClienteService';
-import './AgregarEmpleado.css';
-import { Header } from '../../../Layouts/Header/Header';
-import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso';
+import ClienteService from '../../../../../services/ClienteService';
 
 
-export const AgregarEmpleado = () => {
+const EditManager = () => {
+  const { id } = useParams();
+
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
@@ -14,7 +16,6 @@ export const AgregarEmpleado = () => {
   const [confirmacionContraseña, setConfirmacionContraseña] = useState('');
   const [ccgestor, setCcgestor] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [empresaId, setEmpresaId] = useState(null); // Estado para almacenar el id de la empresa
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -23,74 +24,94 @@ export const AgregarEmpleado = () => {
 
   const navigate = useNavigate();
 
+  // Cargar gestor
   useEffect(() => {
-    // Obtener el usuario autenticado desde el localStorage y establecer el id de la empresa
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser && storedUser.adminModels) {
-      setEmpresaId(storedUser.adminModels.id);
-    } else {
-      console.error('No se encontró el ID de la empresa en localStorage.');
-    }
-  }, []);
+    const cargarDatos = async () => {
+      try {
+        const response = await ClienteService.getManagerById(id);
+        const manager = response.data;
 
-  const saveUser = (e) => {
+        setNombres(manager.userModels?.nombres);
+        setApellidos(manager.userModels?.apellidos);
+        setEmail(manager.userModels?.email);
+        setCcgestor(manager.ccgestor);
+        setTelefono(manager.telefono);
+
+
+
+      } catch (error) {
+        console.error("Error al cargar la cancha:", error);
+        setError('No se pudo cargar la información de la cancha.');
+      }
+    };
+
+    cargarDatos();
+  }, [id]);
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Validación básica
-    if (!nombres || !apellidos || !email || !contraseña || !confirmacionContraseña || !ccgestor || !telefono || !empresaId) {
-      setError('Todos los campos son obligatorios');
+
+    // Obtener el objeto usuario desde el localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.adminModels) {
+      setError("No se pudo obtener la información del usuario.");
       return;
     }
-  
-    // Validar que las contraseñas coincidan
-    if (contraseña !== confirmacionContraseña) {
-      setError('Las contraseñas no coinciden');
-      return;
-    }
-  
-    // Crear el objeto `user` en el formato adecuado
-    const user = {
+
+
+
+    // Crear el objeto de cancha actualizado
+    const updatedManager = {
+      id: id,  // Asegúrate de incluir el ID del campo que estás actualizando
       nombres,
       apellidos,
       email,
       contraseña,
       gestorModels: {
-        telefono,
         ccgestor,
-      },
+        telefono
+      }
     };
-  
-    ClienteService.createGestor(user, empresaId)
+
+    console.log('Objeto actualizado:', updatedManager); // Ver el objeto que se va a enviar
+
+
+    // Llamar al servicio para actualizar el gestor, incluyendo el ID de la empresa
+    ClienteService.updatedManager(id, updatedManager)
       .then((response) => {
-        console.log('Gestor creado:', response.data);
-  
+        console.log('Gestor Actualizado:', response.data);
+
         // Obtener el usuario almacenado en el localStorage
         const storedUser = JSON.parse(localStorage.getItem('user'));
-  
+
         if (storedUser && storedUser.adminModels) {
-          // Agregar el nuevo gestor a la lista de gestores
-          storedUser.adminModels.gestores = [...storedUser.adminModels.gestores, response.data];
-  
+          // Buscar el gestor en la lista de gestores usando el ID del gestor
+          const updatedGestores = storedUser.adminModels.gestores.map(gestor =>
+            gestor.id === id ? { ...gestor, ...response.data } : gestor
+          );
+
+          // Actualizar el gestor en la lista de gestores
+          storedUser.adminModels.gestores = updatedGestores;
+
           // Actualizar el localStorage con los datos modificados
           localStorage.setItem('user', JSON.stringify(storedUser));
-  
+
           console.log('LocalStorage actualizado:', storedUser);
         } else {
           console.error('No se encontró el usuario o adminModels en el localStorage.');
         }
-  
-        // Mostrar el modal de éxito
-        setShowModal(true);
+
+        // Redirigir después de la actualización
+        navigate('/GestionEmpleados');
+
       })
       .catch((error) => {
-        console.error('Error al registrar el gestor:', error);
-        setError('Ocurrió un error al registrar el usuario. Inténtalo de nuevo.');
+        console.error("Error al actualizar el gestor:", error); // Imprimir el error completo
+        const mensajeError = error.response && error.response.data ? error.response.data : error.message;
+        setError(`Error al actualizar la cancha: ${mensajeError}`);
       });
-  };
-  
-  const handleCloseModal = () => {
-    setShowModal(false);
-    navigate('/GestionEmpleados');
+
   };
 
   return (
@@ -98,11 +119,11 @@ export const AgregarEmpleado = () => {
       <Header />
 
       <main className='main_agregarEmpleado'>
-        <h1 className='title_register'>Registrar Gestor</h1>
+        <h1 className='title_register'>Actualizar Gestor</h1>
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={saveUser} className='form'>
+        <form onSubmit={handleSubmit} className='form'>
           <label className='form_label'>
             <input
               type='text'
@@ -171,14 +192,14 @@ export const AgregarEmpleado = () => {
                 className='form_input'
                 value={contraseña}
                 onChange={(e) => setContraseña(e.target.value)}
-                required
+
               />
               <span className='form_text'>Contraseña</span>
               {contraseña && (
-                <span 
-                  className='password-toggle-icon' 
+                <span
+                  className='password-toggle-icon'
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right:'18px', top: '32%', transform: 'translateY(-50%)' }}
+                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right: '18px', top: '32%', transform: 'translateY(-50%)' }}
                 >
                   <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
                 </span>
@@ -192,16 +213,16 @@ export const AgregarEmpleado = () => {
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder=' '
                 className='form_input'
-                value={confirmacionContraseña}  
-                onChange={(e) => setConfirmacionContraseña(e.target.value)}  
-                required
+                value={confirmacionContraseña}
+                onChange={(e) => setConfirmacionContraseña(e.target.value)}
+
               />
               <span className='form_text'>Confirmar Contraseña</span>
               {confirmacionContraseña && (
-                <span 
-                  className="password-toggle-icon" 
+                <span
+                  className="password-toggle-icon"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right:'18px', top: '32%', transform: 'translateY(-50%)' }}
+                  style={{ cursor: 'pointer', position: 'absolute', fontSize: '18px', right: '18px', top: '32%', transform: 'translateY(-50%)' }}
                 >
                   <i className={showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
                 </span>
@@ -209,7 +230,7 @@ export const AgregarEmpleado = () => {
             </div>
           </label>
 
-          <button type="submit" className='register'>Registrar Gestor</button>
+          <button type="submit" className='register'>Actualizar Gestor</button>
           <NavLink className='return' to='/GestionEmpleados'>Volver</NavLink>
         </form>
 
@@ -228,3 +249,5 @@ export const AgregarEmpleado = () => {
     </div>
   );
 }
+
+export default EditManager

@@ -71,8 +71,7 @@ public class AdminModels implements Serializable {
     private List<ReservationsModels> reservations;
 
 
-    @OneToMany(mappedBy = "adminempresa", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "adminModels", cascade = CascadeType.ALL)
     private List<GestorModels> gestores = new ArrayList<>();
 
     @OneToMany(mappedBy = "adminModels")

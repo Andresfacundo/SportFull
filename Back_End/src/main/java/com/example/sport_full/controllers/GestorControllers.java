@@ -15,10 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/admin/gestor")
@@ -38,8 +36,7 @@ public class GestorControllers {
 
     @Autowired
     private UserValidations userValidations;  // Validaciones del usuario
-    
-    // Crear un nuevo Gestor, solo por un administrador
+
     @PostMapping("/register")
     public ResponseEntity<?> createGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long adminEmpresa_Id) {
         try {
@@ -100,8 +97,8 @@ public class GestorControllers {
             GestorModels gestorModels = new GestorModels();
             gestorModels.setCCgestor(ccgestor);
             gestorModels.setTelefono(telefono);
-            gestorModels.setUserModels(userModels);
-            gestorModels.setAdminempresa(empresa.get());
+            gestorModels.setUserModels(userModels);  // Asociar el gestor con el usuario
+            gestorModels.setAdminModels(empresa.get()); // Asociar el gestor con la empresa
 
             // Guardar el gestor en la tabla de gestores
             gestorRepository.save(gestorModels);
@@ -109,9 +106,34 @@ public class GestorControllers {
             // Enviar el correo de verificación
             emailService.sendVerificationEmail(userModels.getEmail(), verificationToken);
 
-            // Retornar el modelo de usuario registrado (sin mostrar la contraseña)
+            // Eliminar la contraseña del modelo de respuesta
             userModels.setContraseña(null);
-            return ResponseEntity.ok(userModels);
+
+            // Crear un objeto que contenga la estructura que necesitas
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", gestorModels.getId());
+            response.put("telefono", gestorModels.getTelefono());
+            response.put("ccgestor", gestorModels.getCCgestor());
+
+            // Crear la estructura 'userModels' dentro de la respuesta
+            Map<String, Object> userResponse = new HashMap<>();
+            userResponse.put("id", userModels.getId());
+            userResponse.put("nombres", userModels.getNombres());
+            userResponse.put("apellidos", userModels.getApellidos());
+            userResponse.put("email", userModels.getEmail());
+            userResponse.put("contraseña", userModels.getContraseña());
+            userResponse.put("tipoUsuario", userModels.getTipoUsuario());
+            userResponse.put("fechaInhabilitacion", userModels.getFechaInhabilitacion());
+            userResponse.put("tiempoLimiteReactivacion", userModels.getTiempoLimiteReactivacion());
+            userResponse.put("estadoCuenta", userModels.isEstadoCuenta());
+            userResponse.put("emailVerified", userModels.isEmailVerified());
+            userResponse.put("verificationToken", userModels.getVerificationToken());
+
+            // Incluir el 'userModels' dentro de la respuesta final
+            response.put("userModels", userResponse);
+
+            // Retornar la respuesta con la estructura completa
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
@@ -135,38 +157,14 @@ public class GestorControllers {
     // Actualizar un gestor
     @PatchMapping("/update/{id}")
     public ResponseEntity<GestorModels> patchUpdateGestor(@PathVariable("id") Long id, @RequestBody Map<String, Object> requestData) {
-        // Buscar el usuario en la tabla de usuarios en base al ID
-        Optional<UserModels> existingUserOpt = userRepository.findById(id);
+        // Buscar el gestor en la tabla de gestores por el ID
+        Optional<GestorModels> existingGestorOpt = gestorRepository.findById(id);
 
-        if (existingUserOpt.isPresent()) {
-            UserModels existingUser = existingUserOpt.get();
+        if (existingGestorOpt.isPresent()) {
+            GestorModels existingGestor = existingGestorOpt.get();
+            UserModels existingUser = existingGestor.getUserModels(); // Obtener el usuario asociado al gestor
 
-            // Si existe un perfil de gestor asociado, se actualiza
-            GestorModels existingGestor = existingUser.getGestorModels();
-            if (existingGestor == null) {
-                return ResponseEntity.badRequest().body(null); // No hay perfil de gestor asociado
-            }
-
-            // Actualizar los datos del UserModels (email, nombres, apellidos, contraseña)
-            if (requestData.containsKey("email")) {
-                existingUser.setEmail((String) requestData.get("email"));
-            }
-
-            if (requestData.containsKey("nombres")) {
-                existingUser.setNombres((String) requestData.get("nombres"));
-            }
-
-            if (requestData.containsKey("apellidos")) {
-                existingUser.setApellidos((String) requestData.get("apellidos"));
-            }
-
-            // Encripta la nueva contraseña si se envía
-            if (requestData.containsKey("contraseña")) {
-                String hashedPassword = BCrypt.hashpw((String) requestData.get("contraseña"), BCrypt.gensalt());
-                existingUser.setContraseña(hashedPassword);
-            }
-
-            // Actualizar los datos del perfil del gestor
+            // Actualizar los datos del perfil de gestor
             if (requestData.containsKey("gestorModels")) {
                 Map<String, Object> gestorData = (Map<String, Object>) requestData.get("gestorModels");
 
@@ -179,12 +177,32 @@ public class GestorControllers {
                 }
             }
 
+            // Actualizar los datos del usuario (si se envían)
+            if (requestData.containsKey("email")) {
+                existingUser.setEmail((String) requestData.get("email"));
+            }
+
+            if (requestData.containsKey("nombres")) {
+                existingUser.setNombres((String) requestData.get("nombres"));
+            }
+
+            if (requestData.containsKey("apellidos")) {
+                existingUser.setApellidos((String) requestData.get("apellidos"));
+            }
+
+            // Encriptar la nueva contraseña si se envía
+            if (requestData.containsKey("contraseña")) {
+                String hashedPassword = BCrypt.hashpw((String) requestData.get("contraseña"), BCrypt.gensalt());
+                existingUser.setContraseña(hashedPassword);
+            }
+
             // Guardar los cambios tanto en el perfil de usuario como en el gestor
             userRepository.save(existingUser); // Guardar los cambios en UserModels
             gestorRepository.save(existingGestor); // Guardar los cambios en GestorModels
+
             return ResponseEntity.ok(existingGestor);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); // Si no se encuentra el gestor
         }
     }
 

@@ -37,7 +37,7 @@ import { AgregarEmpleado } from './Components/Pages/GestionEmpleados/AgregarEmpl
 import { ActualizarEmpleado } from './Components/Pages/GestionEmpleados/ActualizarEmpleado/ActualizarEmpleado.jsx'
 import { ConsultarEmpleados } from './Components/Pages/GestionEmpleados/ConsultarEmpleados/ConsultarEmpleados.jsx'
 import { EliminarEmpleado } from './Components/Pages/GestionEmpleados/EliminarEmpleado/EliminarEmpleado.jsx'
-
+import EditManager from './Components/Pages/GestionEmpleados/ActualizarEmpleado/EditManager/EditManager.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 
 import './App.css'
@@ -81,6 +81,7 @@ function App() {
       <Route path="/DeleteEmployee" element={<EliminarEmpleado />} />
       <Route path="/UpdateEmployee" element={<ActualizarEmpleado />} />
       <Route path="/ShowEmployee" element={<ConsultarEmpleados />} />
+      <Route path="/EditManager/:id" element={<EditManager />} />
 
 
     </Routes>
