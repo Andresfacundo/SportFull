@@ -19,7 +19,6 @@ import { HistorialCliente } from './Components/Pages/Historial/HistorialCliente/
 import {SoporteCliente} from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
 import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/AdvancedConfiguration'
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
-import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import Services from './Components/UI/FieldServices/FieldServices'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
@@ -34,6 +33,7 @@ import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
 import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
 import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
+import PaymentMethod from './Components/Pages/PaymentMethod/PaymentMethod.jsx'
 
 import './App.css'
 
@@ -71,7 +71,7 @@ function App() {
       <Route path='/UpdateField/:id' element={<UpdateField />} />
       <Route path='/ShowFields' element={<ShowFields />} />
       <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
-      <Route path="/editprofile" element={<EditProfile />} />
+      <Route path="/EditProfile" element={<EditProfile />} />
 
     </Routes>
   )
