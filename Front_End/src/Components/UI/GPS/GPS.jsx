@@ -6,7 +6,6 @@
 // import L from "leaflet";
 // import PropTypes from "prop-types";
 
-
 // // Icono personalizado para los marcadores
 // const icon = new L.Icon({
 //   iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-green.png",
@@ -33,6 +32,9 @@
 //   const [allUbic, setAllUbic] = useState([]);
 //   const [mostrarTodas, setMostrarTodas] = useState(false);
 
+//   // Estado para almacenar los datos de las canchas
+//   const [fields, setFields] = useState([]); 
+
 //   // Obtener la ubicación actual del usuario
 //   useEffect(() => {
 //     if (navigator.geolocation) {
@@ -52,16 +54,28 @@
 
 //   // Obtener todas las ubicaciones del backend al cargar la página
 //   useEffect(() => {
-//     axios
-//       .get(`http://localhost:8080/admin/find-all`)
+//     axios.get(`http://localhost:8080/admin/find-all`)
 //       .then((response) => {
-//         const fields = response.data;
-//         setAllUbic(fields);
+//         const ubic = response.data;
+//         setAllUbic(ubic);
+  
+//         // Extraer todas las canchas y agregar el id de la empresa
+//         const allFields = ubic.flatMap((empresa) =>
+//           empresa.fields.map((field) => ({
+//             ...field,
+//             id_empresa: empresa.id, // Agregar el id de la empresa
+//           }))
+//         );
+  
+//         setFields(allFields);
+//         console.log("Datos de canchas con id_empresa:", allFields);
 //       })
 //       .catch((error) => {
 //         console.error("Error al buscar las ubicaciones: ", error);
 //       });
 //   }, []);
+  
+  
 
 //   // Buscar ubicaciones basadas en el término de búsqueda
 //   useEffect(() => {
@@ -177,15 +191,14 @@
 // // Validar las props del componente
 // MapaConGPS.propTypes = {
 //   center: PropTypes.shape({
-//     lat: PropTypes.number.isRequired,
-//     lng: PropTypes.number.isRequired,
-//   }).isRequired,
+//     lat: PropTypes.number,
+//     lng: PropTypes.number,
+//   }),
 // };
 
 // export default MapaConGPS;
 
 
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -202,7 +215,6 @@ const icon = new L.Icon({
 });
 
 // Componente para centrar el mapa en una nueva ubicación
-// eslint-disable-next-line react/prop-types
 const SetViewOnClick = ({ center }) => {
   const map = useMap();
   map.setView(center, map.getZoom());
@@ -211,16 +223,15 @@ const SetViewOnClick = ({ center }) => {
 
 const MapaConGPS = () => {
   const [ubicacionActual, setUbicacionActual] = useState({
-    lat: 4.533889, // Latitud predeterminada de Armenia, Quindío
-    lng: -75.681389, // Longitud predeterminada de Armenia, Quindío
+    lat: 4.533889,
+    lng: -75.681389,
   });
   const [geocodedFields, setGeocodedFields] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [allUbic, setAllUbic] = useState([]);
-  const [mostrarTodas, setMostrarTodas] = useState(false);
-
-  // Estado para almacenar los datos de las canchas
   const [fields, setFields] = useState([]);
+  const [selectedEstado, setSelectedEstado] = useState("");
+  const [filtroActivo, setFiltroActivo] = useState(false);
 
   // Obtener la ubicación actual del usuario
   useEffect(() => {
@@ -241,51 +252,49 @@ const MapaConGPS = () => {
 
   // Obtener todas las ubicaciones del backend al cargar la página
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/admin/find-all`)
+    axios.get(`http://localhost:8080/admin/find-all`)
       .then((response) => {
         const ubic = response.data;
         setAllUbic(ubic);
+
+        const allFields = ubic.flatMap((empresa) =>
+          empresa.fields.map((field) => ({
+            ...field,
+            id_empresa: empresa.id,
+            direccionEmpresa: empresa.direccionEmpresa,
+            nombreEmpresa: empresa.nombreEmpresa,
+          }))
+        );
+
+        setFields(allFields);
+        console.log("Datos de canchas con id_empresa:", allFields);
       })
       .catch((error) => {
         console.error("Error al buscar las ubicaciones: ", error);
       });
   }, []);
 
-  // Obtener todas las canchas del backend al cargar la página
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/fields/findAll`)
-      .then((response) => {
-        setFields(response.data);
-        console.log("Datos de canchas obtenidos:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error al buscar las canchas: ", error);
-      });
-  }, []);
+  // Filtrar las canchas según el estado seleccionado
+const handleFilterByEstado = async (estado) => {
+  setSelectedEstado(estado);
+  setFiltroActivo(true);
 
-  // Buscar ubicaciones basadas en el término de búsqueda
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setGeocodedFields([]);
-      return;
-    }
+  // Normalizar estado a minúsculas y sin espacios adicionales
+  const estadoNormalizado = estado.toLowerCase().trim();
 
-    const filteredFields = allUbic.filter(
-      (field) =>
-        field &&
-        field.nombreEmpresa &&
-        field.nombreEmpresa.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    if (filteredFields.length > 0) {
-      geocodeFields(filteredFields, true);
-    } else {
-      setGeocodedFields([]);
-    }
-  }, [searchQuery, allUbic]);
+  // Filtrar canchas por el estado normalizado
+  const filteredFields = fields.filter(
+    field => field.estado.toLowerCase().trim() === estadoNormalizado
+  );
 
-  // Llamar a la API de Geocoding de Nominatim para convertir las direcciones en coordenadas
+  const uniqueEmpresas = [...new Set(filteredFields.map(field => field.id_empresa))];
+  const empresas = allUbic.filter(empresa => uniqueEmpresas.includes(empresa.id));
+
+  geocodeFields(empresas, true);
+};
+
+
+  // Llamar a la API de Geocoding para convertir direcciones en coordenadas
   const geocodeFields = async (fields, centerOnFirst = false) => {
     const newLocations = await Promise.all(
       fields.map(async (field) => {
@@ -298,7 +307,7 @@ const MapaConGPS = () => {
                 format: "json",
                 addressdetails: 1,
                 limit: 1,
-                countrycodes: "CO", // Restringido a Colombia
+                countrycodes: "CO",
               },
             }
           );
@@ -329,15 +338,26 @@ const MapaConGPS = () => {
     }
   };
 
-  // Función para mostrar/ocultar todas las canchas
-  const toggleMostrarTodasLasCanchas = () => {
-    if (mostrarTodas) {
+  // Función para manejar la búsqueda
+  useEffect(() => {
+    if (!searchQuery.trim()) {
       setGeocodedFields([]);
-    } else {
-      geocodeFields(allUbic);
+      return;
     }
-    setMostrarTodas(!mostrarTodas);
-  };
+
+    const filteredFields = allUbic.filter(
+      (field) =>
+        field &&
+        field.nombreEmpresa &&
+        field.nombreEmpresa.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (filteredFields.length > 0) {
+      geocodeFields(filteredFields, true);
+    } else {
+      setGeocodedFields([]);
+    }
+  }, [searchQuery, allUbic, filtroActivo]);
 
   return (
     <div>
@@ -348,8 +368,17 @@ const MapaConGPS = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: "10px", padding: "5px", width: "300px" }}
       />
-      <button onClick={toggleMostrarTodasLasCanchas} style={{ marginLeft: "10px" }}>
-        {mostrarTodas ? "Ocultar todas las canchas" : "Mostrar todas las canchas"}
+      <button onClick={() => handleFilterByEstado("Disponible")} style={{ marginLeft: "10px" }}>
+        Filtrar por Disponible
+      </button>
+      <button onClick={() => handleFilterByEstado("No Disponible")} style={{ marginLeft: "10px" }}>
+        Filtrar por No Disponible
+      </button>
+      <button onClick={() => { 
+          setFiltroActivo(false);
+          setGeocodedFields([]);
+        }} style={{ marginLeft: "10px" }}>
+        Limpiar Filtro
       </button>
       <MapContainer
         center={ubicacionActual}
@@ -376,7 +405,6 @@ const MapaConGPS = () => {
   );
 };
 
-// Validar las props del componente
 MapaConGPS.propTypes = {
   center: PropTypes.shape({
     lat: PropTypes.number,
