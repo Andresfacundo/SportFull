@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import Dropzone from "react-dropzone";
 import "./EditProfile.css";
+import { Header } from '../../../Components/Layouts/Header/Header';
+import fondo_long from '../../../assets/Images/fondos/fondo_long.png';
 import { useNavigate } from "react-router-dom";
 import avatar_male_1 from "../../../assets/Images/Avatars/Males/avatar_male_01.png";
 import avatar_male_2 from "../../../assets/Images/Avatars/Males/avatar_male_2.png";
@@ -17,6 +19,14 @@ import avatar_female_5 from "../../../assets/Images/Avatars/Females/avatar_femal
 import avatar_female_6 from "../../../assets/Images/Avatars/Females/avatar_female_6.png";
 
 export const EditProfile = ({ setProfileImage }) => {
+
+  const backgroundStyle = {
+    backgroundImage: `url(${fondo_long})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    height: '100%',
+    width: '100%',
+  };
   const [image, setImage] = useState(null); // Imagen cargada desde el ordenador
   const [avatar, setAvatar] = useState(null); // Avatar seleccionado
   const [scale, setScale] = useState(1); // Escala para el recorte
@@ -101,106 +111,111 @@ export const EditProfile = ({ setProfileImage }) => {
   let editor = null;
 
   return (
-    <div className="edit-profile-container">
-      <h2>Edita tu foto de perfil</h2>
+    <div style={backgroundStyle} className='container'>
+      <Header />
 
-      {/* Vista previa de la imagen recortada */}
-      {croppedImage && (
-        <div className="cropped-image-preview">
-          <h3>Vista previa:</h3>
-          <img
-            src={croppedImage}
-            alt="Cropped"
-            style={{ borderRadius: "50%" }}
-          />
-        </div>
-      )}
+      <main className="editPhotoProfile">
 
-      {/* Dropzone para cargar una imagen desde el ordenador */}
-      <Dropzone onDrop={handleDrop} maxFiles={1} accept="image/jpeg, image/png">
-        {({ getRootProps, getInputProps }) => (
-          <div {...getRootProps()} className="dropzone">
-            <input {...getInputProps()} />
-            <p>
-              Arrastra una imagen o haz clic para seleccionar una (solo JPG/PNG)
-            </p>
+        <h2>Editar foto de Perfil</h2>
+
+        {/* Vista previa de la imagen recortada */}
+        {croppedImage && (
+          <div className="cropped-image-preview">
+            <h3>Vista previa:</h3>
+            <img
+              src={croppedImage}
+              alt="Cropped"
+              style={{ borderRadius: "50%" }}
+            />
           </div>
         )}
-      </Dropzone>
 
-      {/* Mostrar el mensaje de error si existe */}
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {/* Dropzone para cargar una imagen desde el ordenador */}
+        <Dropzone onDrop={handleDrop} maxFiles={1} accept="image/jpeg, image/png">
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps()} className="dropzone">
+              <input {...getInputProps()} />
+              <p>
+                Arrastra una imagen o haz clic para seleccionar una (solo JPG/PNG)
+              </p>
+            </div>
+          )}
+        </Dropzone>
 
-      {/* Editor de imagen o avatar */}
-      {image || avatar ? (
-        <div>
-          <AvatarEditor
-            ref={(ref) => (editor = ref)}
-            image={image || avatar} // Usamos la imagen o avatar seleccionada
-            width={250}
-            height={250}
-            border={10}
-            borderRadius={250}
-            color={[255, 255, 255, 0.6]} // Color del borde (RGBA)
-            scale={scale} // Escala del recorte
-            rotate={0}
-          />
+        {/* Mostrar el mensaje de error si existe */}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-          {/* Botón para actualizar vista previa */}
-          <button onClick={handleUpdatePreview} className="preview-button">
-            Actualizar vista previa
-          </button>
+        {/* Editor de imagen o avatar */}
+        {image || avatar ? (
+          <div>
+            <AvatarEditor
+              ref={(ref) => (editor = ref)}
+              image={image || avatar} // Usamos la imagen o avatar seleccionada
+              width={250}
+              height={250}
+              border={10}
+              borderRadius={250}
+              color={[255, 255, 255, 0.6]} // Color del borde (RGBA)
+              scale={scale} // Escala del recorte
+              rotate={0}
+            />
+
+            {/* Botón para actualizar vista previa */}
+            <button onClick={handleUpdatePreview} className="preview-button">
+              Actualizar vista previa
+            </button>
+          </div>
+        ) : (
+          <p>No se ha seleccionado ninguna imagen</p>
+        )}
+
+        {/* Control de escala (zoom) solo cuando se haya seleccionado una imagen o avatar */}
+        {image || avatar ? (
+          <div>
+            <input
+              type="range"
+              min="1"
+              max="2"
+              step="0.1"
+              value={scale}
+              onChange={(e) => setScale(parseFloat(e.target.value))}
+            />
+          </div>
+        ) : null}
+
+        {/* Selección de avatares masculinos */}
+        <h3>Elige un avatar masculino</h3>
+        <div className="avatar-selection">
+          {maleAvatars.map((maleAvatar, index) => (
+            <img
+              key={index}
+              src={maleAvatar}
+              alt={`Male Avatar ${index}`}
+              onClick={() => handleAvatarClick(maleAvatar)}
+              className="avatar"
+            />
+          ))}
         </div>
-      ) : (
-        <p>No se ha seleccionado ninguna imagen</p>
-      )}
 
-      {/* Control de escala (zoom) solo cuando se haya seleccionado una imagen o avatar */}
-      {image || avatar ? (
-        <div>
-          <input
-            type="range"
-            min="1"
-            max="2"
-            step="0.1"
-            value={scale}
-            onChange={(e) => setScale(parseFloat(e.target.value))}
-          />
+        {/* Selección de avatares femeninos */}
+        <h3>Elige un avatar femenino</h3>
+        <div className="avatar-selection">
+          {femaleAvatars.map((femaleAvatar, index) => (
+            <img
+              key={index}
+              src={femaleAvatar}
+              alt={`Female Avatar ${index}`}
+              onClick={() => handleAvatarClick(femaleAvatar)}
+              className="avatar"
+            />
+          ))}
         </div>
-      ) : null}
 
-      {/* Selección de avatares masculinos */}
-      <h3>Elige un avatar masculino</h3>
-      <div className="avatar-selection">
-        {maleAvatars.map((maleAvatar, index) => (
-          <img
-            key={index}
-            src={maleAvatar}
-            alt={`Male Avatar ${index}`}
-            onClick={() => handleAvatarClick(maleAvatar)}
-            className="avatar"
-          />
-        ))}
-      </div>
-
-      {/* Selección de avatares femeninos */}
-      <h3>Elige un avatar femenino</h3>
-      <div className="avatar-selection">
-        {femaleAvatars.map((femaleAvatar, index) => (
-          <img
-            key={index}
-            src={femaleAvatar}
-            alt={`Female Avatar ${index}`}
-            onClick={() => handleAvatarClick(femaleAvatar)}
-            className="avatar"
-          />
-        ))}
-      </div>
-
-      {/* Botón para guardar los cambios */}
-      <button onClick={handleSave} className="save-button">
-        Guardar imagen
-      </button>
+        {/* Botón para guardar los cambios */}
+        <button onClick={handleSave} className="save-button">
+          Guardar imagen
+        </button>
+      </main>
     </div>
   );
 };

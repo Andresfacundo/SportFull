@@ -54,6 +54,14 @@ public class AdminModels implements Serializable {
     @Column(nullable = true)
     private LocalTime horaCierre;
 
+    @Lob
+    @Column(name = "img_perfil", columnDefinition = "LONGBLOB", nullable = true)
+    private byte[] imgPerfil;
+
+
+
+
+
     // Nueva colección para los servicios generales
     @ElementCollection
     @CollectionTable(name = "servicios_generales", joinColumns = @JoinColumn(name = "empresa_id"))
@@ -223,6 +231,14 @@ public class AdminModels implements Serializable {
 
     public void setHoraCierre(LocalTime horaCierre) {
         this.horaCierre = horaCierre;
+    }
+
+    public byte[] getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(byte[] imgPerfil) {
+        this.imgPerfil = imgPerfil;
     }
 }
 

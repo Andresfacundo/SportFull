@@ -13,8 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 @CrossOrigin
@@ -34,7 +38,28 @@ public class AdminControllers {
     @Autowired
     AdminServices adminServices;
 
+    // Método para actualizar la imagen de perfil de la empresa
+    @PostMapping("/actualizar-imagen/{empresaId}")
+    public ResponseEntity<?> actualizarImagenEmpresa(@PathVariable("empresaId") Long empresaId,
+                                                     @RequestParam("imgPerfil") MultipartFile imgPerfil) {
+        try {
+            // Buscar la empresa en la base de datos
+            AdminModels empresa = companyRepository.findById(empresaId)
+                    .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
+            // Convertir la imagen a bytes
+            byte[] imagenBytes = imgPerfil.getBytes();
+
+            // Actualizar la imagen de perfil en el servicio
+            adminServices.actualizarImagenEmpresa(empresa, imagenBytes);
+
+            return ResponseEntity.ok("Imagen de perfil de la empresa actualizada correctamente.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar la imagen.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
 
     @PutMapping("/{id}")
@@ -149,6 +174,7 @@ public class AdminControllers {
     public List<AdminModels> findAll() {
         return companyRepository.findAll();
     }
+
 
     @GetMapping("/find/{id}")
     public ResponseEntity<UserModels> findById(@PathVariable("id") Long id) {

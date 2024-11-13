@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -107,7 +110,14 @@ public class AdminServices {
         // Aquí se guardarían los cambios en la base de datos
     }
 
-    public boolean validarDisponibilidad(AdminModels empresa, LocalTime horaReserva) {
-        return !horaReserva.isBefore(empresa.getHoraApertura()) && !horaReserva.isAfter(empresa.getHoraCierre());
+    public boolean validarDisponibilidad(AdminModels adminModels, LocalTime horaReserva) {
+        return !horaReserva.isBefore(adminModels.getHoraApertura()) && !horaReserva.isAfter(adminModels.getHoraCierre());
+    }
+    public void actualizarImagenEmpresa(AdminModels empresa, byte[] imagenBytes) {
+        // Actualizar la imagen en el modelo de la empresa
+        empresa.setImgPerfil(imagenBytes);
+
+        // Guardar los cambios en la base de datos
+        companyRepository.save(empresa);
     }
 }

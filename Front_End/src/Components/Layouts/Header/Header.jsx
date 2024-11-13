@@ -1,7 +1,6 @@
 import React from 'react';
 import './Header.css';
 import icon_logout from '../../../../src/assets/Images/icons/salida.png';
-import foto_perfil from '../../../../src/assets/Images/icons/avatar_01.png';
 import icon_reservation from '../../../../src/assets/Images/icons/Icon_Reservation.png';
 import icon_notification from '../../../../src/assets/Images/icons/icon_notificacion.png';
 import ClienteService from '../../../services/ClienteService';
@@ -12,7 +11,7 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-export const Header = ({ children }) => {
+export const Header = ({ children,foto_perfil }) => {
   
   const location = useLocation();  // Hook para obtener la ruta actual
   const navigate = useNavigate();  // Hook para navegar entre rutas
@@ -79,7 +78,12 @@ export const Header = ({ children }) => {
         </div>
 
         <div className='container_user'>
-          <img className='pefil_pic' src={foto_perfil} alt="Foto de perfil" />
+        <div className='container_img'>
+                    <img className='img_manager' src={foto_perfil} alt="Foto de perfil" />
+
+                </div>
+
+          
           <h2 className='nameUser'>{resultado}</h2> {/* Mostrar el nombre o "Invitado" si está en /Guest */}
         </div>
         {/* Aplicamos la clase condicional al ícono de edición */}
