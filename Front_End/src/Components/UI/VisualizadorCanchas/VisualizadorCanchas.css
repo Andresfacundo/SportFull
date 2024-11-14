@@ -128,6 +128,7 @@
 .btn {
     text-align: center;
     margin: 1.25rem;
+    
 }
 .btn-reservar {
     width: max-content;
@@ -141,4 +142,15 @@
 
 .calendario{
     width: 100%;
+}
+
+.otra-Reserva {
+    margin: 1rem;
+    width: max-content;
+    height: max-content;
+    border-radius: 10px;
+    background-color: #07954a;
+    color: white;
+    font-size: 1.5rem;
+    padding: 0.50rem; 
 }

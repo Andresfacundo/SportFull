@@ -40,6 +40,7 @@ const VisualizadorCanchas = (props) => {
 
                 <section className='btn'>
                     <button className='btn-reservar'>Reservar</button>
+                    <button className='otra-Reserva'>Reservar otra cancha</button>
                 </section>                
 
             </div>        
