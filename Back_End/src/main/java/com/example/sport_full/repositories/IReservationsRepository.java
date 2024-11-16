@@ -38,6 +38,10 @@ public interface IReservationsRepository extends JpaRepository<ReservationsModel
     List<ReservationsModels> findByAdminModels_IdAndFieldModels_Id(
             Long empresaId, Long canchaId);
 
+   List<ReservationsModels> findByAdminModels_IdAndFechaHoraInicioBetween(
+           Long empresaId, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin);
+
+
     // Método para verificar si una cancha pertenece a una empresa
     boolean existsByAdminModels_IdAndFieldModels_Id(Long empresaId, Long canchaId);
 

@@ -4,14 +4,12 @@ package com.example.sport_full.controllers;
 import com.example.sport_full.models.*;
 import com.example.sport_full.repositories.*;
 import com.example.sport_full.services.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -483,10 +481,15 @@ public class ReservationsControllers {
     public ResponseEntity<?> getTotalReservationsValue(
             @RequestParam Long empresaId,
             @RequestParam(required = false) ReservationsModels.estadoReserva estado,
-            @RequestParam(required = false) Long canchaId) {
+            @RequestParam(required = false) Long canchaId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fechaHoraInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fechaHoraFin) {
 
         try {
-            Double totalValue = reservationsServices.getTotalReservationsValue(empresaId, estado, canchaId);
+            if (fechaHoraInicio != null && fechaHoraFin != null && fechaHoraInicio.isAfter(fechaHoraFin)) {
+                throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+            }
+            Double totalValue = reservationsServices.getTotalReservationsValue(empresaId, estado, canchaId, fechaHoraInicio, fechaHoraFin);
             return new ResponseEntity<>(totalValue, HttpStatus.OK);
         }catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
