@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import Dropzone from "react-dropzone";
 import "./EditProfile.css";
-import { Header } from '../../../Components/Layouts/Header/Header';
-import fondo_long from '../../../assets/Images/fondos/fondo_long.png';
+import { Header } from "../../../Components/Layouts/Header/Header";
+import fondo_long from "../../../assets/Images/fondos/fondo_long.png";
 import { useNavigate } from "react-router-dom";
 import avatar_male_1 from "../../../assets/Images/Avatars/Males/avatar_male_01.png";
 import avatar_male_2 from "../../../assets/Images/Avatars/Males/avatar_male_2.png";
@@ -17,159 +17,151 @@ import avatar_female_3 from "../../../assets/Images/Avatars/Females/avatar_femal
 import avatar_female_4 from "../../../assets/Images/Avatars/Females/avatar_female_4.png";
 import avatar_female_5 from "../../../assets/Images/Avatars/Females/avatar_female_5.png";
 import avatar_female_6 from "../../../assets/Images/Avatars/Females/avatar_female_6.png";
+import ClienteServices from "../../../services/ClienteService"; // Asegúrate de que la ruta sea correcta
 
 export const EditProfile = ({ setProfileImage }) => {
-
-  const backgroundStyle = {
-    backgroundImage: `url(${fondo_long})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    height: '100%',
-    width: '100%',
-  };
-  const [image, setImage] = useState(null); // Imagen cargada desde el ordenador
-  const [avatar, setAvatar] = useState(null); // Avatar seleccionado
-  const [scale, setScale] = useState(1); // Escala para el recorte
-  const [croppedImage, setCroppedImage] = useState(null); // Imagen recortada
-  const [errorMessage, setErrorMessage] = useState(""); // Estado para el mensaje de error
+  const [image, setImage] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [scale, setScale] = useState(1);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  let editor = null;
 
   const maleAvatars = [
-    avatar_male_1,
-    avatar_male_2,
-    avatar_male_3,
-    avatar_male_4,
-    avatar_male_5,
-    avatar_male_6,
+    avatar_male_1, avatar_male_2, avatar_male_3, avatar_male_4, avatar_male_5, avatar_male_6
   ];
   const femaleAvatars = [
-    avatar_female_1,
-    avatar_female_2,
-    avatar_female_3,
-    avatar_female_4,
-    avatar_female_5,
-    avatar_female_6,
+    avatar_female_1, avatar_female_2, avatar_female_3, avatar_female_4, avatar_female_5, avatar_female_6
   ];
 
   const handleDrop = (acceptedFiles) => {
     try {
-      // Validamos que el archivo sea de tipo JPG o PNG
       const file = acceptedFiles[0];
-
-      if (
-        !file.type.includes("image/jpeg") &&
-        !file.type.includes("image/png")
-      ) {
-        throw new Error(
-          "Archivo no soportado. Solo se permiten archivos JPG o PNG."
-        );
+      if (!file.type.includes("image/jpeg") && !file.type.includes("image/png")) {
+        throw new Error("Archivo no soportado. Solo se permiten archivos JPG o PNG.");
       }
-
-      // Si el archivo es válido, lo cargamos
       setImage(URL.createObjectURL(file));
-      setAvatar(null); // Descartar cualquier avatar seleccionado
-      setErrorMessage(null); // Limpiar mensaje de error si había uno
+      setAvatar(null);
+      setErrorMessage(null);
     } catch (error) {
-      setErrorMessage(error.message); // Mostramos el mensaje de error capturado
-      setImage(null); // Evitamos que se cargue la imagen no válida
+      setErrorMessage(error.message);
+      setImage(null);
     }
   };
 
   const handleDropRejected = (rejectedFiles) => {
-    // Si el archivo es rechazado, mostramos el mensaje de error
     if (rejectedFiles && rejectedFiles.length > 0) {
-      setErrorMessage(
-        "Archivo no soportado. Solo se permiten archivos JPG o PNG."
-      );
+      setErrorMessage("Archivo no soportado. Solo se permiten archivos JPG o PNG.");
     }
-    setImage(null); // Asegúrate de que no se permita editar archivos no válidos
+    setImage(null);
   };
 
   const handleAvatarClick = (selectedAvatar) => {
     setAvatar(selectedAvatar);
-    setImage(null); // Descartar cualquier imagen cargada
-    setErrorMessage(""); // Limpiar el mensaje de error
-  };
-
-  const handleSave = () => {
-    if (editor) {
-      const canvasScaled = editor.getImageScaledToCanvas();
-      const cropped = canvasScaled.toDataURL();
-      setProfileImage(cropped); // Actualizamos la imagen de perfil en Header
-      navigate("/ActualizarCliente"); // Redirigimos a /ActualizarCliente
-    }
+    setImage(null);
+    setErrorMessage("");
   };
 
   const handleUpdatePreview = () => {
     if (editor) {
       const canvasScaled = editor.getImageScaledToCanvas();
-      const cropped = canvasScaled.toDataURL();
-      setCroppedImage(cropped); // Guardamos la imagen recortada para vista previa
+      const cropped = canvasScaled.toDataURL("image/jpeg"); 
+      setCroppedImage(cropped);
     }
   };
 
-  let editor = null;
+const handleSave = async () => {
+  if (croppedImage) {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const empresaId = user?.adminModels?.id;
+
+      if (!empresaId) {
+        throw new Error("No se encontró el ID de la empresa");
+      }
+
+      const byteString = atob(croppedImage.split(',')[1]);
+      const mimeString = croppedImage.split(',')[0].split(':')[1].split(';')[0];
+      const buffer = new ArrayBuffer(byteString.length);
+      const intArray = new Uint8Array(buffer);
+      for (let i = 0; i < byteString.length; i++) {
+        intArray[i] = byteString.charCodeAt(i);
+      }
+      const file = new Blob([buffer], { type: mimeString });
+
+      const response = await ClienteServices.updateCompanyImage(empresaId, file);
+      if (response.status === 200) {
+        // Actualizar la imagen en el estado global
+        setImage(croppedImage);
+
+        // Actualizar la imagen en el localStorage
+        user.profileImage = croppedImage;  // Actualizamos el campo de la imagen en el objeto 'user'
+        localStorage.setItem('user', JSON.stringify(user));  // Guardamos el usuario con la nueva imagen
+
+        setSuccessMessage("Imagen actualizada con éxito.");
+        navigate("/ActualizarCliente");
+      } else {
+        throw new Error("No se pudo actualizar la imagen.");
+      }
+    } catch (error) {
+      setErrorMessage(error.message || "Ocurrió un error al actualizar la imagen.");
+    }
+  }
+};
+
 
   return (
-    <div style={backgroundStyle} className='container'>
+    <div
+      style={{
+        backgroundImage: `url(${fondo_long})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100%",
+        width: "100%",
+      }}
+      className="container"
+    >
       <Header />
-
       <main className="editPhotoProfile">
-
         <h2>Editar foto de Perfil</h2>
-
-        {/* Vista previa de la imagen recortada */}
         {croppedImage && (
           <div className="cropped-image-preview">
             <h3>Vista previa:</h3>
-            <img
-              src={croppedImage}
-              alt="Cropped"
-              style={{ borderRadius: "50%" }}
-            />
+            <img src={croppedImage} alt="Cropped" style={{ borderRadius: "50%" }} />
           </div>
         )}
-
-        {/* Dropzone para cargar una imagen desde el ordenador */}
         <Dropzone onDrop={handleDrop} maxFiles={1} accept="image/jpeg, image/png">
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()} className="dropzone">
               <input {...getInputProps()} />
-              <p>
-                Arrastra una imagen o haz clic para seleccionar una (solo JPG/PNG)
-              </p>
+              <p>Arrastra una imagen o haz clic para seleccionar una (solo JPG/PNG)</p>
             </div>
           )}
         </Dropzone>
 
-        {/* Mostrar el mensaje de error si existe */}
         {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-        {/* Editor de imagen o avatar */}
         {image || avatar ? (
           <div>
             <AvatarEditor
               ref={(ref) => (editor = ref)}
-              image={image || avatar} // Usamos la imagen o avatar seleccionada
+              image={image || avatar}
               width={250}
               height={250}
               border={10}
               borderRadius={250}
-              color={[255, 255, 255, 0.6]} // Color del borde (RGBA)
-              scale={scale} // Escala del recorte
+              color={[255, 255, 255, 0.6]}
+              scale={scale}
               rotate={0}
             />
-
-            {/* Botón para actualizar vista previa */}
-            <button onClick={handleUpdatePreview} className="preview-button">
-              Actualizar vista previa
-            </button>
+            <button onClick={handleUpdatePreview} className="preview-button">Actualizar vista previa</button>
           </div>
         ) : (
           <p>No se ha seleccionado ninguna imagen</p>
         )}
 
-        {/* Control de escala (zoom) solo cuando se haya seleccionado una imagen o avatar */}
         {image || avatar ? (
           <div>
             <input
@@ -183,7 +175,6 @@ export const EditProfile = ({ setProfileImage }) => {
           </div>
         ) : null}
 
-        {/* Selección de avatares masculinos */}
         <h3>Elige un avatar masculino</h3>
         <div className="avatar-selection">
           {maleAvatars.map((maleAvatar, index) => (
@@ -197,7 +188,6 @@ export const EditProfile = ({ setProfileImage }) => {
           ))}
         </div>
 
-        {/* Selección de avatares femeninos */}
         <h3>Elige un avatar femenino</h3>
         <div className="avatar-selection">
           {femaleAvatars.map((femaleAvatar, index) => (
@@ -211,10 +201,9 @@ export const EditProfile = ({ setProfileImage }) => {
           ))}
         </div>
 
-        {/* Botón para guardar los cambios */}
-        <button onClick={handleSave} className="save-button">
-          Guardar imagen
-        </button>
+        <button onClick={handleSave} className="save-button">Guardar imagen</button>
+
+        {successMessage && <div className="success-message">{successMessage}</div>}
       </main>
     </div>
   );

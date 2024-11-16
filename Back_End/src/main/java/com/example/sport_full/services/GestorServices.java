@@ -1,5 +1,6 @@
 package com.example.sport_full.services;
 
+import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.models.GestorModels;
 import com.example.sport_full.repositories.IGestorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,13 @@ public class GestorServices {
         // Devuelve el gestor junto con sus relaciones
         return igestorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gestor not found with id " + id));
+    }
+
+    public void actualizarImagenGestor(GestorModels gestor, byte[] imagenBytes) {
+        // Actualizar la imagen en el modelo de la empresa
+        gestor.setImgPerfil(imagenBytes);
+
+        // Guardar los cambios en la base de datos
+        igestorRepository.save(gestor);
     }
 }

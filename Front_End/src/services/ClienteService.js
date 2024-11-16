@@ -134,6 +134,20 @@ class ClienteService {
         return axios.patch(`http://localhost:8080/admin/gestor/update/${id}`, updatedManager);;
 
     };
+
+    // Método para actualizar la imagen de perfil de la empresa
+    updateCompanyImage(empresaId, imgPerfil) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        const formData = new FormData();
+        formData.append("imgPerfil", imgPerfil);
+
+        return axios.post(`http://localhost:8080/admin/actualizar-imagen/${empresaId}`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado
+                'Content-Type': 'multipart/form-data' // Asegura que el contenido sea multipart/form-data
+            }
+        });
+    }                       
 }
 
 

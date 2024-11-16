@@ -26,6 +26,11 @@ public class ClientModels implements Serializable {
     @JoinColumn(name = "usuario_id", referencedColumnName = "id",unique = true)
     private UserModels userModels;
 
+    @Lob
+    @Column(name = "img_perfil", columnDefinition = "LONGBLOB", nullable = true)
+    private byte[] imgPerfil;
+
+
     // Getters y Setters
 
     public Long getId() {
@@ -58,5 +63,13 @@ public class ClientModels implements Serializable {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
+    }
+
+    public byte[] getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(byte[] imgPerfil) {
+        this.imgPerfil = imgPerfil;
     }
 }

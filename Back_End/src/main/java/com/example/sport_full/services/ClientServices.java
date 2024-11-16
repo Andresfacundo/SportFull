@@ -1,5 +1,6 @@
 package com.example.sport_full.services;
 
+import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
@@ -62,5 +63,13 @@ public UserModels updateUserAndClient(UserModels user, ClientModels client, Long
         }else{
             return "usuario con id " + id + " no existe";
         }
+    }
+
+    public void actualizarImagenCliente(ClientModels cliente, byte[] imagenBytes) {
+        // Actualizar la imagen en el modelo de la empresa
+        cliente.setImgPerfil(imagenBytes);
+
+        // Guardar los cambios en la base de datos
+        clientRepository.save(cliente);
     }
 }

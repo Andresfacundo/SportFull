@@ -33,24 +33,6 @@ export const ActualizarEmpleado = () => {
 
     const [managers, setManagers] = useState(user?.adminModels?.gestores || []);
 
-    const [imageSrc, setImageSrc] = useState("");
-    useEffect(() => {
-      if (user && user.adminModels?.imgPerfil) {
-        const imgPerfil = user.adminModels.imgPerfil;
-  
-        // Verificar si `imgPerfil` ya es un Base64 string o un byte array
-        if (Array.isArray(imgPerfil)) {
-          // Si es un byte[], convertirlo a URL con Blob
-          const byteArray = new Uint8Array(imgPerfil);
-          const blob = new Blob([byteArray], { type: "image/jpeg" }); // Cambia el MIME si es diferente
-          const url = URL.createObjectURL(blob);
-          setImageSrc(url);
-        } else if (typeof imgPerfil === "string") {
-          // Si ya es un Base64 string, usa directamente
-          setImageSrc(`data:image/jpeg;base64,${imgPerfil}`);
-        }
-      }
-    }, [user]);
 
 
 // Efecto para actualizar el estado cuando el localStorage cambie
@@ -73,7 +55,7 @@ useEffect(() => {
 
   return (
     <div style={backgroundStyle} className='container'>
-      <Header  foto_perfil={imageSrc}/>
+      <Header/>
 
       <main className='main_Managers'>
         <h2 className='title_manager'>Gestores</h2>

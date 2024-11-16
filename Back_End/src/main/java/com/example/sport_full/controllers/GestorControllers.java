@@ -1,12 +1,14 @@
 package com.example.sport_full.controllers;
 
 import com.example.sport_full.models.AdminModels;
+import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.models.GestorModels;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.repositories.IGestorRepository;
 import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.EmailServices;
+import com.example.sport_full.services.GestorServices;
 import com.example.sport_full.validations.UserValidations;
 import jakarta.transaction.Transactional;
 import org.mindrot.jbcrypt.BCrypt;
@@ -14,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @CrossOrigin
@@ -36,6 +40,8 @@ public class GestorControllers {
 
     @Autowired
     private UserValidations userValidations;  // Validaciones del usuario
+    @Autowired
+    private GestorServices gestorServices;
 
     @PostMapping("/register")
     public ResponseEntity<?> createGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long adminEmpresa_Id) {
@@ -152,6 +158,29 @@ public class GestorControllers {
     @GetMapping("/find-all")
     public List<GestorModels> findAll() {
         return gestorRepository.findAll();
+    }
+
+    // Método para actualizar la imagen de perfil de la empresa
+    @PostMapping("/actualizar-imagen/{gestorId}")
+    public ResponseEntity<?> actualizarImagenGestor(@PathVariable("gestorId") Long gestorId,
+                                                     @RequestParam("imgPerfil") MultipartFile imgPerfil) {
+        try {
+            // Buscar la empresa en la base de datos
+            GestorModels gestor = gestorRepository.findById(gestorId)
+                    .orElseThrow(() -> new RuntimeException("Gestor no encontrado"));
+
+            // Convertir la imagen a bytes
+            byte[] imagenBytes = imgPerfil.getBytes();
+
+            // Actualizar la imagen de perfil en el servicio
+            gestorServices.actualizarImagenGestor(gestor, imagenBytes);
+
+            return ResponseEntity.ok("Imagen de perfil del gestor actualizado correctamente.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar la imagen.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     // Actualizar un gestor

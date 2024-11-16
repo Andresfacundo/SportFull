@@ -28,6 +28,11 @@ public class GestorModels implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private UserModels userModels;  // Relación con UserModels
 
+    @Lob
+    @Column(name = "img_perfil", columnDefinition = "LONGBLOB", nullable = true)
+    private byte[] imgPerfil;
+
+
     // Getters y setters
 
     public Long getId() {
@@ -68,5 +73,13 @@ public class GestorModels implements Serializable {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
+    }
+
+    public byte[] getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(byte[] imgPerfil) {
+        this.imgPerfil = imgPerfil;
     }
 }
