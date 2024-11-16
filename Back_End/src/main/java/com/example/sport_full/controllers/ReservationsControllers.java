@@ -90,10 +90,12 @@ public class ReservationsControllers {
                 }
 
                 // Verificar si ya existe una reserva para la misma cancha en el mismo horario
-                boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
+                boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqualAndEstadoReservaNot(
                         fieldModel,
                         reservationsModels.getFechaHoraFin(),
-                        reservationsModels.getFechaHoraInicio()
+                        reservationsModels.getFechaHoraInicio(),
+                        ReservationsModels.estadoReserva.CANCELADA
+
                 );
 
                 if (existeReserva) {
@@ -510,20 +512,6 @@ public class ReservationsControllers {
         }
     }
 
-//    @PutMapping("/cancelReservation")
-//    public ResponseEntity<?> cancelReservation(@RequestParam Long reservationId) {
-//        try {
-//            // Llamar al servicio para cancelar la reserva
-//            ReservationsModels canceledReservation = reservationsServices.cancelReservation(reservationId);
-//            return ResponseEntity.ok("Reserva cancelada exitosamente. Estado actual: " + canceledReservation.getEstadoReserva());
-//        } catch (ResponseStatusException e) {
-//            // Manejar error si la reserva no se encuentra
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada.");
-//        } catch (Exception e) {
-//            // Manejar otros errores
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cancelar la reserva.");
-//        }
-//    }
 @PatchMapping("/{id}/cancelar")
 public ResponseEntity<String> cancelReservation(@PathVariable Long id) {
     Optional<ReservationsModels> reservationOptional = reservationsRepository.findById(id);
