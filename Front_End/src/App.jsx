@@ -34,7 +34,7 @@ import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
 import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
 import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
-
+import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import './App.css'
 
 function App() {
@@ -72,6 +72,7 @@ function App() {
       <Route path='/ShowFields' element={<ShowFields />} />
       <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
       <Route path="/editprofile" element={<EditProfile />} />
+      <Route path="/CardGps" element={<CardGps />} />
 
     </Routes>
   )
