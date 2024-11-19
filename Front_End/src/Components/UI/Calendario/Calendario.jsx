@@ -5,30 +5,26 @@ import './Calendario.css';
 import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
 
-// Función para convertir formato de 24 horas a 12 horas con am/pm
 const formatearHora = (hora) => {
   const ampm = hora >= 12 ? 'pm' : 'am';
-  const hora12 = hora % 12 || 12; // Convertir a formato de 12 horas
+  const hora12 = hora % 12 || 12;
   return `${hora12}${ampm}`;
 };
 
-// Función para normalizar texto (eliminar acentos y convertir a minúsculas)
-const normalizarTexto = (texto) => 
+const normalizarTexto = (texto) =>
   texto
     .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, ""); // Eliminar acentos
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 
-const Calendario = ({ cancha }) => {
+const Calendario = ({ cancha, onDateTimeSelect }) => {
   const [fecha, setFecha] = useState(new Date());
-  const [citas, setCitas] = useState({});
+  const [horasSeleccionadas, setHorasSeleccionadas] = useState([]);
 
-  // Extraer valores del objeto cancha
   const horaApertura = cancha.horaApertura;
   const horaCierre = cancha.horaCierre;
-  const diasApertura = cancha.diasApertura.map(normalizarTexto); // Normalizar días
+  const diasApertura = cancha.diasApertura.map(normalizarTexto);
 
-  // Generar franjas horarias en formato "8am-9am"
   const generarFranjasHorarias = (apertura, cierre) => {
     const [inicioHora] = apertura.split(':').map(Number);
     const [finHora] = cierre.split(':').map(Number);
@@ -41,72 +37,101 @@ const Calendario = ({ cancha }) => {
 
   const franjasHorarias = generarFranjasHorarias(horaApertura, horaCierre);
 
-  const agendarCita = (franja) => {
-    const nombre = prompt("Ingresa tu nombre:");
-    if (nombre) {
-      const key = `${format(fecha, 'eeeeee dd MMMM yyyy', { locale: es })} ${franja}`;
-      setCitas((prevCitas) => ({
-        ...prevCitas,
-        [key]: nombre,
-      }));
+  const manejarCambioFecha = (nuevaFecha) => {
+    setFecha(nuevaFecha);
+    setHorasSeleccionadas([]); // Limpiar selección al cambiar la fecha
+  };
+
+  const seleccionarHora = (franja) => {
+    const [inicio, fin] = franja.split('-').map((hora) => {
+      const ampm = hora.slice(-2); // 'am' o 'pm'
+      const hora24 = parseInt(hora, 10) + (ampm === 'pm' && parseInt(hora, 10) !== 12 ? 12 : 0);
+      return hora24;
+    });
+
+    const horaYaSeleccionada = horasSeleccionadas.find(
+      (seleccionada) => seleccionada.inicio === inicio && seleccionada.fin === fin
+    );
+
+    if (horaYaSeleccionada) {
+      // Si la hora ya está seleccionada, quítala
+      const nuevasHorasSeleccionadas = horasSeleccionadas.filter(
+        (seleccionada) => seleccionada.inicio !== inicio || seleccionada.fin !== fin
+      );
+      setHorasSeleccionadas(nuevasHorasSeleccionadas);
+      if (nuevasHorasSeleccionadas.length > 0) {
+        enviarFechas(nuevasHorasSeleccionadas);
+      } else {
+        // Si no quedan horas seleccionadas, enviamos un objeto vacío
+        onDateTimeSelect({ fechaHoraInicio: "", fechaHoraFin: "" });
+      }
+    } else {
+      // Validar si es consecutiva antes de agregar
+      if (
+        horasSeleccionadas.length === 0 ||
+        horasSeleccionadas.at(-1).fin === inicio
+      ) {
+        const nuevasHorasSeleccionadas = [...horasSeleccionadas, { inicio, fin }];
+        setHorasSeleccionadas(nuevasHorasSeleccionadas);
+        enviarFechas(nuevasHorasSeleccionadas);
+      } else {
+        alert('Solo puedes seleccionar franjas horarias consecutivas.');
+      }
     }
   };
 
-  const eliminarCita = (key) => {
-    setCitas((prevCitas) => {
-      const newCitas = { ...prevCitas };
-      delete newCitas[key];
-      return newCitas;
-    });
+  const enviarFechas = (seleccionadas) => {
+    const fechaSeleccionada = format(fecha, 'yyyy-MM-dd');
+    const fechaHoraInicio = `${fechaSeleccionada}T${seleccionadas[0].inicio
+      .toString()
+      .padStart(2, '0')}:00:00`;
+    const fechaHoraFin = `${fechaSeleccionada}T${seleccionadas.at(-1).fin
+      .toString()
+      .padStart(2, '0')}:00:00`;
+
+    onDateTimeSelect({ fechaHoraInicio, fechaHoraFin });
   };
 
-  const manejarCambioFecha = (nuevaFecha) => {
-    setFecha(nuevaFecha);
-  };
-
-  const franjasDisponibles = franjasHorarias.filter((franja) => {
-    const key = `${format(fecha, 'eeeeee dd MMMM yyyy', { locale: es })} ${franja}`;
-    return !citas[key];
-  });
-
-  // Función para deshabilitar días no disponibles
   const deshabilitarDias = ({ date }) => {
-    const diaNombre = normalizarTexto(format(date, 'EEEE', { locale: es })); // Normalizar el nombre del día
-    return !diasApertura.includes(diaNombre); // Comparar con días normalizados
+    const diaNombre = normalizarTexto(format(date, 'EEEE', { locale: es }));
+    return !diasApertura.includes(diaNombre);
+  };
+
+  const estaSeleccionada = (franja) => {
+    const [inicio, fin] = franja.split('-').map((hora) => {
+      const ampm = hora.slice(-2); // 'am' o 'pm'
+      const hora24 = parseInt(hora, 10) + (ampm === 'pm' && parseInt(hora, 10) !== 12 ? 12 : 0);
+      return hora24;
+    });
+
+    return horasSeleccionadas.some(
+      (seleccionada) => seleccionada.inicio === inicio && seleccionada.fin === fin
+    );
   };
 
   return (
     <div className="calendario-container">
       <h1>Calendario</h1>
-      <div className="calendario-horas">
-        <Calendar
-          onChange={manejarCambioFecha}
-          value={fecha}
-          locale="es" // Establecer el idioma del calendario
-          tileDisabled={deshabilitarDias} // Deshabilitar días
-        />
-        <div className="horarios">
-          <h2 className="horarios-disponibles">Horarios Disponibles</h2>
-          {franjasDisponibles.length > 0 ? (
-            franjasDisponibles.map((franja) => (
-              <div key={franja} className="hora" onClick={() => agendarCita(franja)}>
-                {franja}
-              </div>
-            ))
-          ) : (
-            <p>No hay horarios disponibles para esta fecha.</p>
-          )}
+      <Calendar
+        onChange={manejarCambioFecha}
+        value={fecha}
+        locale="es"
+        tileDisabled={deshabilitarDias}
+      />
+      <div className="horarios">
+        <h2 className="horarios-disponibles">Horarios Disponibles</h2>
+        <div className="container_horas">
+          {franjasHorarias.map((franja) => (
+            <div
+              key={franja}
+              className={`hora ${estaSeleccionada(franja) ? 'hora-seleccionada' : ''}`}
+              onClick={() => seleccionarHora(franja)}
+            >
+              {franja}
+            </div>
+          ))}
         </div>
       </div>
-      <h2 className="horarios-disponibles">Citas Agendadas</h2>
-      <ul>
-        {Object.entries(citas).map(([key, nombre]) => (
-          <li key={key}>
-            {key}: {nombre}
-            <button onClick={() => eliminarCita(key)}>Eliminar</button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

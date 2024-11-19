@@ -20,6 +20,7 @@ public class ReservationsModels {
 
     @ManyToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    @JsonIgnore
     private AdminModels adminModels;
 
 

@@ -89,6 +89,8 @@ public class FieldControllers {
                 fieldMap.put("horaApertura", field.getAdminModels().getHoraApertura());
                 fieldMap.put("horaCierre", field.getAdminModels().getHoraCierre());
                 fieldMap.put("diasApertura", field.getAdminModels().getDiasApertura());
+                fieldMap.put("empresaId", field.getAdminModels().getId());
+
 
             }
 

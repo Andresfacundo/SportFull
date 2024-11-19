@@ -120,6 +120,9 @@
 .btn {
     text-align: center;
     margin: 1.25rem;
+    display: flex;
+    width: auto;
+    flex-direction: column;
 }
 
 .btn-reservar,

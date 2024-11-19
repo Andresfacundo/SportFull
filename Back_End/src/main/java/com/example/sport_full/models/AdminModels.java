@@ -83,7 +83,6 @@ public class AdminModels implements Serializable {
 
 
     @OneToMany(mappedBy = "adminModels")
-    @JsonIgnore
     private List<ReservationsModels> reservations;
 
 

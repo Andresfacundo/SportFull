@@ -1,7 +1,7 @@
 import React from 'react';
 import './BigCard.css';
 import img from '../../../assets/Images/cancha.jpg';
-
+import { UnicReservation } from '../Reservations/UnicReservation/UnicReservation';
 import Calendario from '../Calendario/Calendario';
 
 export const BigCard = ({ cancha, onClose }) => {
@@ -37,10 +37,8 @@ export const BigCard = ({ cancha, onClose }) => {
           </div>
         </section>
 
-        <Calendario  cancha={cancha}/>
-
         <section className="btn">
-          <button className="btn-reservar">Reservar</button>
+        <UnicReservation cancha={cancha} />
           <button className="otra-Reserva">Reservar otra cancha</button>
         </section>
       </div>
