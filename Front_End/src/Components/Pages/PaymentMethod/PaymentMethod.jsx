@@ -1,28 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./PaymentMethod.css";
 
-const PaymentMethod = () => {
+const PaymentMethod = ({ empresaId, estado, canchaId, fechaHoraInicio, fechaHoraFin }) => {
+  const [totalValue, setTotalValue] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Función para obtener el valor total desde el backend
+  const fetchTotalValue = async () => {
+    try {
+      const params = new URLSearchParams({
+        empresaId,
+        ...(estado && { estado }), // Agrega el estado solo si existe
+        ...(canchaId && { canchaId }),
+        ...(fechaHoraInicio && { fechaHoraInicio }),
+        ...(fechaHoraFin && { fechaHoraFin }),
+      });
+
+      const response = await fetch(`http://localhost:8080/reservas/valorTotal?empresaId=1`);
+      console.log(response)
+      if (!response.ok) throw new Error("Error al obtener el valor total");
+
+      const data = await response.json();
+      setTotalValue(data.totalValue || data); // Maneja ambos formatos de respuesta
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener el valor total:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTotalValue();
+  }, [empresaId, estado, canchaId, fechaHoraInicio, fechaHoraFin]);
+
   const generateInvoiceNumber = () => {
     return `INV-${uuidv4()}`;
   };
 
-  // Funciones para habilitar/deshabilitar Datadog RUM
-  const disableDatadog = () => {
-    if (window.DD_RUM) {
-      window.DD_RUM.stopSession();
-      console.log("Datadog deshabilitado");
-    }
-  };
-
-  const enableDatadog = () => {
-    if (window.DD_RUM) {
-      window.DD_RUM.startSession();
-      console.log("Datadog habilitado");
-    }
-  };
-
-  // Configurar ePayco globalmente para reutilizar
   const configureEpayco = () => {
     if (window.ePayco) {
       return window.ePayco.checkout.configure({
@@ -35,44 +50,16 @@ const PaymentMethod = () => {
     }
   };
 
-  // Método de pago embebido (dispositivos móviles)
-  const handleEmbeddedPayment = () => {
-    const ePayco = configureEpayco();
-    if (!ePayco) return;
-
-    const paymentData = {
-      name: "Reserva de Cancha",
-      description: "Pago por reserva de cancha sintética",
-      invoice: generateInvoiceNumber(),
-      currency: "COP",
-      amount: "50000",
-      tax_base: "0",
-      tax: "0",
-      country: "CO",
-      lang: "es",
-      external: "false",
-      response: "https://tusitio.com/respuesta",
-      confirmation: "https://tusitio.com/confirmacion",
-      method: "embedded",
-    };
-
-    ePayco.open(paymentData);
-  };
-
-  // Método de pago en pantalla completa (PSE)
   const handleFullScreenPayment = () => {
-    // Deshabilitar Datadog antes de abrir ePayco
-    disableDatadog();
-
     const ePayco = configureEpayco();
-    if (!ePayco) return;
+    if (!ePayco || !totalValue) return;
 
     const paymentData = {
       name: "Reserva de Cancha",
       description: "Pago por reserva de cancha sintética",
       invoice: generateInvoiceNumber(),
       currency: "COP",
-      amount: "50000",
+      amount: totalValue.toFixed(2), // Asegura que sea un formato válido
       tax_base: "0",
       tax: "0",
       country: "CO",
@@ -84,31 +71,21 @@ const PaymentMethod = () => {
     };
 
     ePayco.open(paymentData);
-
-    // Detectar cuando el popup se cierre y reactivar Datadog
-    const interval = setInterval(() => {
-      if (document.querySelector(".epayco-overlay") === null) {
-        console.log("Pago cerrado");
-        enableDatadog();
-        clearInterval(interval);
-      }
-    }, 1000);
   };
-
-  useEffect(() => {
-    // Asegurar que ePayco esté disponible
-    if (!window.ePayco) {
-      console.error("ePayco no está cargado");
-    }
-  }, []);
 
   return (
     <div className="payment-container">
       <h2>Completa tu pago</h2>
-      <p>Haz clic en el botón para completar tu reserva</p>
-      <button onClick={handleEmbeddedPayment} className="payment-button">
-        Pagar con ePayco
-      </button>
+      {loading ? (
+        <p>Cargando total...</p>
+      ) : (
+        <>
+          <p>Total a pagar: COP {totalValue}</p>
+          <button onClick={handleFullScreenPayment} className="payment-button">
+            Pagar ahora
+          </button>
+        </>
+      )}
     </div>
   );
 };
