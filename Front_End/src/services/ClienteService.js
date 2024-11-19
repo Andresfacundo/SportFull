@@ -150,29 +150,38 @@ class ClienteService {
                 'Content-Type': 'multipart/form-data' // Asegura que el contenido sea multipart/form-data
             }
         });
-    }   
-    
-    
-// Crear una reserva
-createReservation(reservation, fieldId, adminId, clientId, userEmail) {
-    const token = localStorage.getItem('token'); // Obtener el token del localStorage
-    return axios.post(
-        `http://localhost:8080/reservas/create`, // URL del endpoint
-        reservation, // Datos de la reserva
-        {
-            params: {
-                fieldId, // ID de la cancha
-                adminId, // ID del administrador
-                clientId, // ID del cliente
-                userEmail // Email del cliente
-            },
-            headers: {
-                'Authorization': `Bearer ${token}`, // Agregar el token al encabezado
-                'Content-Type': 'application/json' // Especificar que se envía JSON
+    }
+
+
+    // Crear una reserva
+    createReservation(reservation, fieldId, adminId, clientId, userEmail) {
+        const token = localStorage.getItem('token'); // Obtener el token del localStorage
+        return axios.post(
+            `http://localhost:8080/reservas/create`, // URL del endpoint
+            reservation, // Datos de la reserva
+            {
+                params: {
+                    fieldId, // ID de la cancha
+                    adminId, // ID del administrador
+                    clientId, // ID del cliente
+                    userEmail // Email del cliente
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Agregar el token al encabezado
+                    'Content-Type': 'application/json' // Especificar que se envía JSON
+                }
             }
-        }
-    );
-}
+        );
+    }
+
+    getReservationsByUser(userId){
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.get(`http://localhost:8080/reservas/user?userId=${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
+            }
+        });
+    }
 }
 
 

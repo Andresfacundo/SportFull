@@ -16,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ReservationsServices {
@@ -32,13 +34,42 @@ public class ReservationsServices {
     @Autowired
     ICompanyRepository companyRepository;
 
+    // Método para crear una reserva
     public ReservationsModels createReservation(ReservationsModels reservation) {
         if(reservation.getFechaHoraInicio().equals(reservation.getFechaHoraFin())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        return reservationsRepository.save(reservation);
+
+        // Guardar la reserva inicialmente con estado PENDIENTE
+        reservation.setEstadoReserva(ReservationsModels.estadoReserva.PENDIENTE);
+        reservation = reservationsRepository.save(reservation);
+
+        // Programar la tarea para cambiar el estado a CANCELADA si no se confirma en 30 segundos
+        programarCambioEstado(reservation);
+
+        return reservation;
     }
 
+    // Método para programar el cambio de estado a CANCELADA después de 30 segundos
+    private void programarCambioEstado(ReservationsModels reservation) {
+        Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+            // Verificar el estado de la reserva y actualizar si sigue en PENDIENTE
+            actualizarEstadoSiNoConfirmada(reservation);
+        }, 60, TimeUnit.SECONDS);
+    }
+
+    // Método que cambia el estado a CANCELADA si la reserva sigue en PENDIENTE después de 30 segundos
+    private void actualizarEstadoSiNoConfirmada(ReservationsModels reservation) {
+        Optional<ReservationsModels> reservaPersistida = reservationsRepository.findById(reservation.getId());
+        if (reservaPersistida.isPresent()) {
+            ReservationsModels reserva = reservaPersistida.get();
+            // Si la reserva sigue en PENDIENTE, cambiar su estado a CANCELADA
+            if (reserva.getEstadoReserva() == ReservationsModels.estadoReserva.PENDIENTE) {
+                reserva.setEstadoReserva(ReservationsModels.estadoReserva.CANCELADA);
+                reservationsRepository.save(reserva);
+            }
+        }
+    }
     public List<ReservationsModels> getAllReservations() {
         return reservationsRepository.findAll();
     }

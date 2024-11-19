@@ -260,6 +260,29 @@ public class ReservationsControllers {
         }
     }
 
+    //cambiar estado de reserva manualmente PENDIENTE a CONFIRMADA
+    @PutMapping("/{id}/confirmar")
+    public ResponseEntity<ReservationsModels> confirmReservation(@PathVariable Long id) {
+        Optional<ReservationsModels> reservation = reservationsServices.getReservationById(id);
+        if (reservation.isPresent()) {
+            ReservationsModels reserva = reservation.get();
+
+            // Verificar si el estado de la reserva es CANCELADA
+            if (reserva.getEstadoReserva() == ReservationsModels.estadoReserva.CANCELADA) {
+                // Si ya está CANCELADA, lanzar una excepción indicando que no se puede confirmar
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva está CANCELADA y no se puede confirmar.");
+            }
+
+            // Cambiar el estado de la reserva a CONFIRMADA
+            reserva.setEstadoReserva(ReservationsModels.estadoReserva.CONFIRMADA);
+            reservationsServices.updateReservation(id, reserva);
+            return new ResponseEntity<>(reserva, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no encontrada");
+        }
+    }
+
+    //Crear reserva desde Admin una reserva para un usuario no registrado
     @PostMapping("/empresa/reserva")
     public ResponseEntity<?> createReservaByEmpresa(@RequestBody Map<String, Object> requestData, @RequestParam Long adminId,
                                                     @RequestParam Long fieldId) {
@@ -371,7 +394,7 @@ public class ReservationsControllers {
         }
     }
 
-
+    //Crear reserva como Cliente
     @PostMapping("/createReservation")
     public ResponseEntity<?> createTwoReservation(@RequestBody List<ReservationsModels> reservationsList,
                                                   @RequestParam Long adminId,
@@ -460,6 +483,7 @@ public class ReservationsControllers {
         }
     }
 
+    //Consultar reserva por ID
     @GetMapping("/{id}")
     public ResponseEntity<ReservationsModels> getReservationById(@PathVariable("id") Long id) {
         return reservationsServices.getReservationById(id)
@@ -467,11 +491,13 @@ public class ReservationsControllers {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    //consultar todas las reservas
     @GetMapping("/findAll")
     public List<ReservationsModels> findAll() {
         return reservationsServices.getAllReservations();
     }
 
+    //consultar reserva por usuario
     @GetMapping("/user")
     public ResponseEntity<List<ReservationsModels>> getReservationsByUser(@RequestParam Long userId) {
         Optional<UserModels> user = userRepository.findById(userId);
@@ -483,6 +509,7 @@ public class ReservationsControllers {
         return ResponseEntity.ok(reservations);
     }
 
+    //consultar reservas de una empresa
     @GetMapping("/empresa")
     public ResponseEntity<List<ReservationsModels>> getReservationsByCompany(@RequestParam Long empresaId) {
         Optional<AdminModels> admin = companyRepository.findById(empresaId);
@@ -495,6 +522,7 @@ public class ReservationsControllers {
     }
 
 
+    //actualizar reserva por ID
     @PutMapping("/{reservationId}")
     public ResponseEntity<ReservationsModels> updateReservation(
             @PathVariable Long reservationId,
@@ -506,6 +534,7 @@ public class ReservationsControllers {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
 
     @PutMapping("/cancelReservation")
     public ResponseEntity<?> cancelReservation(@RequestParam Long reservationId) {
@@ -522,6 +551,7 @@ public class ReservationsControllers {
         }
     }
 
+    //Eliminar reserva por ID
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long reservationId) {
         try {

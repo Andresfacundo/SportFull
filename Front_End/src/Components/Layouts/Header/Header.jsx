@@ -72,7 +72,7 @@ export const Header = ({ children }) => {
           <CurrentDate />
           {location.pathname !== '/Guest' && (
             <>
-              <NavLink className={'configuration'}>
+              <NavLink to='/PendingReservations' className={'configuration'}>
                 <img className='icon_options' src={icon_reservation} alt="Configuración" />
               </NavLink>
               <NavLink className={'notifications'}>

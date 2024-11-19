@@ -1,0 +1,15 @@
+.main_pendingReservations{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    margin-bottom: 5rem;
+}
+
+
+.title_pendingReservations{
+    width: 90%;
+    font-size: 2.3rem;
+    text-align: center;
+}

@@ -40,6 +40,7 @@ import { EliminarEmpleado } from './Components/Pages/GestionEmpleados/EliminarEm
 import EditManager from './Components/Pages/GestionEmpleados/ActualizarEmpleado/EditManager/EditManager.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
+import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
 
 import './App.css'
 
@@ -84,6 +85,7 @@ function App() {
       <Route path="/ShowEmployee" element={<ConsultarEmpleados />} />
       <Route path="/EditManager/:id" element={<EditManager />} />
       <Route path="/BigCard" element={<BigCard />} />
+      <Route path="/PendingReservations" element={<PendingReservations />} />
 
 
     </Routes>
