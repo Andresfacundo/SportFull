@@ -73,7 +73,9 @@ public class AdminControllers {
             return ResponseEntity.notFound().build();
         }
     }
-        @PatchMapping("/update/{id}")
+
+
+    @PatchMapping("/update/{id}")
     public ResponseEntity<UserModels> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
         Optional<UserModels> existingUserOpt = userRepository.findById(userId);
 
@@ -157,6 +159,16 @@ public class AdminControllers {
                     for (String nuevoServicio : adminModels.getServiciosGenerales()) {
                         if (!existingServicios.contains(nuevoServicio)) {
                             existingServicios.add(nuevoServicio);
+                        }
+                    }
+                }
+
+                if (adminModels.getDiasApertura() != null) {
+                    List<String> existingDias = existingUser.getAdminModels().getDiasApertura();
+
+                    for (String nuevoDia : adminModels.getDiasApertura()) {
+                        if (!existingDias.contains(nuevoDia)) {
+                            existingDias.add(nuevoDia);
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package com.example.sport_full.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,12 @@ public class FieldModels {
     @Column(nullable = false)
     private String estado;
 
-    @ManyToOne
+
     @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private AdminModels adminModels;
+
 
     @ElementCollection
     @CollectionTable(name = "field_servicios", joinColumns = @JoinColumn(name = "field_id"))

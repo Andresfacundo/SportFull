@@ -68,7 +68,10 @@ class ClienteService {
         });
     }
 
-
+    //Mostrar todas la canchas
+    getAllFields() {
+        return axios.get("http://localhost:8080/fields/findAll");
+    }
 
 
     //verificar email
