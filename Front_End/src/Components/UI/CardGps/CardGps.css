@@ -1,12 +1,13 @@
 
 .cardGps {
-    background-color: rgba(1, 1, 1, 0.9);
+   /* background-color: rgba(1, 1, 1, 0.9);*/
     width: 90%;
     height: max-content;
     margin: 1rem auto;
     text-align: center;
     border-radius: 15px;
     border: 3px solid white;
+    background-image: url('../../../assets/Images/fondos/fondo_01.png');
 }
 
 .mapaConGps {
@@ -59,11 +60,15 @@
     width: 40%;
     height: 3rem;
     font-size: 1.5rem;
-    color: black;
+    color: white;
+    background-color: #07954A;
+    box-shadow: 0px 0px 5px 1px;
+    border: 3px solid white;
 }
 
 .ubicacion{
   margin: 15px 15px 2rem 15px;  
+  
 }
 
 .ubicacion h3 {
@@ -75,6 +80,11 @@
     border-radius: 10px;
     padding: 10px;
     width: 90%;
+    color: white;
+    background-color: #07954A;
+    text-align: left;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
 }
 
 
@@ -99,6 +109,7 @@
 }
 .a-disponibilidad p {
     font-size: 1.5rem;
+
 }
 
 .a-disponibilidad input {
@@ -106,6 +117,9 @@
     height: 3rem;
     padding: 5px;    
     text-align: center;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+    
 }
 
 .b-disponibilidad {
@@ -123,7 +137,12 @@
     height: 3rem;
     border-radius: 5px;
     text-align: center;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
 }
+
+
+
 
 .tipoCancha {
     display: flex;
@@ -168,23 +187,26 @@ padding: 1rem;
 }
 
 .servicios input {
-    width: 10rem;    
+    width: 8rem;    
     border-radius: 10px;
     text-align: center;
-    margin: 5px;
+    margin: 15px;
     background-color: #07954A;
     color: white;   
     font-size: 1.25rem;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
 }
 
 .cardGps button {
     width: 9rem;
     height: 3rem;
-    margin: 1rem;
+    margin: 2rem;
     background-color: #07954A;
     font-size: 2rem;
     border-radius: 10px;
-    
+    box-shadow: 0px 0px 5px 2px rgb(0, 110, 0);
+    border: 3px solid white;
 }
 
 input::placeholder {
@@ -193,3 +215,51 @@ input::placeholder {
     height: 100%;
 }
 
+.filtros{
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+    margin: 1rem auto;
+    color: white;
+    border-radius: 5px;
+    width: max-content;
+    background-color: #07954A;     
+    padding: 10px;       
+}
+
+.titulo-filtro{
+   margin: 1rem auto;
+   
+}
+
+
+.filtro{
+    height: 10rem;      
+    background-color: #07954A;
+    border: 1px solid #07954A;   
+    font-size: 1rem;
+    outline: none;   
+}
+
+.filtros option{
+    color: white;
+    margin: 10px;   
+    width: 100%;    
+}
+
+/* Estilo para el dropdown */
+.dropdown-filtro {
+    width: 300px; 
+    margin: 10px 0;
+    color: black;
+    
+  }
+  
+  .titulo-filtro {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+  }
+  
+  
+  
