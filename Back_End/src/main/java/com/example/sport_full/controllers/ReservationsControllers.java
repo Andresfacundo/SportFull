@@ -6,6 +6,7 @@ import com.example.sport_full.repositories.*;
 import com.example.sport_full.services.*;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,9 @@ import javax.swing.text.html.Option;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reservas")
@@ -87,18 +87,31 @@ public class ReservationsControllers {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("La cancha no pertenece a esta empresa.");
                 }
 
-                if(!userModels.getEmail().equals(userEmail)) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El email proporcinado no corresponde  al cliente");
+                if (!userModels.getEmail().equals(userEmail)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El email proporcionado no corresponde al cliente");
                 }
 
-                // Verificar si ya existe una reserva para la misma cancha en el mismo horario
-                boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioLessThanEqualAndFechaHoraFinGreaterThanEqual(
+                // Buscar reservas que puedan traslaparse
+                List<ReservationsModels> reservasConflicto = reservationsRepository.findConflictingReservations(
                         fieldModel,
-                        reservationsModels.getFechaHoraFin(),
-                        reservationsModels.getFechaHoraInicio()
+                        reservationsModels.getFechaHoraInicio(),
+                        reservationsModels.getFechaHoraFin()
                 );
 
-                if (existeReserva) {
+                // Validar si existe un traslape real
+                boolean existeTraslape = reservasConflicto.stream().anyMatch(reserva -> {
+                    LocalDateTime inicioReservaExistente = reserva.getFechaHoraInicio();
+                    LocalDateTime finReservaExistente = reserva.getFechaHoraFin();
+
+                    LocalDateTime inicioNuevaReserva = reservationsModels.getFechaHoraInicio();
+                    LocalDateTime finNuevaReserva = reservationsModels.getFechaHoraFin();
+
+                    // No permitir que la nueva reserva coincida con las existentes, ni que se solapen
+                    return !(finNuevaReserva.equals(inicioReservaExistente) || inicioNuevaReserva.equals(finReservaExistente)) &&
+                            (inicioNuevaReserva.isBefore(finReservaExistente) && finNuevaReserva.isAfter(inicioReservaExistente));
+                });
+
+                if (existeTraslape) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una reserva para esta cancha en el horario especificado.");
                 }
 
@@ -134,7 +147,6 @@ public class ReservationsControllers {
             return ResponseEntity.badRequest().body("Error al crear la reserva: " + e.getMessage());
         }
     }
-
 
 
     // gestor realiza reserva a nombre de
@@ -396,20 +408,21 @@ public class ReservationsControllers {
 
     //Crear reserva como Cliente
     @PostMapping("/createReservation")
-    public ResponseEntity<?> createTwoReservation(@RequestBody List<ReservationsModels> reservationsList,
-                                                  @RequestParam Long adminId,
-                                                  @RequestParam Long clientId,
-                                                  @RequestParam String userEmail,
-                                                  @RequestParam List<Long> fieldIds) {
+    public ResponseEntity<?> createTwoReservation(
+            @RequestBody List<ReservationsModels> reservationsList,
+            @RequestParam Long adminId,
+            @RequestParam Long clientId,
+            @RequestParam String userEmail,
+            @RequestParam List<Long> fieldIds) {
         try {
             Optional<UserModels> user = userRepository.findByEmail(userEmail);
             if (!user.isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado.");
             }
+
             Optional<UserModels> admin = adminServices.getUser(adminId);
             Optional<UserModels> client = clientServices.getClient(clientId);
             if (admin.isPresent() && client.isPresent()) {
-                // Validar que el email proporcionado coincida con el email del cliente registrado
                 if (!client.get().getEmail().equals(userEmail)) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body("El correo proporcionado no coincide con el del cliente registrado.");
@@ -419,7 +432,6 @@ public class ReservationsControllers {
                 for (int i = 0; i < reservationsList.size(); i++) {
                     ReservationsModels reservation = reservationsList.get(i);
 
-                    // Validar que haya un ID de cancha correspondiente en la lista de IDs
                     if (i >= fieldIds.size()) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                 .body("La cantidad de IDs de canchas no coincide con la cantidad de reservas.");
@@ -429,40 +441,14 @@ public class ReservationsControllers {
                     Optional<FieldModels> field = fieldRepository.findById(fieldId);
                     if (field.isPresent()) {
                         FieldModels fieldModel = field.get();
-                        // Verificar que la cancha pertenece al administrador (empresa)
+
                         if (!fieldModel.getAdminModels().getId().equals(admin.get().getId())) {
                             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                     .body("Una de las canchas no pertenece a esta empresa.");
                         }
 
-                        Double costoHora = fieldModel.getPrecio();
-
-                        // Calcular la duración de la reserva en horas
-                        long duracionHoras = Duration.between(reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()).toHours();
-
-                        Long costoTotal = (long) (costoHora * duracionHoras);
-
-                        reservation.setCostoTotal(costoTotal);
-                        reservation.setCostoHora(costoHora);
-                        reservation.setFechaPago(LocalDate.now());
-
-                        // Validar si ya existe una reserva en la misma cancha y rango de horario
-                        boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
-                                fieldModel, reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()
-                        );
-
-                        if (existeReserva) {
-                            return ResponseEntity.status(HttpStatus.CONFLICT)
-                                    .body("Ya existe una reserva para la cancha " + fieldModel.getNombre() +
-                                            " en el horario especificado.");
-                        }
-
-                        // Asignar el administrador y la cancha a la reserva y el usuario
-                        reservation.setAdminModels(fieldModel.getAdminModels());
                         reservation.setFieldModels(fieldModel);
-                        reservation.setUserModels(client.get());
 
-                        // Crear la reserva y agregarla a la lista de reservas creadas
                         ReservationsModels newReservation = reservationsServices.createReservation(reservation);
                         createdReservations.add(newReservation);
                     } else {
@@ -470,18 +456,15 @@ public class ReservationsControllers {
                     }
                 }
 
-                // Enviar el correo de confirmación al usuario para todas las reservas
-                String subject = "Confirmación de tus reservas";
-                confirmReservationServices.ReservationConfirmation(userEmail, subject, createdReservations);
                 return ResponseEntity.ok(createdReservations);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrador o cliente no encontrado.");
             }
         } catch (RuntimeException e) {
-            e.printStackTrace(); // Esto imprimirá el stacktrace completo en los logs del servidor.
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
     }
+
 
     //Consultar reserva por ID
     @GetMapping("/{id}")
@@ -497,16 +480,35 @@ public class ReservationsControllers {
         return reservationsServices.getAllReservations();
     }
 
-    //consultar reserva por usuario
     @GetMapping("/user")
-    public ResponseEntity<List<ReservationsModels>> getReservationsByUser(@RequestParam Long userId) {
+    public ResponseEntity<List<Map<String, Object>>> getReservationsByUser(@RequestParam Long userId) {
         Optional<UserModels> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         List<ReservationsModels> reservations = reservationsServices.getReservationsByUser(user.get());
-        return ResponseEntity.ok(reservations);
+
+        // Transformar cada reserva al formato esperado
+        List<Map<String, Object>> formattedReservations = reservations.stream().map(reservation -> {
+            Map<String, Object> formattedReservation = new HashMap<>();
+            formattedReservation.put("id", reservation.getId());
+            formattedReservation.put("cancha", reservation.getFieldModels().getNombre());
+            formattedReservation.put("fechaPago", reservation.getFechaPago());
+            formattedReservation.put(
+                    "empresa",
+                    reservation.getFieldModels().getAdminModels() != null
+                            ? reservation.getFieldModels().getAdminModels().getNombreEmpresa()
+                            : "N/A"
+            );
+            formattedReservation.put("fechaHoraInicio", reservation.getFechaHoraInicio());
+            formattedReservation.put("fechaHoraFin", reservation.getFechaHoraFin());
+            formattedReservation.put("costoTotal", String.format("$%,d", reservation.getCostoTotal()));
+            formattedReservation.put("estado", reservation.getEstadoReserva());
+            return formattedReservation;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(formattedReservations);
     }
 
     //consultar reservas de una empresa
@@ -521,6 +523,18 @@ public class ReservationsControllers {
         return ResponseEntity.ok(reservations);
     }
 
+    //Consultar horarios de reservas por cancha segun fecha
+    @GetMapping("/horarios/{idCancha}")
+    public ResponseEntity<List<String>> obtenerHorariosReservados(
+            @PathVariable Long idCancha, // Asegúrate de que sea Long
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+        try {
+            List<String> horariosReservados = reservationsServices.obtenerHorariosReservados(idCancha, fecha);
+            return ResponseEntity.ok(horariosReservados);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
     //actualizar reserva por ID
     @PutMapping("/{reservationId}")

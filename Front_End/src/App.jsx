@@ -41,7 +41,7 @@ import EditManager from './Components/Pages/GestionEmpleados/ActualizarEmpleado/
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
 import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
-
+import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
 import './App.css'
 
 function App() {
@@ -86,6 +86,7 @@ function App() {
       <Route path="/EditManager/:id" element={<EditManager />} />
       <Route path="/BigCard" element={<BigCard />} />
       <Route path="/PendingReservations" element={<PendingReservations />} />
+      <Route path="/CardReservation" element={<CardReservation />} />
 
 
     </Routes>

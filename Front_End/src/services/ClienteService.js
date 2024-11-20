@@ -174,9 +174,26 @@ class ClienteService {
         );
     }
 
-    getReservationsByUser(userId){
+    getReservationsByUser(userId) {
         const token = localStorage.getItem('token'); // Obtén el token de autenticación
         return axios.get(`http://localhost:8080/reservas/user?userId=${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
+            }
+        });
+    }
+
+    getHorariosReservados(idCancha, fecha) {
+        return axios.get(`http://localhost:8080/reservas/horarios/${idCancha}`, {
+            params: { fecha }
+        });
+    }
+
+    // Obtener historial de reservas por usuario
+    getReservationsByUser(userId) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.get(`http://localhost:8080/reservas/user`, {
+            params: { userId }, // Parámetro para enviar el ID del usuario
             headers: {
                 'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
             }

@@ -2,22 +2,29 @@ package com.example.sport_full.services;
 
 
 import com.example.sport_full.models.AdminModels;
+import com.example.sport_full.models.FieldModels;
 import com.example.sport_full.models.ReservationsModels;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.repositories.IFieldRepository;
 import com.example.sport_full.repositories.IReservationsRepository;
 import com.example.sport_full.repositories.IUserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationsServices {
@@ -34,11 +41,49 @@ public class ReservationsServices {
     @Autowired
     ICompanyRepository companyRepository;
 
-    // Método para crear una reserva
+    FieldModels fieldModels;
+
     public ReservationsModels createReservation(ReservationsModels reservation) {
-        if(reservation.getFechaHoraInicio().equals(reservation.getFechaHoraFin())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        if (reservation.getFechaHoraInicio().equals(reservation.getFechaHoraFin())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La hora de inicio y fin no pueden ser iguales.");
         }
+
+        // Obtener las reservas existentes en el rango de la fecha seleccionada
+        List<String> horariosReservados = obtenerHorariosReservados(
+                reservation.getFieldModels().getId(), // ID de la cancha
+                reservation.getFechaHoraInicio().toLocalDate()
+        );
+
+        // Validar que no haya conflicto con las reservas existentes
+        ReservationsModels finalReservation = reservation;
+        boolean conflicto = horariosReservados.stream().anyMatch(horario -> {
+            String[] partes = horario.split("-");
+            LocalTime inicioReservado = LocalTime.parse(partes[0]);
+            LocalTime finReservado = LocalTime.parse(partes[1]);
+
+            // Validar si hay un traslape real (adyacencia permitida)
+            return (
+                    finalReservation.getFechaHoraInicio().toLocalTime().isBefore(finReservado) && // Empieza antes del final reservado
+                            finalReservation.getFechaHoraFin().toLocalTime().isAfter(inicioReservado) && // Termina después del inicio reservado
+                            !finalReservation.getFechaHoraInicio().toLocalTime().equals(finReservado) && // No es adyacente por la izquierda
+                            !finalReservation.getFechaHoraFin().toLocalTime().equals(inicioReservado)    // No es adyacente por la derecha
+            );
+        });
+
+        if (conflicto) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una reserva que traslapa con este horario: " +
+                    horariosReservados.stream().filter(horario -> {
+                        String[] partes = horario.split("-");
+                        LocalTime inicioReservado = LocalTime.parse(partes[0]);
+                        LocalTime finReservado = LocalTime.parse(partes[1]);
+                        LocalTime inicioNuevaReserva = finalReservation.getFechaHoraInicio().toLocalTime();
+                        LocalTime finNuevaReserva = finalReservation.getFechaHoraFin().toLocalTime();
+                        return !(finNuevaReserva.equals(inicioReservado) || inicioNuevaReserva.equals(finReservado)) &&
+                                (inicioNuevaReserva.isBefore(finReservado) && finNuevaReserva.isAfter(inicioReservado));
+                    }).findFirst().orElse("N/A"));
+        }
+
+
 
         // Guardar la reserva inicialmente con estado PENDIENTE
         reservation.setEstadoReserva(ReservationsModels.estadoReserva.PENDIENTE);
@@ -134,5 +179,35 @@ public class ReservationsServices {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    public List<String> obtenerHorariosReservados(Long idCancha, LocalDate fecha) {
+        List<Object[]> horariosReservados = reservationsRepository.findHorariosByCanchaAndFecha(idCancha, fecha);
+
+        return horariosReservados.stream()
+                .map(horario -> {
+                    LocalDateTime inicio = (LocalDateTime) horario[0];
+                    LocalDateTime fin = (LocalDateTime) horario[1];
+                    return inicio.toLocalTime() + "-" + fin.toLocalTime();
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    private List<String> generarHorarios(LocalTime inicio, LocalTime fin) {
+        List<String> horarios = new ArrayList<>();
+        LocalTime actual = inicio;
+
+        while (actual.isBefore(fin)) {
+            LocalTime siguiente = actual.plusHours(1); // Generar bloques de 1 hora
+            horarios.add(formatHorario(actual, siguiente)); // Formatear horario
+            actual = siguiente;
+        }
+
+        return horarios;
+    }
+
+    private String formatHorario(LocalTime inicio, LocalTime fin) {
+        return String.format("%02d:00-%02d:00", inicio.getHour(), fin.getHour());
     }
 }

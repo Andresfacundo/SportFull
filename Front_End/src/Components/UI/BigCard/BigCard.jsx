@@ -39,7 +39,6 @@ export const BigCard = ({ cancha, onClose }) => {
 
         <section className="btn">
         <UnicReservation cancha={cancha} />
-          <button className="otra-Reserva">Reservar otra cancha</button>
         </section>
       </div>
     </div>

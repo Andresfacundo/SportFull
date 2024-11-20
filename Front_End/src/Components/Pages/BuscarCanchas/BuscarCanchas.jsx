@@ -59,6 +59,7 @@ export const BuscarCanchas = () => {
   return (
     <div style={backgroundStyle} className='container'>
       <Header />
+      
       <main className='main_foundFields'>
         <h2 className='title_foundFields'>Canchas</h2>
         {fields.length > 0 ? (
