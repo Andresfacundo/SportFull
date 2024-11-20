@@ -76,6 +76,7 @@ const PaymentMethod = ({ empresaId, estado, canchaId, fechaHoraInicio, fechaHora
   return (
     <div className="payment-container">
       <h2>Completa tu pago</h2>
+      
       {loading ? (
         <p>Cargando total...</p>
       ) : (

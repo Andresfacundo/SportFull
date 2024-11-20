@@ -26,6 +26,10 @@ public class ReservationsModels {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserModels userModels; // Nueva relación para soporte de reservas por usuarios
 
+    @OneToOne
+    @JoinColumn(name = "metodo_pago_id") // Nombre de la columna FK
+    private PaymentMethodModels metododepago;
+
     @Column(nullable = false)
     private LocalDateTime fechaHoraInicio;
 
@@ -128,5 +132,13 @@ public class ReservationsModels {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
+    }
+
+    public PaymentMethodModels getMetododepago() {
+        return metododepago;
+    }
+
+    public void setMetododepago(PaymentMethodModels metododepago) {
+        this.metododepago = metododepago;
     }
 }
