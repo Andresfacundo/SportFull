@@ -32,7 +32,7 @@ export const BigCard = ({ cancha, onClose }) => {
           <h3>Servicios</h3>
           <div className="serviciosBigCard-btns">
             {cancha.servicios && cancha.servicios.map((servicio, index) => (
-              <button key={index}>{servicio}</button>
+              <button className='option' key={index}>{servicio}</button>
             ))}
           </div>
         </section>

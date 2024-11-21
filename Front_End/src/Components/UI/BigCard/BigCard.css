@@ -89,11 +89,15 @@
     gap: 1rem;
 }
 
-.serviciosBigCard button {
-    width: 40%;
-    font-size: 20px;
-    color: black;
-    border-radius: 15px;
+.option {
+    background-color: #073b4c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    border-style: none;
+    border: 3px solid #e7e7e78e;
+
 }
 
 .serviciosBigCard h3 {
@@ -102,15 +106,19 @@
 
 /* Botón de cierre en la esquina superior derecha */
 .close-btn {
-    position: absolute;
-    top: 5px;
-    right: 18px;
-    background-color: transparent;
+    position: fixed;
+    top: 5.5rem;
+    right: 3rem;
+    background-color: #e7e7e7;
     border: none;
-    color: #e7e7e7;
+    color: #07954A;
     font-size: 2.5rem;
     cursor: pointer;
     z-index: 20;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    
 }
 
 .close-btn:hover {
@@ -185,7 +193,10 @@
 }
 
 .canchas>section>h3{
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+    background-color: #07954A;
+    padding: 8px 15px 8px 15px;
+    border-radius: 25px;
 }
 
 .canchas>section>p{

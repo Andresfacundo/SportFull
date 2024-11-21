@@ -76,12 +76,9 @@ export const BuscarCanchas = () => {
               </div>
               <div className="item">
                 <span className="big-text"></span>
-                <a href='#' className="regular-text">${field.precio.toFixed(0)}</a>
+                <a href='#' className="regular-text">${field.precio.toFixed(0)}/h</a>
               </div>
-              <div className="item">
-                <span className="big-text"></span>
-                <a href='#' className="regular-text">{field.estado}</a>
-              </div>
+
             </SmallCard>
           ))
         ) : (

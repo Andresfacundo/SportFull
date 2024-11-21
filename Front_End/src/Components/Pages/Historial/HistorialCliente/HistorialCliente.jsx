@@ -30,19 +30,26 @@ export const HistorialCliente = () => {
 
         const response = await ClienteService.getReservationsByUser(userId);
 
-        // Formatear las fechas y horas
         const formattedReservations = response.data.map((reservation) => {
           const inicio = new Date(reservation.fechaHoraInicio);
           const fin = new Date(reservation.fechaHoraFin);
-
+        
+          // Convertir las fechas y horas a la hora de Colombia (GMT-5)
+          const options = { timeZone: "America/Bogota", hour12: false }; // Configuración para formato 24 horas
+          const formatterDate = new Intl.DateTimeFormat("es-CO", { ...options, year: "numeric", month: "2-digit", day: "2-digit" });
+          const formatterTime = new Intl.DateTimeFormat("es-CO", { ...options, hour: "2-digit", minute: "2-digit" });
+        
+          const formatDate = (date) => formatterDate.format(date).split("/").reverse().join("-");
+          const formatTime = (date) => formatterTime.format(date).replace(":", ":");
+        
           return {
             ...reservation,
-            fechaReserva: inicio.toISOString().split('T')[0], // Extraer la fecha en formato YYYY-MM-DD
-            horaInicio: inicio.toTimeString().slice(0, 5), // Extraer la hora de inicio en formato HH:MM
-            horaFin: fin.toTimeString().slice(0, 5), // Extraer la hora de fin en formato HH:MM
+            fechaReserva: formatDate(inicio), // Fecha en formato YYYY-MM-DD
+            horaInicio: formatTime(inicio), // Hora de inicio en formato HH:MM
+            horaFin: formatTime(fin), // Hora de fin en formato HH:MM
           };
         });
-
+        
 
         setReservations(formattedReservations);
       } catch (error) {
@@ -86,6 +93,10 @@ export const HistorialCliente = () => {
               fechaPago={reservation.fechaPago}
               horaInicio={reservation.horaInicio}
               horaFin={reservation.horaFin}
+              empresa={reservation.empresa}
+              costo={reservation.costoTotal}
+              id={reservation.id}
+              asistida={'NO'}
             />
           ))}
         </div>

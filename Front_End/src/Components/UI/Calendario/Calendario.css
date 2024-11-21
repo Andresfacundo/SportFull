@@ -29,7 +29,6 @@
 
 .hora {
   cursor: pointer;
-  border: 1px solid #ccc;
   width: 38%;
   transition: background-color 0.3s;
   padding: 5px;
@@ -37,12 +36,13 @@
   background-color: #07954a;
   color: #e7e7e7;
   border-radius: 15px;
+  opacity: 70%;
 
 }
 
-.hora:hover {
-  background-color: #f0f0f0;
-}
+
+
+
 
 .horarios .horarios-disponibles {
   color: #e7e7e7;
@@ -198,10 +198,8 @@ li button {
 }
 
 .hora-seleccionada {
-  background-color: #4caf50;
-  color: white;
   font-weight: bold;
-  border: 1px solid #388e3c;
+  opacity: 100%;
 }
 
 .limpiar-horas {

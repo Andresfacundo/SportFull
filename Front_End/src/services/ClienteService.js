@@ -73,7 +73,6 @@ class ClienteService {
         return axios.get("http://localhost:8080/fields/findAll");
     }
 
-
     //verificar email
     verifyEmail = (token) => {
         return axios.get(`${API_URL}/verify?token=${token}`);
@@ -123,16 +122,18 @@ class ClienteService {
         return axios.get(`http://localhost:8080/fields/findById/${fieldId}`);
     }
 
-    // Método para consultar cancha por ID
+    // Método para consultar gestor por ID
     getManagerById(managerId) {
         return axios.get(` http://localhost:8080/admin/gestor/find/${managerId}`);
     }
-    //eliminar gestor
 
+    //eliminar gestor
     deletedManager(gestorId) {
         return axios.delete(`http://localhost:8080/admin/gestor/${gestorId}`);
 
     }
+
+    //actualizar gestor
     updatedManager(id, updatedManager) {
         return axios.patch(`http://localhost:8080/admin/gestor/update/${id}`, updatedManager);;
 
@@ -145,6 +146,34 @@ class ClienteService {
         formData.append("imgPerfil", imgPerfil);
 
         return axios.post(`http://localhost:8080/admin/actualizar-imagen/${empresaId}`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado
+                'Content-Type': 'multipart/form-data' // Asegura que el contenido sea multipart/form-data
+            }
+        });
+    }
+
+    // Método para actualizar la imagen de perfil de la empresa
+    updateClientImage(clientId, imgPerfil) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        const formData = new FormData();
+        formData.append("imgPerfil", imgPerfil);
+
+        return axios.post(`http://localhost:8080/client/actualizar-imagen/${clientId}`, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado
+                'Content-Type': 'multipart/form-data' // Asegura que el contenido sea multipart/form-data
+            }
+        });
+    }
+
+    // Método para actualizar la imagen de perfil del gestor
+    updateManagerImage(managerId, imgPerfil) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        const formData = new FormData();
+        formData.append("imgPerfil", imgPerfil);
+
+        return axios.post(`http://localhost:8080/gestor/actualizar-imagen/${managerId}`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado
                 'Content-Type': 'multipart/form-data' // Asegura que el contenido sea multipart/form-data
@@ -174,6 +203,7 @@ class ClienteService {
         );
     }
 
+    //filtrar reservas por usuario
     getReservationsByUser(userId) {
         const token = localStorage.getItem('token'); // Obtén el token de autenticación
         return axios.get(`http://localhost:8080/reservas/user?userId=${userId}`, {
@@ -183,6 +213,7 @@ class ClienteService {
         });
     }
 
+    // filtrar horarios reservados por cancha
     getHorariosReservados(idCancha, fecha) {
         return axios.get(`http://localhost:8080/reservas/horarios/${idCancha}`, {
             params: { fecha }

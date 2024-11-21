@@ -72,45 +72,65 @@ export const EditProfile = ({ setProfileImage }) => {
     }
   };
 
-const handleSave = async () => {
-  if (croppedImage) {
-    try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const empresaId = user?.adminModels?.id;
-
-      if (!empresaId) {
-        throw new Error("No se encontró el ID de la empresa");
+  const handleSave = async () => {
+    if (croppedImage) {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const tipoUsuario = user?.tipoUsuario;
+        const empresaId = user?.adminModels?.id;
+        const clienteId = user?.clientModels?.id;
+        const gestorId = user?.gestorModels?.id;
+  
+        if (!tipoUsuario) {
+          throw new Error("No se encontró el tipo de usuario.");
+        }
+  
+        // Convertir la imagen a Blob
+        const byteString = atob(croppedImage.split(',')[1]);
+        const mimeString = croppedImage.split(',')[0].split(':')[1].split(';')[0];
+        const buffer = new ArrayBuffer(byteString.length);
+        const intArray = new Uint8Array(buffer);
+        for (let i = 0; i < byteString.length; i++) {
+          intArray[i] = byteString.charCodeAt(i);
+        }
+        const file = new Blob([buffer], { type: mimeString });
+  
+        let response;
+  
+        // Determinar el método a ejecutar basado en el tipo de usuario
+        if (tipoUsuario === "EMPRESA") {
+          if (!empresaId) throw new Error("No se encontró el ID de la empresa.");
+          response = await ClienteServices.updateCompanyImage(empresaId, file);
+        } else if (tipoUsuario === "CLIENTE") {
+          if (!clienteId) throw new Error("No se encontró el ID del cliente.");
+          response = await ClienteServices.updateClientImage(clienteId, file);
+        } else if (tipoUsuario === "GESTOR") {
+          if (!gestorId) throw new Error("No se encontró el ID del gestor.");
+          response = await ClienteServices.updateManagerImage(gestorId, file);
+        } else {
+          throw new Error("Tipo de usuario no válido.");
+        }
+  
+        // Validar la respuesta
+        if (response.status === 200) {
+          // Actualizar la imagen en el estado global
+          setImage(croppedImage);
+  
+          // Actualizar la imagen en el localStorage
+          const updatedUser = { ...user, profileImage: croppedImage }; // Actualizar el campo de la imagen
+          localStorage.setItem('user', JSON.stringify(updatedUser)); // Guardar el usuario actualizado en el localStorage
+  
+          setSuccessMessage("Imagen actualizada con éxito.");
+          navigate("/ActualizarCliente");
+        } else {
+          throw new Error("No se pudo actualizar la imagen.");
+        }
+      } catch (error) {
+        setErrorMessage(error.message || "Ocurrió un error al actualizar la imagen.");
       }
-
-      const byteString = atob(croppedImage.split(',')[1]);
-      const mimeString = croppedImage.split(',')[0].split(':')[1].split(';')[0];
-      const buffer = new ArrayBuffer(byteString.length);
-      const intArray = new Uint8Array(buffer);
-      for (let i = 0; i < byteString.length; i++) {
-        intArray[i] = byteString.charCodeAt(i);
-      }
-      const file = new Blob([buffer], { type: mimeString });
-
-      const response = await ClienteServices.updateCompanyImage(empresaId, file);
-      if (response.status === 200) {
-        // Actualizar la imagen en el estado global
-        setImage(croppedImage);
-
-        // Actualizar la imagen en el localStorage
-        user.profileImage = croppedImage;  // Actualizamos el campo de la imagen en el objeto 'user'
-        localStorage.setItem('user', JSON.stringify(user));  // Guardamos el usuario con la nueva imagen
-
-        setSuccessMessage("Imagen actualizada con éxito.");
-        navigate("/ActualizarCliente");
-      } else {
-        throw new Error("No se pudo actualizar la imagen.");
-      }
-    } catch (error) {
-      setErrorMessage(error.message || "Ocurrió un error al actualizar la imagen.");
     }
-  }
-};
-
+  };
+  
 
   return (
     <div
