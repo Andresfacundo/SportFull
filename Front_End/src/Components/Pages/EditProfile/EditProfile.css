@@ -1,14 +1,11 @@
-.edit-profile-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0%;
-  padding: 0%;
-  text-align: center;
-  background-image: url(/src/assets/Images/fondos/fondo_long.png);
-  background-size: cover;
-  width: 100%;
-}
+  .editPhotoProfile{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
   
 .dropzone {
     width: 300px;
@@ -86,4 +83,8 @@
     padding: 0.5rem;
     border-radius: 10px;
     color: #e7e7e7;
+  }
+
+  .editPhotoProfile>h2{
+    font-size: 1.8rem;
   }

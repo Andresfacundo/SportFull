@@ -55,10 +55,10 @@ export const AdvancedConfiguration = () => {
         {/* Usamos un botón que navega dinámicamente según el tipo de usuario */}
         <button className='return' onClick={handleNavigation}>Volver</button>
       </main>
-
+{/* 
       <footer>
         <NavBar/>
-      </footer>
+      </footer> */}
     </div>
   );
 };

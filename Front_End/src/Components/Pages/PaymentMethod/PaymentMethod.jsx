@@ -4,11 +4,10 @@ import NavBar from '../../UI/NavBar/NavBar'
 
 
 export const PaymentMethod = () => {
+  
   return (
     <div>PaymentMethod
-            <footer>
-        <NavBar/>
-      </footer>
+
     </div>
   )
 }

@@ -20,14 +20,18 @@ public class GestorModels implements Serializable {
     private String telefono;
 
     @ManyToOne
-    @JoinColumn(name = "empresa_id", nullable = false)
     @JsonIgnore
-    private AdminModels adminempresa;
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private AdminModels adminModels;
 
     @OneToOne
-    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private UserModels userModels;  // Relación con UserModels
+
+    @Lob
+    @Column(name = "img_perfil", columnDefinition = "LONGBLOB", nullable = true)
+    private byte[] imgPerfil;
+
 
     // Getters y setters
 
@@ -55,12 +59,12 @@ public class GestorModels implements Serializable {
         this.telefono = telefono;
     }
 
-    public AdminModels getAdminempresa() {
-        return adminempresa;
+    public AdminModels getAdminModels() {
+        return adminModels;
     }
 
-    public void setAdminempresa(AdminModels adminempresa) {
-        this.adminempresa = adminempresa;
+    public void setAdminModels(AdminModels adminModels) {
+        this.adminModels = adminModels;
     }
 
     public UserModels getUserModels() {
@@ -69,5 +73,13 @@ public class GestorModels implements Serializable {
 
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
+    }
+
+    public byte[] getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(byte[] imgPerfil) {
+        this.imgPerfil = imgPerfil;
     }
 }

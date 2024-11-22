@@ -1,0 +1,38 @@
+.main_pendingReservations{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    margin-bottom: 5rem;
+}
+
+
+.title_pendingReservations{
+    width: 90%;
+    font-size: 2.3rem;
+    text-align: center;
+}
+
+.btm-pay{
+    width: auto;
+    border: none;
+    height: auto;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 3px 3px 5px #07954983;
+    font-size: 1.2rem;
+    padding: 0.3rem 1.5rem;
+    margin: 1rem 0 1rem 0;
+}
+
+.container-cardPending{
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}

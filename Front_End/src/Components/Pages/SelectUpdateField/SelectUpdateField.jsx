@@ -59,7 +59,7 @@ export const SelectUpdateField = () => {
                             nombreEmpresa={user?.adminModels?.nombreEmpresa || 'Empresa'}
                             nombreCancha={field.nombre || 'Cancha'}
                         >
-                            <button onClick={() => handleUpdate(field)}>Actualizar</button> {/* Botón para actualizar */}
+                            <button className='btn-action' onClick={() => handleUpdate(field)}>Actualizar</button> {/* Botón para actualizar */}
                         </SmallCard>
                     ))
                 ) : (
