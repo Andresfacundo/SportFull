@@ -8,11 +8,12 @@ import "./CardGps.css";
 
 // Icono personalizado para Leaflet
 const icon = new L.Icon({
-  iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-green.png",
-  iconSize: [38, 95],
-  iconAnchor: [22, 94],
+  iconUrl: "src/assets/Images/icons/icon-ball.png",
+  iconSize: [55, 80],
+  iconAnchor: [25, 90],
   popupAnchor: [-3, -76],
 });
+
 
 // Componente para centrar el mapa dinámicamente
 const SetViewOnClick = ({ center }) => {
@@ -34,6 +35,8 @@ const CardGps = () => {
   const [precioMin, setPrecioMin] = useState(null);
   const [precioMax, setPrecioMax] = useState(null);
   const [filteredLocations, setFilteredLocations] = useState([]);
+  const [selectedTiposCancha, setSelectedTiposCancha] = useState([]);
+
 
 
 
@@ -135,6 +138,12 @@ const aplicarFiltros = () => {
         break;
       case "tipoCancha":
         // Lógica para filtrar por tipo de cancha
+        if (selectedTiposCancha.length > 0) {
+          resultado = resultado.filter((ubicacion) => {
+            const fields = Array.isArray(ubicacion.fields) ? ubicacion.fields : [ubicacion.fields];
+            return fields.some((field) => selectedTiposCancha.includes(field.tipoCancha));
+          });
+        }
         break;
       case "servicios":
         // Lógica para filtrar por servicios
@@ -220,6 +229,16 @@ const aplicarFiltros = () => {
       return false; // Caso: fields no existe o no es válido
     });
   };
+
+  //Filtrar por tipo cancha
+  const handleTipoCanchaChange = (tipo) => {
+    setSelectedTiposCancha((prevTipos) =>
+      prevTipos.includes(tipo)
+        ? prevTipos.filter((t) => t !== tipo) // Si ya está, lo elimina
+        : [...prevTipos, tipo] // Si no está, lo agrega
+    );
+  };
+  
   
   
   const handleFilterChange = (selectedOptions) => {
@@ -332,21 +351,31 @@ const aplicarFiltros = () => {
 
       {filtrosSeleccionados.some((filtro) => filtro.value === "tipoCancha") && (
         <section className="tipoCancha">
-          <h3>Tipo de cancha</h3>
-          <div className="contenedorTipoCancha">
-            <div>
-              <p>Fútbol 5</p>
-              <input type="checkbox" />
-            </div>
-            <div>
-              <p>Fútbol 8</p>
-              <input type="checkbox" />
-            </div>
-            <div>
-              <p>Fútbol 11</p>
-              <input type="checkbox" />
-            </div>
-          </div>
+        <h3>Tipo de cancha</h3>
+<div className="contenedorTipoCancha">
+  <div>
+    <p>Fútbol 5</p>
+    <input
+      type="checkbox"
+      onChange={() => handleTipoCanchaChange("Fútbol 5")}
+    />
+  </div>
+  <div>
+    <p>Fútbol 8</p>
+    <input
+      type="checkbox"
+      onChange={() => handleTipoCanchaChange("Fútbol 8")}
+    />
+  </div>
+  <div>
+    <p>Fútbol 11</p>
+    <input
+      type="checkbox"
+      onChange={() => handleTipoCanchaChange("Fútbol 11")}
+    />
+  </div>
+</div>
+
         </section>
       )}
 
