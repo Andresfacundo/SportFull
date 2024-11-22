@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@datadog/browser-rum": "^5.31.1",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@react-google-maps/api": "^2.20.3",
     "axios": "^1.7.4",
+    "epayco-sdk-node": "^1.4.0",
     "esqueleto-react": "file:",
     "ionicons": "^7.4.0",
     "js-cookie": "^3.0.5",

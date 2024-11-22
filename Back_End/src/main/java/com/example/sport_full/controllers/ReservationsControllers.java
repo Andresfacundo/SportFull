@@ -443,6 +443,13 @@ public class ReservationsControllers {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
     }
+// metodo para traer el valor total de una reserva
+    @GetMapping("/{id}/valorTotal")
+    public ResponseEntity<?> getTotalValueByReservationId(@PathVariable("id") Long id) {
+        return reservationsServices.getReservationById(id)
+                .map(reservation -> new ResponseEntity<>(reservation.getCostoTotal(), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationsModels> getReservationById(@PathVariable("id") Long id) {

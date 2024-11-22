@@ -2,41 +2,30 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./PaymentMethod.css";
 
-const PaymentMethod = ({ empresaId, estado, canchaId, fechaHoraInicio, fechaHoraFin }) => {
-  const [totalValue, setTotalValue] = useState(null);
+const PaymentMethod = ({ reservaId }) => {
+  const [valorTotal, setValorTotal] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Función para obtener el valor total desde el backend
   const fetchTotalValue = async () => {
     try {
-      const params = new URLSearchParams({
-        empresaId,
-        ...(estado && { estado }), // Agrega el estado solo si existe
-        ...(canchaId && { canchaId }),
-        ...(fechaHoraInicio && { fechaHoraInicio }),
-        ...(fechaHoraFin && { fechaHoraFin }),
-      });
+      const response = await fetch(`http://localhost:8080/reservas/12/valorTotal`);
+      if (!response.ok) {
+        throw new Error("Error al obtener el valor total de la reserva.");
+      }
 
-      const response = await fetch(`http://localhost:8080/reservas/valorTotal?empresaId=1`);
-      console.log(response)
-      if (!response.ok) throw new Error("Error al obtener el valor total");
-
-      const data = await response.json();
-      setTotalValue(data.totalValue || data); // Maneja ambos formatos de respuesta
+      const total = await response.json();
+      setValorTotal(total); // Guardamos el valor total recibido
       setLoading(false);
-    } catch (error) {
-      console.error("Error al obtener el valor total:", error);
+    } catch (err) {
+      setError(err.message);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchTotalValue();
-  }, [empresaId, estado, canchaId, fechaHoraInicio, fechaHoraFin]);
-
-  const generateInvoiceNumber = () => {
-    return `INV-${uuidv4()}`;
-  };
+  }, [reservaId]);
 
   const configureEpayco = () => {
     if (window.ePayco) {
@@ -52,22 +41,22 @@ const PaymentMethod = ({ empresaId, estado, canchaId, fechaHoraInicio, fechaHora
 
   const handleFullScreenPayment = () => {
     const ePayco = configureEpayco();
-    if (!ePayco || !totalValue) return;
+    if (!ePayco || !valorTotal) return;
 
     const paymentData = {
       name: "Reserva de Cancha",
-      description: "Pago por reserva de cancha sintética",
-      invoice: generateInvoiceNumber(),
+      description: `Pago de reserva ID: ${reservaId}`,
+      invoice: `INV-${uuidv4()}`,
       currency: "COP",
-      amount: totalValue.toFixed(2), // Asegura que sea un formato válido
+      amount: valorTotal.toFixed(2),
       tax_base: "0",
       tax: "0",
       country: "CO",
       lang: "es",
       external: "false",
-      response: "https://tusitio.com/respuesta",
-      confirmation: "https://tusitio.com/confirmacion",
-      method: "popup",
+      response: "http://localhost:8080/api/pagos/respuesta",
+      confirmation: "http://localhost:8080/api/pagos/confirmacion",
+      method: "embedded",
     };
 
     ePayco.open(paymentData);
@@ -76,13 +65,14 @@ const PaymentMethod = ({ empresaId, estado, canchaId, fechaHoraInicio, fechaHora
   return (
     <div className="payment-container">
       <h2>Completa tu pago</h2>
-      
       {loading ? (
         <p>Cargando total...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
       ) : (
         <>
-          <p>Total a pagar: COP {totalValue}</p>
-          <button onClick={handleFullScreenPayment} className="payment-button">
+          <p>Total a pagar: COP {valorTotal}</p>
+          <button onClick={handleFullScreenPayment} className="payment-button" disabled={!valorTotal || loading}>
             Pagar ahora
           </button>
         </>
