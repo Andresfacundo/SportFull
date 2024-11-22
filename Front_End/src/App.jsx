@@ -38,6 +38,7 @@ import { ConsultarEmpleados } from './Components/Pages/GestionEmpleados/Consulta
 import { EliminarEmpleado } from './Components/Pages/GestionEmpleados/EliminarEmpleado/EliminarEmpleado.jsx'
 import EditManager from './Components/Pages/GestionEmpleados/ActualizarEmpleado/EditManager/EditManager.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
+import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
 import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
 import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
@@ -79,6 +80,7 @@ function App() {
       <Route path='/ShowFields' element={<ShowFields />} />
       <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
       <Route path="/editprofile" element={<EditProfile />} />
+      <Route path="/CardGps" element={<CardGps />} />
       <Route path="/AddEmployee" element={<AgregarEmpleado />} />
       <Route path="/DeleteEmployee" element={<EliminarEmpleado />} />
       <Route path="/UpdateEmployee" element={<ActualizarEmpleado />} />
