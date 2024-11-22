@@ -149,7 +149,7 @@ public class ReservationsControllers {
     }
 
 
-    // gestor realiza reserva a nombre de
+    // gestor realiza reserva a nombre de...
     @PostMapping("/gestor/reserva")
     public ResponseEntity<?> createReservaByGestor(@RequestBody Map<String, Object> requestData, @RequestParam Long gestorId,
                                                    @RequestParam Long fieldId) {

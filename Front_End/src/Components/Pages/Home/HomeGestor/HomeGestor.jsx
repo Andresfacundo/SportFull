@@ -33,10 +33,10 @@ export const HomeGestor = () => {
         <OptionMenuRight link={'/GestionReservas'} shade={'shade_booking'} classNameImg={'icon_1'} icon={icon_01} content={'Gestionar Reservas'} />
 
       </main>
-
+{/* 
       <footer>
         <NavBar/>
-      </footer>
+      </footer> */}
 
     </div>
 

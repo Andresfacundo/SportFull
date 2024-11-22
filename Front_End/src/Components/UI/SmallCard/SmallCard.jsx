@@ -20,7 +20,7 @@ export const SmallCard = ({ nombreCancha, nombreEmpresa, onClick, children }) =>
             <img src={imgStar} className='imgStar' alt="Estrella" />
           </div>
 
-          <div className="row row1">
+          <div className="row-row1">
             {children}
           </div>
         </div>

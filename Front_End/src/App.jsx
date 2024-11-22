@@ -19,7 +19,6 @@ import { HistorialCliente } from './Components/Pages/Historial/HistorialCliente/
 import {SoporteCliente} from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
 import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/AdvancedConfiguration'
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
-import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import Services from './Components/UI/FieldServices/FieldServices'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
@@ -42,6 +41,7 @@ import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
 import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
 import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
+import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import './App.css'
 
 function App() {
@@ -86,8 +86,7 @@ function App() {
       <Route path="/EditManager/:id" element={<EditManager />} />
       <Route path="/BigCard" element={<BigCard />} />
       <Route path="/PendingReservations" element={<PendingReservations />} />
-      <Route path="/CardReservation" element={<CardReservation />} />
-
+    <Route path="/PaymentMethod" element={<PaymentMethod />} />
 
     </Routes>
   )

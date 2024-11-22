@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import './UnicReservation.css';
 import ClienteService from '../../../../services/ClienteService';
 import Calendario from '../../Calendario/Calendario';
-
+import { NavLink, useNavigate } from 'react-router-dom';
 
 
 export const UnicReservation = ({ cancha }) => {
   const [dateTime, setDateTime] = useState({ fechaHoraInicio: '', fechaHoraFin: '' });
+  const navigate = useNavigate();
 
   const handleDateTimeSelect = (selectedDateTime) => {
     setDateTime(selectedDateTime);
@@ -36,8 +37,12 @@ export const UnicReservation = ({ cancha }) => {
         reservationData.userEmail
       );
 
+
       alert('Reserva creada exitosamente.');
       console.log('Reserva:', response.data);
+      navigate('/PaymentMethod'); // Redirigir a la ruta de pago cuando se realiza la reserva
+
+
     } catch (error) {
       console.error('Error al crear la reserva:', error.response?.data || error.message);
       alert(`Error al crear la reserva: ${error.response?.data || 'Intenta nuevamente.'}`);

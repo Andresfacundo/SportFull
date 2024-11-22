@@ -170,24 +170,22 @@ public class FieldControllers {
     // Eliminar una cancha
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteField(@RequestParam Long fieldId, @RequestParam Long empresaId) {
+        // Buscar la cancha por su ID
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
-        Optional<UserModels> userOptional = userRepository.findById(empresaId);
+        // Buscar la empresa por su ID
+        Optional<AdminModels> adminOptional = companyRepository.findById(empresaId);
 
-        if (fieldOptional.isPresent() && userOptional.isPresent()) {
-            UserModels user = userOptional.get();
+        // Validar si la cancha y la empresa existen
+        if (fieldOptional.isPresent() && adminOptional.isPresent()) {
+            AdminModels admin = adminOptional.get();
+            FieldModels field = fieldOptional.get();
 
-            if (!"EMPRESA".equalsIgnoreCase(user.getTipoUsuario())) {
-                return new ResponseEntity<>("El usuario no es de tipo EMPRESA", HttpStatus.UNAUTHORIZED);
-            }
-            FieldModels fields = fieldOptional.get();
-
-//          verificar que la cancha pertenece a la empresa
             // Verificar que la cancha pertenece a la empresa
-            if (!fields.getAdminModels().getId().equals(user.getId())) {
+            if (!field.getAdminModels().getId().equals(admin.getId())) {
                 return new ResponseEntity<>("La cancha no pertenece a esta empresa", HttpStatus.UNAUTHORIZED);
             }
 
-
+            // Eliminar la cancha
             fieldRepository.deleteById(fieldId);
             return new ResponseEntity<>("Campo eliminado correctamente", HttpStatus.OK);
         } else {

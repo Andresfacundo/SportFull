@@ -236,10 +236,10 @@ public class GestorControllers {
     }
 
     // Eliminar un gestor y su usuario asociado
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGestor(@PathVariable("id") Long id) {
+    @DeleteMapping("/{gestorId}")
+    public ResponseEntity<String> deleteGestor(@PathVariable("gestorId") Long gestorId) {
         // Verificar si el gestor existe
-        Optional<GestorModels> gestorOptional = gestorRepository.findById(id);
+        Optional<GestorModels> gestorOptional = gestorRepository.findById(gestorId);
 
         if (gestorOptional.isPresent()) {
             GestorModels gestor = gestorOptional.get();
@@ -247,15 +247,15 @@ public class GestorControllers {
             // Eliminar el gestor
             gestorRepository.delete(gestor);
 
-            // Eliminar el usuario asociado
-            UserModels user = gestor.getUserModels();
-            if (user != null) {
+            // Obtener y eliminar el usuario asociado al gestor
+            if (gestor.getUserModels() != null) {
+                UserModels user = gestor.getUserModels();
                 userRepository.delete(user);
             }
 
             return ResponseEntity.status(HttpStatus.OK).body("Gestor y usuario eliminados exitosamente.");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gestor no encontrado.");
         }
     }
 

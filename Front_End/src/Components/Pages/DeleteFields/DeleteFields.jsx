@@ -86,7 +86,7 @@ export const DeleteFields = () => {
               nombreEmpresa={user?.adminModels?.nombreEmpresa || 'Empresa'}
               nombreCancha={field.nombre || 'Cancha'}
             >
-              <button onClick={() => handleDelete(field.id)}>Eliminar</button> {/* Botón para eliminar */}
+              <button className='btn-action' onClick={() => handleDelete(field.id)}>Eliminar</button> {/* Botón para eliminar */}
             </SmallCard>
           ))
         ) : (
