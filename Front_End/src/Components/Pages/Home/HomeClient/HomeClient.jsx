@@ -28,10 +28,10 @@ export const HomeClient = () => {
         <OptionMenuRight link={'/HistorialCliente'} shade={'shade_historial'} classNameImg={'icon_3'} icon={icon_03} content={'Historial'} />
         <OptionMenuLeft link={'/SoporteCliente'} shade={'shade_support'} classNameImg={'icon_4'} icon={icon_04} content={'Soporte'} />
       </main>
-
+{/* 
       <footer>
         <NavBar/>
-      </footer>
+      </footer> */}
 
     </div>
   );

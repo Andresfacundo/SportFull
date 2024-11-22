@@ -19,22 +19,30 @@ import { HistorialCliente } from './Components/Pages/Historial/HistorialCliente/
 import {SoporteCliente} from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
 import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/AdvancedConfiguration'
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
-import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
 import Services from './Components/UI/FieldServices/FieldServices'
 import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
 import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
 import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
 import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
-import { GestionEmpleados } from './Components/Pages/GestionEmpleados/GestionEmpleados.jsx'
+import { GestionEmpleados } from './Components/Pages/GestionEmpleados/MenuGestionEmpleados/GestionEmpleados.jsx'
 import { GestionReportes } from './Components/Pages/GestionReportes/GestionReportes.jsx'
 import { SmallCard } from './Components/UI/SmallCard/SmallCard.jsx'
 import { DeleteFields } from './Components/Pages/DeleteFields/DeleteFields.jsx'
 import { ShowFields } from './Components/Pages/ShowFields/ShowFields.jsx'
 import { SelectUpdateField } from './Components/Pages/SelectUpdateField/SelectUpdateField.jsx'
 import { UpdateField } from './Components/Pages/UpdateField/UpdateField.jsx'
+import { AgregarEmpleado } from './Components/Pages/GestionEmpleados/AgregarEmpleado/AgregarEmpleado.jsx'
+import { ActualizarEmpleado } from './Components/Pages/GestionEmpleados/ActualizarEmpleado/ActualizarEmpleado.jsx'
+import { ConsultarEmpleados } from './Components/Pages/GestionEmpleados/ConsultarEmpleados/ConsultarEmpleados.jsx'
+import { EliminarEmpleado } from './Components/Pages/GestionEmpleados/EliminarEmpleado/EliminarEmpleado.jsx'
+import EditManager from './Components/Pages/GestionEmpleados/ActualizarEmpleado/EditManager/EditManager.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 import CardGps from './Components/UI/CardGps/CardGps.jsx'
+import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
+import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
+import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
+import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
 import './App.css'
 
 function App() {
@@ -73,6 +81,14 @@ function App() {
       <Route path='/SelectUpdateField' element={<SelectUpdateField />} />
       <Route path="/editprofile" element={<EditProfile />} />
       <Route path="/CardGps" element={<CardGps />} />
+      <Route path="/AddEmployee" element={<AgregarEmpleado />} />
+      <Route path="/DeleteEmployee" element={<EliminarEmpleado />} />
+      <Route path="/UpdateEmployee" element={<ActualizarEmpleado />} />
+      <Route path="/ShowEmployee" element={<ConsultarEmpleados />} />
+      <Route path="/EditManager/:id" element={<EditManager />} />
+      <Route path="/BigCard" element={<BigCard />} />
+      <Route path="/PendingReservations" element={<PendingReservations />} />
+    <Route path="/PaymentMethod" element={<PaymentMethod />} />
 
     </Routes>
   )

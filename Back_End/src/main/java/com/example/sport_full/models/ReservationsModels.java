@@ -1,5 +1,6 @@
 package com.example.sport_full.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -16,9 +17,12 @@ public class ReservationsModels {
     @JoinColumn(name = "idCancha", referencedColumnName = "id")
     private FieldModels fieldModels;
 
+
     @ManyToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    @JsonIgnore
     private AdminModels adminModels;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

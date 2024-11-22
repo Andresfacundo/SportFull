@@ -33,10 +33,10 @@ export const HomeEmpresa = () => {
         <OptionMenuRight link={'/GestionReportes'} shade={'shade_ManageReports'} classNameImg={'icon_3'} icon={icon_01} content={'Gestión Reportes'} />
         <OptionMenuLeft link={''} shade={'shade_support'} classNameImg={'icon_4'} icon={icon_02} content={'Soporte'} />
       </main>
-      <footer>
+      {/* <footer>
         <NavBar/>
       </footer>
-      
+       */}
       
     </div>
   )

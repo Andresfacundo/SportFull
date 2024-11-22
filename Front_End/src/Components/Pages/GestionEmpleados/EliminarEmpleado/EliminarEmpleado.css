@@ -1,0 +1,11 @@
+.main_Managers{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 4rem;
+}
+
+.title_manager{
+    font-size: 2.5rem;
+}

@@ -7,9 +7,9 @@ import NavBar from '../../UI/NavBar/NavBar'
 export const GestionReservas = () => {
   return (
     <div>GestionReservas
-            <footer>
+            {/* <footer>
         <NavBar/>
-      </footer>
+      </footer> */}
     </div>
   )
 }

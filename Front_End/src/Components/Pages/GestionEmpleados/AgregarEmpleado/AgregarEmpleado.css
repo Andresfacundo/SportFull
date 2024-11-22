@@ -1,0 +1,21 @@
+.main_agregarEmpleado {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container_agregarEmpleado {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #073B4C;
+    overflow-x: hidden;
+}
+
+.title_register {
+    font-size: 2.4rem;
+    font-weight: 400;
+    margin-bottom: 4rem;
+    text-align: center;
+}

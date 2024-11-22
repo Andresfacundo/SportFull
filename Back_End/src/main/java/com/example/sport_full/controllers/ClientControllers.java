@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.Optional;
 @CrossOrigin
 @RestController
@@ -58,6 +60,29 @@ public class ClientControllers {
         }
     }
 
+
+    // Método para actualizar la imagen de perfil de la empresa
+    @PostMapping("/actualizar-imagen/{clientId}")
+    public ResponseEntity<?> actualizarImagenCliente(@PathVariable("clientId") Long clientId,
+                                                     @RequestParam("imgPerfil") MultipartFile imgPerfil) {
+        try {
+            // Buscar la empresa en la base de datos
+            ClientModels cliente = clientRepository.findById(clientId)
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+            // Convertir la imagen a bytes
+            byte[] imagenBytes = imgPerfil.getBytes();
+
+            // Actualizar la imagen de perfil en el servicio
+            clientServices.actualizarImagenCliente(cliente, imagenBytes);
+
+            return ResponseEntity.ok("Imagen de perfil del cliente actualizado correctamente.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar la imagen.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
     // PRUEBA PATCH ACTUALIZACION PARCIAL
     @PatchMapping("/update/{id}")

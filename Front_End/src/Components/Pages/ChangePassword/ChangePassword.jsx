@@ -186,9 +186,9 @@ export const ChangePassword = () => {
           <NavLink className='return' to='/AdvancedConfiguration'>Volver</NavLink>
         </form>
       </main>
-      <footer>
+      {/* <footer>
         <NavBar/>
-      </footer>
+      </footer> */}
     </div>
   );
 };
