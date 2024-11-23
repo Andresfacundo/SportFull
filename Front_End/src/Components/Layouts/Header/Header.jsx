@@ -1,71 +1,78 @@
-import React from 'react';
 import './Header.css';
+import React, { useEffect, useState } from 'react';
 import icon_logout from '../../../../src/assets/Images/icons/salida.png';
-import foto_perfil from '../../../../src/assets/Images/icons/avatar_01.png';
 import icon_reservation from '../../../../src/assets/Images/icons/Icon_Reservation.png';
 import icon_notification from '../../../../src/assets/Images/icons/icon_notificacion.png';
 import ClienteService from '../../../services/ClienteService';
 import { CurrentDate } from '../../UI/CurrentDate/CurrentDate';
-import { NavLink } from 'react-router-dom';  // Importa useLocation
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 export const Header = ({ children }) => {
-  
-  const location = useLocation();  // Hook para obtener la ruta actual
-  const navigate = useNavigate();  // Hook para navegar entre rutas
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Función para redirigir a la página de edición de perfil
   const handleEditProfile = () => {
-    navigate('/editprofile');  // Redirige a la ruta /editprofile
+    navigate('/editprofile');
   };
 
-  // Función para manejar el cierre de sesión
   const handleLogout = () => {
-    ClienteService.logout(); // Llama al método logout
-    navigate('/Login');  // Redirige al usuario a la página de login
+    ClienteService.logout();
+    navigate('/Login');
   };
 
-  // Obtener datos del usuario
-  const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
 
-  // Función para obtener la primera palabra del nombre y la primera letra del apellido
   const obtenerResultado = (nombre, apellido) => {
-    const showNombre = nombre.trim().split(" ")[0]; // Tomar la primera palabra del nombre
-    const showApellido = apellido.trim().split(" ")[0][0]; // Tomar la primera letra de la primera palabra del apellido
-
+    const showNombre = nombre.trim().split(' ')[0];
+    const showApellido = apellido.trim().split(' ')[0][0];
     const nombreCapitalizado = showNombre.charAt(0).toUpperCase() + showNombre.slice(1).toLowerCase();
     const apellidoCapitalizado = showApellido.toUpperCase();
-
-    return `${nombreCapitalizado} ${apellidoCapitalizado}.`; // Devolver el nombre capitalizado y la inicial del apellido
+    return `${nombreCapitalizado} ${apellidoCapitalizado}.`;
   };
 
-  // Validar que 'user' esté disponible antes de acceder a 'nombres' y 'apellidos'
   const nombre = user?.nombres || 'Nombre';
   const apellido = user?.apellidos || 'Apellido';
-
-  // Obtener el resultado formateado solo si la ruta no es /Guest
   const resultado = location.pathname === '/Guest' ? 'Invitado' : obtenerResultado(nombre, apellido);
 
-  // Lista de rutas donde queremos que se muestre el ícono de edición
   const validPaths = ['/ActualizarCliente', '/ActualizarEmpresa', '/ActualizarGestor'];
-
-  // Definimos una clase condicional para mostrar u ocultar el ícono
   const editIconClass = validPaths.includes(location.pathname) ? 'edit_icon show' : 'edit_icon hide';
+
+  const [imageSrc, setImageSrc] = useState('');
+
+  useEffect(() => {
+    if (user?.tipoUsuario === 'EMPRESA' && user.adminModels?.imgPerfil) {
+      const imgPerfil = user.adminModels.imgPerfil;
+      if (Array.isArray(imgPerfil)) {
+        const byteArray = new Uint8Array(imgPerfil);
+        const blob = new Blob([byteArray], { type: 'image/jpg' });
+        const url = URL.createObjectURL(blob);
+        setImageSrc(url);
+      } else if (typeof imgPerfil === 'string') {
+        setImageSrc(`data:image/jpg;base64,${imgPerfil}`);
+      }
+    }else if (user?.tipoUsuario === 'CLIENTE' && user.clientModels?.imgPerfil) {
+      const imgPerfil = user.clientModels.imgPerfil;
+      if (Array.isArray(imgPerfil)) {
+        const byteArray = new Uint8Array(imgPerfil);
+        const blob = new Blob([byteArray], { type: 'image/jpg' });
+        const url = URL.createObjectURL(blob);
+        setImageSrc(url);
+      } else if (typeof imgPerfil === 'string') {
+        setImageSrc(`data:image/jpg;base64,${imgPerfil}`);
+      }
+    }
+  }, [user]);
 
   return (
     <header className='header_home'>
       <div className='container_header'>
-
         <div className='container_options'>
-          <CurrentDate></CurrentDate>
-
-          {/* Mostrar los iconos solo si no está en la vista /Guest */}
+          <CurrentDate />
           {location.pathname !== '/Guest' && (
             <>
-              <NavLink className={'configuration'}>
+              <NavLink to='/PendingReservations' className={'configuration'}>
                 <img className='icon_options' src={icon_reservation} alt="Configuración" />
               </NavLink>
               <NavLink className={'notifications'}>
@@ -79,14 +86,15 @@ export const Header = ({ children }) => {
         </div>
 
         <div className='container_user'>
-          <img className='pefil_pic' src={foto_perfil} alt="Foto de perfil" />
-          <h2 className='nameUser'>{resultado}</h2> {/* Mostrar el nombre o "Invitado" si está en /Guest */}
+          <div className='container_img'>
+            <img className='img_manager' src={imageSrc} alt="Foto de perfil" />
+          </div>
+          <h2 className='nameUser'>{resultado}</h2>
         </div>
-        {/* Aplicamos la clase condicional al ícono de edición */}
+
         <div className={editIconClass} onClick={handleEditProfile}>
           <FontAwesomeIcon icon={faPencilAlt} />
         </div>
-
       </div>
     </header>
   );

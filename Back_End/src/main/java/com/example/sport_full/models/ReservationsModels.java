@@ -17,10 +17,12 @@ public class ReservationsModels {
     @JoinColumn(name = "idCancha", referencedColumnName = "id")
     private FieldModels fieldModels;
 
+
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    @JsonIgnore
     private AdminModels adminModels;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

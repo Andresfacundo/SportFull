@@ -1,6 +1,7 @@
 package com.example.sport_full.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
@@ -47,6 +48,7 @@ public class UserModels implements Serializable {
 
     // Relación opcional con AdminModels
     @OneToOne(mappedBy = "userModels", cascade = CascadeType.ALL, optional = true)
+    @JsonIgnoreProperties("userModels")
     private GestorModels gestorModels;
 
     private boolean estadoCuenta;

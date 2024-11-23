@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import "./PaymentMethod.css";
 
-const PaymentMethod = ({ reservaId }) => {
+const PaymentMethod = () => {
+  const location = useLocation();
+  const reservaId = location.state?.reservaId;
+
   const [valorTotal, setValorTotal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchTotalValue = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/reservas/12/valorTotal`);
+      const response = await fetch(`http://localhost:8080/reservas/${reservaId}/valorTotal`);
       if (!response.ok) {
         throw new Error("Error al obtener el valor total de la reserva.");
       }
@@ -24,7 +28,9 @@ const PaymentMethod = ({ reservaId }) => {
   };
 
   useEffect(() => {
-    fetchTotalValue();
+    if (reservaId) {
+      fetchTotalValue();
+    }
   }, [reservaId]);
 
   const configureEpayco = () => {
@@ -56,11 +62,15 @@ const PaymentMethod = ({ reservaId }) => {
       external: "false",
       response: "http://localhost:8080/api/pagos/respuesta",
       confirmation: "http://localhost:8080/api/pagos/confirmacion",
-      method: "embedded",
+      method: "popup",
     };
 
     ePayco.open(paymentData);
   };
+
+  if (!reservaId) {
+    return <div>Error: No se recibió la ID de la reserva.</div>;
+  }
 
   return (
     <div className="payment-container">
