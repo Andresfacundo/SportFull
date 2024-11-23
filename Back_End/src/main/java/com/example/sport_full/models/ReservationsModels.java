@@ -28,6 +28,7 @@ public class ReservationsModels {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserModels userModels; // Nueva relación para soporte de reservas por usuarios
 
+
     @Column(nullable = false)
     private LocalDateTime fechaHoraInicio;
 
@@ -131,4 +132,5 @@ public class ReservationsModels {
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
     }
+
 }

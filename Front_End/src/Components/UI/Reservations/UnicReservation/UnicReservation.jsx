@@ -40,7 +40,10 @@ export const UnicReservation = ({ cancha }) => {
 
       alert('Reserva creada exitosamente.');
       console.log('Reserva:', response.data);
-      navigate('/PaymentMethod'); // Redirigir a la ruta de pago cuando se realiza la reserva
+      console.log(response.data.id);
+      
+      const reservaId = response.data.id 
+      navigate('/PaymentMethod', { state: { reservaId } });
 
 
     } catch (error) {

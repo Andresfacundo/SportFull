@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@datadog/browser-rum": "^5.31.1",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@react-google-maps/api": "^2.20.3",
     "axios": "^1.7.4",
     "date-fns": "^4.1.0",
+    "epayco-sdk-node": "^1.4.0",
     "esqueleto-react": "file:",
     "i": "^0.3.7",
     "ionicons": "^7.4.0",
@@ -30,7 +32,9 @@
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.26.1",
     "react-select": "^5.8.3",
-    "stream-browserify": "^3.0.0"
+    "react-toastify": "^10.0.6",
+    "stream-browserify": "^3.0.0",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

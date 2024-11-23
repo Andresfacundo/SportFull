@@ -38,12 +38,12 @@ import { ConsultarEmpleados } from './Components/Pages/GestionEmpleados/Consulta
 import { EliminarEmpleado } from './Components/Pages/GestionEmpleados/EliminarEmpleado/EliminarEmpleado.jsx'
 import EditManager from './Components/Pages/GestionEmpleados/ActualizarEmpleado/EditManager/EditManager.jsx'
 import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
-import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
 import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
 import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
-import { PaymentMethod } from './Components/Pages/PaymentMethod/PaymentMethod'
+import  PaymentMethod  from './Components/Pages/PaymentMethod/PaymentMethod.jsx'
 import './App.css'
+import CardGps from './Components/UI/CardGps/CardGps.jsx'
 
 function App() {
   

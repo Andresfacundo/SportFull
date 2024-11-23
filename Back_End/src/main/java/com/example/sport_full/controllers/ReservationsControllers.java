@@ -4,7 +4,6 @@ package com.example.sport_full.controllers;
 import com.example.sport_full.models.*;
 import com.example.sport_full.repositories.*;
 import com.example.sport_full.services.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -90,13 +88,13 @@ public class ReservationsControllers {
                 if (!userModels.getEmail().equals(userEmail)) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El email proporcionado no corresponde al cliente");
                 }
-
                 // Buscar reservas que puedan traslaparse
                 List<ReservationsModels> reservasConflicto = reservationsRepository.findConflictingReservations(
                         fieldModel,
                         reservationsModels.getFechaHoraInicio(),
                         reservationsModels.getFechaHoraFin()
                 );
+
 
                 // Validar si existe un traslape real
                 boolean existeTraslape = reservasConflicto.stream().anyMatch(reserva -> {
@@ -408,21 +406,17 @@ public class ReservationsControllers {
 
     //Crear reserva como Cliente
     @PostMapping("/createReservation")
-    public ResponseEntity<?> createTwoReservation(
-            @RequestBody List<ReservationsModels> reservationsList,
-            @RequestParam Long adminId,
-            @RequestParam Long clientId,
-            @RequestParam String userEmail,
-            @RequestParam List<Long> fieldIds) {
+    public ResponseEntity<?> createTwoReservation(@RequestBody List<ReservationsModels> reservationsList,
+                                                  @RequestParam Long clientId,
+                                                  @RequestParam String userEmail,
+                                                  @RequestParam List<Long> fieldIds) {
         try {
             Optional<UserModels> user = userRepository.findByEmail(userEmail);
             if (!user.isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado.");
             }
-
-            Optional<UserModels> admin = adminServices.getUser(adminId);
             Optional<UserModels> client = clientServices.getClient(clientId);
-            if (admin.isPresent() && client.isPresent()) {
+            if (client.isPresent()) {
                 if (!client.get().getEmail().equals(userEmail)) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body("El correo proporcionado no coincide con el del cliente registrado.");
@@ -441,14 +435,30 @@ public class ReservationsControllers {
                     Optional<FieldModels> field = fieldRepository.findById(fieldId);
                     if (field.isPresent()) {
                         FieldModels fieldModel = field.get();
+                        Double costoHora = fieldModel.getPrecio();
+                        long duracionHoras = Duration.between(reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()).toHours();
+                        Long costoTotal = (long) (costoHora * duracionHoras);
 
-                        if (!fieldModel.getAdminModels().getId().equals(admin.get().getId())) {
-                            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                    .body("Una de las canchas no pertenece a esta empresa.");
+                        reservation.setCostoTotal(costoTotal);
+                        reservation.setCostoHora(costoHora);
+                        reservation.setFechaPago(LocalDate.now());
+
+                        boolean existeReserva = reservationsRepository.existsByFieldModelsAndFechaHoraInicioBetween(
+                                fieldModel, reservation.getFechaHoraInicio(), reservation.getFechaHoraFin()
+                        );
+
+                        if (existeReserva) {
+                            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                    .body("Ya existe una reserva para la cancha " + fieldModel.getNombre() +
+                                            " en el horario especificado.");
                         }
 
+                        // Asignar la cancha, el usuario y el administrador a la reserva
+                        reservation.setAdminModels(fieldModel.getAdminModels());
                         reservation.setFieldModels(fieldModel);
+                        reservation.setUserModels(client.get());
 
+                        // Crear la reserva y agregarla a la lista de reservas creadas
                         ReservationsModels newReservation = reservationsServices.createReservation(reservation);
                         createdReservations.add(newReservation);
                     } else {
@@ -456,13 +466,23 @@ public class ReservationsControllers {
                     }
                 }
 
+                String subject = "Confirmación de tus reservas";
+                confirmReservationServices.ReservationConfirmation(userEmail, subject, createdReservations);
                 return ResponseEntity.ok(createdReservations);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrador o cliente no encontrado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado.");
             }
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
+    }
+// metodo para traer el valor total de una reserva
+    @GetMapping("/{id}/valorTotal")
+    public ResponseEntity<?> getTotalValueByReservationId(@PathVariable("id") Long id) {
+        return reservationsServices.getReservationById(id)
+                .map(reservation -> new ResponseEntity<>(reservation.getCostoTotal(), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 
@@ -523,6 +543,27 @@ public class ReservationsControllers {
         return ResponseEntity.ok(reservations);
     }
 
+    // Endpoint para obtener el valor total de reservas filtrado por empresa, estado y/o cancha
+    @GetMapping("/valorTotal")
+    public ResponseEntity<?> getTotalReservationsValue(
+            @RequestParam Long empresaId,
+            @RequestParam(required = false) ReservationsModels.estadoReserva estado,
+            @RequestParam(required = false) Long canchaId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fechaHoraInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fechaHoraFin) {
+
+        try {
+            if (fechaHoraInicio != null && fechaHoraFin != null && fechaHoraInicio.isAfter(fechaHoraFin)) {
+                throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+            }
+            Double totalValue = reservationsServices.getTotalReservationsValue(empresaId, estado, canchaId, fechaHoraInicio, fechaHoraFin);
+            return new ResponseEntity<>(totalValue, HttpStatus.OK);
+        }catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     //Consultar horarios de reservas por cancha segun fecha
     @GetMapping("/horarios/{idCancha}")
     public ResponseEntity<List<String>> obtenerHorariosReservados(
@@ -549,21 +590,22 @@ public class ReservationsControllers {
         }
     }
 
+@PatchMapping("/{id}/cancelar")
+public ResponseEntity<String> cancelReservation(@PathVariable Long id) {
+    Optional<ReservationsModels> reservationOptional = reservationsRepository.findById(id);
 
-    @PutMapping("/cancelReservation")
-    public ResponseEntity<?> cancelReservation(@RequestParam Long reservationId) {
-        try {
-            // Llamar al servicio para cancelar la reserva
-            ReservationsModels canceledReservation = reservationsServices.cancelReservation(reservationId);
-            return ResponseEntity.ok("Reserva cancelada exitosamente. Estado actual: " + canceledReservation.getEstadoReserva());
-        } catch (ResponseStatusException e) {
-            // Manejar error si la reserva no se encuentra
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada.");
-        } catch (Exception e) {
-            // Manejar otros errores
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cancelar la reserva.");
-        }
+    if (reservationOptional.isPresent()) {
+        ReservationsModels reservation = reservationOptional.get();
+
+        // Cambiar el estado de la reserva a CANCELADA
+        reservation.setEstadoReserva(ReservationsModels.estadoReserva.CANCELADA);
+        reservationsRepository.save(reservation);
+
+        return ResponseEntity.ok("Reserva cancelada exitosamente.");
+    } else {
+        return ResponseEntity.status(404).body("Reserva no encontrada.");
     }
+}
 
     //Eliminar reserva por ID
     @DeleteMapping("/{reservationId}")
