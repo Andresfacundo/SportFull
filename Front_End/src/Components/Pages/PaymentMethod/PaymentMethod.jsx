@@ -62,7 +62,7 @@ const PaymentMethod = () => {
       external: "false",
       response: "http://localhost:8080/api/pagos/respuesta",
       confirmation: "http://localhost:8080/api/pagos/confirmacion",
-      method: "popup",
+      method: "standard",
     };
 
     ePayco.open(paymentData);
@@ -89,6 +89,7 @@ const PaymentMethod = () => {
       )}
     </div>
   );
+
 };
 
 export default PaymentMethod;
