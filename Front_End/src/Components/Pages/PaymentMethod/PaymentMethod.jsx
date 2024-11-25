@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import { stringify, v4 as uuidv4 } from "uuid";
 import "./PaymentMethod.css";
 
 const PaymentMethod = () => {
   const location = useLocation();
   const reservaId = location.state?.reservaId;
+  const userId = location.state?.userId;
 
   const [valorTotal, setValorTotal] = useState(null);
   const [loading, setLoading] = useState(true);

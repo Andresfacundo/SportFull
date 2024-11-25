@@ -1,32 +1,46 @@
 package com.example.sport_full.services;
 
 import com.example.sport_full.models.Pago;
+import com.example.sport_full.models.ReservationsModels;
+import com.example.sport_full.repositories.IReservationsRepository;
 import com.example.sport_full.repositories.PagoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class PagoService {
     private final PagoRepository pagoRepository;
 
+     @Autowired
+    IReservationsRepository reservationsRepository;
+
     public PagoService(PagoRepository pagoRepository) {
         this.pagoRepository = pagoRepository;
     }
-
-    public void guardarPago(Map<String, Object> datosPago) {
+    public void guardarPago(String referenciaPago, String estadoPago, Double monto, String moneda) {
         Pago pago = new Pago();
-        pago.setReferenciaPago((String) datosPago.get("x_ref_payco"));
-        pago.setEstado((String) datosPago.get("x_transaction_state"));
-        pago.setMonto(Double.valueOf(datosPago.get("x_amount").toString()));
-        pago.setMoneda((String) datosPago.get("x_currency_code"));
-        pago.setMetodoPago((String) datosPago.get("x_franchise"));
-        pago.setDescripcion((String) datosPago.get("x_description"));
-        pago.setFactura((String) datosPago.get("x_id_factura"));
-        pago.setClienteId(Integer.valueOf(datosPago.get("x_customer_id").toString()));
-        pago.setDatosAdicionales(datosPago.toString());
-
+        pago.setReferenciaPago(referenciaPago);
+        pago.setEstado(estadoPago);
+        pago.setMonto(monto);
+        pago.setMoneda(moneda);
+        pago.setFechaCreacion(LocalDateTime.now());
         pagoRepository.save(pago);
+    }
+
+    public void actualizarReservaAConfirmada(Long idReserva) {
+        Optional<ReservationsModels> reservaOpt = reservationsRepository.findById(idReserva);
+
+        if (reservaOpt.isEmpty()) {
+            throw new IllegalArgumentException("Reserva no encontrada para el ID: " + idReserva);
+        }
+
+        ReservationsModels reserva = reservaOpt.get();
+        reserva.setEstadoReserva(ReservationsModels.estadoReserva.CONFIRMADA);
+        reservationsRepository.save(reserva);
     }
 }
 

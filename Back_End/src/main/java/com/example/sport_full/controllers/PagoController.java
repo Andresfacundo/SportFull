@@ -1,71 +1,63 @@
 package com.example.sport_full.controllers;
 
-import com.example.sport_full.models.Pago;
-import com.example.sport_full.models.ReservationsModels;
-import com.example.sport_full.repositories.PagoRepository;
-import com.example.sport_full.repositories.IReservationsRepository;
+import com.example.sport_full.services.PagoService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
+
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pagos")
 public class PagoController {
 
-    private final PagoRepository pagoRepository;
-    private final IReservationsRepository reservaRepository;
+    @Autowired
+    PagoService pagoService;
 
-    // Constructor con inyección de dependencias
-    public PagoController(PagoRepository pagoRepository, IReservationsRepository reservaRepository) {
-        this.pagoRepository = pagoRepository;
-        this.reservaRepository = reservaRepository;
-    }
-
-    /**
-     * Endpoint para recibir la confirmación de pago desde ePayco
-     */
     @PostMapping("/confirmacion")
     public ResponseEntity<String> recibirConfirmacion(@RequestBody Map<String, Object> datosPago) {
         System.out.println("Datos recibidos del webhook: " + datosPago);
+        if (datosPago == null || !datosPago.containsKey("x_ref_payco") ||
+                !datosPago.containsKey("x_response") || !datosPago.containsKey("x_extra1")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Datos incompletos en la notificación.");
+        }
+
 
         try {
-            // Extraer datos relevantes del webhook
             String referenciaPago = (String) datosPago.get("x_ref_payco");
             String estadoPago = (String) datosPago.get("x_response");
-            String idReserva = (String) datosPago.get("x_extra1"); // ID de la reserva enviado como parámetro extra
+            Long idReserva = Long.valueOf((String) datosPago.get("x_extra1"));
             Double monto = Double.parseDouble((String) datosPago.get("x_amount"));
             String moneda = (String) datosPago.get("x_currency_code");
 
             // Guardar el registro del pago
-            Pago pago = new Pago();
-            pago.setReferenciaPago(referenciaPago);
-            pago.setEstado(estadoPago);
-            pago.setMonto(monto);
-            pago.setMoneda(moneda);
-            pago.setFechaCreacion(LocalDateTime.now());
-            pagoRepository.save(pago);
+            pagoService.guardarPago(referenciaPago, estadoPago, monto, moneda);
 
             // Actualizar el estado de la reserva si el pago es aceptado
             if ("Aceptada".equalsIgnoreCase(estadoPago)) {
-                ReservationsModels reserva = reservaRepository.findById(Long.valueOf(idReserva)).orElse(null);
-                if (reserva == null) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body("Reserva no encontrada para el ID: " + idReserva);
-                }
-                reserva.setEstadoReserva(ReservationsModels.estadoReserva.valueOf("confirmado")); // Cambiar el estado a "confirmado"
-                reservaRepository.save(reserva);
-                System.out.println("Reserva actualizada a estado confirmado: " + idReserva);
+                pagoService.actualizarReservaAConfirmada(idReserva);
             }
 
-            // Responder a ePayco que el webhook fue procesado correctamente
             return ResponseEntity.ok("Notificación recibida correctamente");
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error en el formato de los datos numéricos.");
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al procesar la notificación: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/respuesta")
+    public ResponseEntity<Void> redirigirDespuesDelPago(HttpServletResponse response) throws IOException {
+        response.sendRedirect("http://localhost:5173");
+        return ResponseEntity.status(HttpStatus.FOUND).build();
+    }
+    @GetMapping("/prueba")
+    public ResponseEntity<String> prueba() {
+        return ResponseEntity.ok("Endpoint funcionando correctamente");
     }
 }

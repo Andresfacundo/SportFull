@@ -1,15 +1,8 @@
 package com.example.sport_full.services;
 
 
-import com.example.sport_full.models.AdminModels;
-import com.example.sport_full.models.FieldModels;
-import com.example.sport_full.models.ReservationsModels;
-import com.example.sport_full.models.UserModels;
-import com.example.sport_full.repositories.ICompanyRepository;
-import com.example.sport_full.repositories.IFieldRepository;
-import com.example.sport_full.repositories.IReservationsRepository;
-import com.example.sport_full.repositories.IUserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.sport_full.models.*;
+import com.example.sport_full.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -100,7 +93,7 @@ public class ReservationsServices {
         Executors.newSingleThreadScheduledExecutor().schedule(() -> {
             // Verificar el estado de la reserva y actualizar si sigue en PENDIENTE
             actualizarEstadoSiNoConfirmada(reservation);
-        }, 60, TimeUnit.SECONDS);
+        }, 300, TimeUnit.SECONDS);
     }
 
     // Método que cambia el estado a CANCELADA si la reserva sigue en PENDIENTE después de 30 segundos
