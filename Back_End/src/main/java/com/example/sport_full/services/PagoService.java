@@ -21,15 +21,30 @@ public class PagoService {
     public PagoService(PagoRepository pagoRepository) {
         this.pagoRepository = pagoRepository;
     }
-    public void guardarPago(String referenciaPago, String estadoPago, Double monto, String moneda) {
-        Pago pago = new Pago();
-        pago.setReferenciaPago(referenciaPago);
-        pago.setEstado(estadoPago);
-        pago.setMonto(monto);
-        pago.setMoneda(moneda);
-        pago.setFechaCreacion(LocalDateTime.now());
-        pagoRepository.save(pago);
-    }
+//    public void guardarPago(String referenciaPago, String estadoPago, Double monto, String moneda) {
+//        Pago pago = new Pago();
+//        pago.setReferenciaPago(referenciaPago);
+//        pago.setEstado(estadoPago);
+//        pago.setMonto(monto);
+//        pago.setMoneda(moneda);
+//        pago.setFechaCreacion(LocalDateTime.now());
+//        pagoRepository.save(pago);
+//    }
+public Pago guardarPago(String referenciaPago, String estado, Double monto, String moneda,
+                        String metodoPago, String descripcion, String factura, Integer clienteId,
+                        String datosAdicionales) {
+    Pago pago = new Pago();
+    pago.setReferenciaPago(referenciaPago);
+    pago.setEstado(estado);
+    pago.setMonto(monto);
+    pago.setMoneda(moneda);
+    pago.setMetodoPago(metodoPago);
+    pago.setDescripcion(descripcion);
+    pago.setFactura(factura);
+    pago.setClienteId(clienteId);
+    pago.setDatosAdicionales(datosAdicionales);
+    return pagoRepository.save(pago);
+}
 
     public void actualizarReservaAConfirmada(Long idReserva) {
         Optional<ReservationsModels> reservaOpt = reservationsRepository.findById(idReserva);

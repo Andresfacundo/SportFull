@@ -61,8 +61,8 @@ const PaymentMethod = () => {
       country: "CO",
       lang: "es",
       external: "false",
-      response: "http://localhost:8080/api/pagos/respuesta",
-      confirmation: "http://localhost:8080/api/pagos/confirmacion",
+      response: "https://455a-152-202-24-228.ngrok-free.app/api/pagos/respuesta",
+      confirmation: "https://455a-152-202-24-228.ngrok-free.app/api/pagos/confirmacion",
       method: "standard",
     };
 
