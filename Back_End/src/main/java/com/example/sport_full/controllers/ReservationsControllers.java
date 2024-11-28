@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+@CrossOrigin
 
 @RestController
 @RequestMapping("/reservas")
@@ -514,6 +515,7 @@ public class ReservationsControllers {
             Map<String, Object> formattedReservation = new HashMap<>();
             formattedReservation.put("id", reservation.getId());
             formattedReservation.put("cancha", reservation.getFieldModels().getNombre());
+            formattedReservation.put("canchaId", reservation.getFieldModels().getId());
             formattedReservation.put("fechaPago", reservation.getFechaPago());
             formattedReservation.put(
                     "empresa",
@@ -590,22 +592,34 @@ public class ReservationsControllers {
         }
     }
 
-@PatchMapping("/{id}/cancelar")
-public ResponseEntity<String> cancelReservation(@PathVariable Long id) {
-    Optional<ReservationsModels> reservationOptional = reservationsRepository.findById(id);
-
-    if (reservationOptional.isPresent()) {
-        ReservationsModels reservation = reservationOptional.get();
-
-        // Cambiar el estado de la reserva a CANCELADA
-        reservation.setEstadoReserva(ReservationsModels.estadoReserva.CANCELADA);
-        reservationsRepository.save(reservation);
-
-        return ResponseEntity.ok("Reserva cancelada exitosamente.");
-    } else {
-        return ResponseEntity.status(404).body("Reserva no encontrada.");
+    @PatchMapping("/{reservationId}")
+    public ResponseEntity<ReservationsModels> patchReservation(
+            @PathVariable Long reservationId,
+            @RequestBody Map<String, Object> updates) {
+        try {
+            ReservationsModels updatedReservation = reservationsServices.partialUpdateReservation(reservationId, updates);
+            return ResponseEntity.ok(updatedReservation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
-}
+
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<String> cancelReservation(@PathVariable Long id) {
+        Optional<ReservationsModels> reservationOptional = reservationsRepository.findById(id);
+
+        if (reservationOptional.isPresent()) {
+            ReservationsModels reservation = reservationOptional.get();
+
+            // Cambiar el estado de la reserva a CANCELADA
+            reservation.setEstadoReserva(ReservationsModels.estadoReserva.CANCELADA);
+            reservationsRepository.save(reservation);
+
+            return ResponseEntity.ok("Reserva cancelada exitosamente.");
+        } else {
+            return ResponseEntity.status(404).body("Reserva no encontrada.");
+        }
+    }
 
     //Eliminar reserva por ID
     @DeleteMapping("/{reservationId}")

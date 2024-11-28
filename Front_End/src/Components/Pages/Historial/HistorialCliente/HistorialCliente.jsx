@@ -5,10 +5,13 @@ import { Header } from '../../../Layouts/Header/Header';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import { CardReservation } from '../../../UI/CardReservation/CardReservation';
 import ClienteService from '../../../../services/ClienteService';
+import { UpdateReservationDate } from '../../../UI/UpdateReservationDate/UpdateReservationDate';
 
 export const HistorialCliente = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false); // Estado para abrir el modal
+  const [selectedReservation, setSelectedReservation] = useState(null); // Estado para la reserva seleccionada
 
   const backgroundStyle = {
     backgroundImage: `url(${fondo_long})`,
@@ -39,8 +42,8 @@ export const HistorialCliente = () => {
           const formatterDate = new Intl.DateTimeFormat("es-CO", { ...options, year: "numeric", month: "2-digit", day: "2-digit" });
           const formatterTime = new Intl.DateTimeFormat("es-CO", { ...options, hour: "2-digit", minute: "2-digit" });
         
-          const formatDate = (date) => formatterDate.format(date).split("/").reverse().join("-");
-          const formatTime = (date) => formatterTime.format(date).replace(":", ":");
+          const formatDate = (date) => formatterDate.format(date).split("/").reverse().join("-"); // Formato YYYY-MM-DD
+          const formatTime = (date) => formatterTime.format(date).replace(":", ":"); // Formato HH:MM
         
           return {
             ...reservation,
@@ -49,7 +52,6 @@ export const HistorialCliente = () => {
             horaFin: formatTime(fin), // Hora de fin en formato HH:MM
           };
         });
-        
 
         setReservations(formattedReservations);
       } catch (error) {
@@ -61,6 +63,13 @@ export const HistorialCliente = () => {
 
     fetchReservations();
   }, []);
+
+  const handleReservationClick = (reservation) => {
+    if (reservation.estado === "CONFIRMADA") {
+      setSelectedReservation(reservation); // Guarda la reserva seleccionada
+      setModalOpen(true); // Abre el modal
+    }
+  };
 
   if (loading) {
     return <div className="loading">Cargando historial de reservas...</div>;
@@ -97,10 +106,18 @@ export const HistorialCliente = () => {
               costo={reservation.costoTotal}
               id={reservation.id}
               asistida={'NO'}
+              onEdit={() => handleReservationClick(reservation)} // Pasa la función de clic para editar la fecha
             />
           ))}
         </div>
       </main>
+
+      {modalOpen && selectedReservation && (
+        <UpdateReservationDate
+          reservation={selectedReservation} // Pasa la reserva seleccionada al modal
+          onClose={() => setModalOpen(false)} // Cierra el modal
+        />
+      )}
     </div>
   );
 };

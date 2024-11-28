@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -100,7 +102,7 @@ public class ReservationsServices {
         Executors.newSingleThreadScheduledExecutor().schedule(() -> {
             // Verificar el estado de la reserva y actualizar si sigue en PENDIENTE
             actualizarEstadoSiNoConfirmada(reservation);
-        }, 60, TimeUnit.SECONDS);
+        }, 240, TimeUnit.SECONDS);
     }
 
     // Método que cambia el estado a CANCELADA si la reserva sigue en PENDIENTE después de 30 segundos
@@ -115,6 +117,7 @@ public class ReservationsServices {
             }
         }
     }
+
     public List<ReservationsModels> getAllReservations() {
         return reservationsRepository.findAll();
     }
@@ -222,7 +225,6 @@ public class ReservationsServices {
                 .collect(Collectors.toList());
     }
 
-
     private List<String> generarHorarios(LocalTime inicio, LocalTime fin) {
         List<String> horarios = new ArrayList<>();
         LocalTime actual = inicio;
@@ -238,5 +240,41 @@ public class ReservationsServices {
 
     private String formatHorario(LocalTime inicio, LocalTime fin) {
         return String.format("%02d:00-%02d:00", inicio.getHour(), fin.getHour());
+    }
+
+    public ReservationsModels partialUpdateReservation(Long reservationId, Map<String, Object> updates) {
+        ReservationsModels reservation = reservationsRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+
+        // Calcula la duración original
+        Duration originalDuration = Duration.between(reservation.getFechaHoraInicio(), reservation.getFechaHoraFin());
+
+        // Variables para los nuevos valores (si se proporcionan)
+        LocalDateTime newFechaHoraInicio = reservation.getFechaHoraInicio();
+        LocalDateTime newFechaHoraFin = reservation.getFechaHoraFin();
+
+        // Validar y actualizar fechaHoraInicio
+        if (updates.containsKey("fechaHoraInicio")) {
+            String fechaHoraInicioStr = (String) updates.get("fechaHoraInicio");
+            newFechaHoraInicio = LocalDateTime.parse(fechaHoraInicioStr); // Convierte la cadena a LocalDateTime
+        }
+
+        // Validar y actualizar fechaHoraFin
+        if (updates.containsKey("fechaHoraFin")) {
+            String fechaHoraFinStr = (String) updates.get("fechaHoraFin");
+            newFechaHoraFin = LocalDateTime.parse(fechaHoraFinStr); // Convierte la cadena a LocalDateTime
+        }
+
+        // Validar que la nueva duración sea igual a la original
+        Duration newDuration = Duration.between(newFechaHoraInicio, newFechaHoraFin);
+        if (!newDuration.equals(originalDuration)) {
+            throw new IllegalArgumentException("La duración de la reprogramación debe ser igual a la duración original");
+        }
+
+        // Si la validación pasa, actualiza la reserva
+        reservation.setFechaHoraInicio(newFechaHoraInicio);
+        reservation.setFechaHoraFin(newFechaHoraFin);
+
+        return reservationsRepository.save(reservation);
     }
 }

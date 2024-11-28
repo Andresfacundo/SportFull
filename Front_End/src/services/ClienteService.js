@@ -230,6 +230,16 @@ class ClienteService {
             }
         });
     }
+
+    // Actualizar una reserva
+    updateReservation(reservationId, updates) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación
+        return axios.patch(`http://localhost:8080/reservas/${reservationId}`, updates, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Incluye el token en el encabezado
+            }
+        });
+    }
 }
 
 

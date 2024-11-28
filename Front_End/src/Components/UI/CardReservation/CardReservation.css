@@ -65,3 +65,15 @@
   .status-green {
     background-color: #2ecc71; /* Verde */
   }
+
+
+  .container-card.clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease; /* Suaviza el efecto */
+  }
+  
+  .container-card.clickable:hover {
+    transform: scale(1.02); /* Un leve zoom */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra al pasar el mouse */
+  }
+  
