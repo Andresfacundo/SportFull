@@ -49,9 +49,12 @@ export const ActualizarCliente = () => {
 
     //obtener datos del usuario
     const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
-
+    const client= user.clientModels;
     // Obtén el ID del usuario desde localStorage
     const userId = user.id;
+
+    //obtener imgPerfil para guardar la misma
+    const imgPerfil = user.ClientModels?.imgPerfil;
 
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
@@ -74,6 +77,7 @@ export const ActualizarCliente = () => {
           nombres,  // Actualizar el campo 'nombres' con los nuevos datos
           apellidos, // Actualizar el campo 'apellidos'    // Actualizar el campo 'email'
           clientModels: {
+            ...client,
             telefono,
             cc
           }

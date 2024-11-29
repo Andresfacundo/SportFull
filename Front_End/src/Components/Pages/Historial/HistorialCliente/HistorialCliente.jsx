@@ -76,7 +76,7 @@ export const HistorialCliente = () => {
   }, []);
 
   const handleReservationClick = (reservation) => {
-    if (reservation.estado === 'CONFIRMADA') {
+    if (reservation.estado === 'CONFIRMADA' || reservation.estado === 'PENDIENTE'  ) {
       setSelectedReservation(reservation);
       setModalOpen(true);
     }
