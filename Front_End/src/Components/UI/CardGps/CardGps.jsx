@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
@@ -36,6 +37,7 @@ const CardGps = () => {
   const [precioMax, setPrecioMax] = useState(null);
   const [filteredLocations, setFilteredLocations] = useState([]);
   const [selectedTiposCancha, setSelectedTiposCancha] = useState([]);
+  const [selectedServicios, setSelectedServicios] = useState([]);
 
 
 
@@ -114,6 +116,15 @@ const handleBusquedaClick = () => {
 };
 
 
+  // Manejar cambio en los checkboxes de servicios
+  const handleServicioChange = (servicio) => {
+    setSelectedServicios((prevServicios) =>
+      prevServicios.includes(servicio)
+        ? prevServicios.filter((s) => s !== servicio) // Elimina el servicio si ya estaba seleccionado
+        : [...prevServicios, servicio] // Agrega el servicio si no estaba seleccionado
+    );
+  };
+
 
 
 const aplicarFiltros = () => {
@@ -147,6 +158,26 @@ const aplicarFiltros = () => {
         break;
       case "servicios":
         // Lógica para filtrar por servicios
+        if (selectedServicios.length > 0) {
+          resultado = resultado.filter((ubicacion) => {
+            if (Array.isArray(ubicacion.fields)) {
+              // Revisa cada cancha dentro de la ubicación
+              return ubicacion.fields.some((field) => {
+                const serviciosCancha = field.servicios || [];
+                return selectedServicios.every((servicio) =>
+                  serviciosCancha.includes(servicio)
+                );
+              });
+            } else if (ubicacion.fields && typeof ubicacion.fields === "object") {
+              // Caso único (fields no es un array)
+              const serviciosCancha = ubicacion.fields.servicios || [];
+              return selectedServicios.every((servicio) =>
+                serviciosCancha.includes(servicio)
+              );
+            }
+            return false;
+          });
+        }
         break;
       default:
         break;
@@ -183,6 +214,7 @@ const aplicarFiltros = () => {
               nombre: field.nombreEmpresa,
               direccion: field.direccionEmpresa,
               fields: field,
+              servicios: field.servicios,
             };
           }
           return null;
@@ -383,15 +415,27 @@ const aplicarFiltros = () => {
         <section className="servicios">
           <h3>Servicios</h3>
           <div className="servicios-contenedor">
-            <input type="checkbox" /> <label>Arbitraje</label>
-            <input type="checkbox" /> <label>Petos</label>
-            <input type="checkbox" /> <label>Iluminación</label>
-            <input type="checkbox" /> <label>Balón</label>
-            <input type="checkbox" /> <label>Hidratación</label>
-            <input type="checkbox" /> <label>Cronómetro</label>
-            <input type="checkbox" /> <label>Vestuario</label>
-            <input type="checkbox" /> <label>Duchas</label>
-            <input type="checkbox" /> <label>Baños</label>
+            {[
+              "Arbitraje",
+              "Petos",
+              "Iluminación",
+              "Balón",
+              "Hidratación",
+              "Cronómetro",
+              "Vestuario",
+              "Duchas",
+              "Baños",
+            ].map((servicio) => (
+              <div key={servicio}>
+                <input
+                  type="checkbox"
+                  id={`servicio-${servicio}`}
+                  onChange={() => handleServicioChange(servicio)}
+                  checked={selectedServicios.includes(servicio)}
+                />
+                <label htmlFor={`servicio-${servicio}`}>{servicio}</label>
+              </div>
+            ))}
           </div>
         </section>
       )}
