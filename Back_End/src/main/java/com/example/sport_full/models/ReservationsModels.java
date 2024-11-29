@@ -1,5 +1,6 @@
 package com.example.sport_full.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -10,19 +11,23 @@ import java.time.LocalDateTime;
 public class ReservationsModels {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "idCancha", referencedColumnName = "id")
     private FieldModels fieldModels;
 
+
     @ManyToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    @JsonIgnore
     private AdminModels adminModels;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserModels userModels; // Nueva relación para soporte de reservas por usuarios
+
 
     @Column(nullable = false)
     private LocalDateTime fechaHoraInicio;
@@ -43,17 +48,31 @@ public class ReservationsModels {
         CANCELADA
     }
 
+    // Relación One-to-One con Pago
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Pago pago;
+
+
+
     private Double costoHora;
 
     private Long costoTotal;
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
     }
 
     public FieldModels getFieldModels() {
@@ -127,4 +146,5 @@ public class ReservationsModels {
     public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
     }
+
 }

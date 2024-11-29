@@ -1,0 +1,66 @@
+.container-updateReservationDate{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; 
+
+}
+
+.container-update{
+    width: 85%;
+    height: 85%;    
+    background-color: #073b4c;
+    border-radius: 15px;
+    color: #e7e7e7;
+    text-align: center;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    z-index: 1000; /* Debe estar por encima del fondo con opacidad */
+    border: 5px solid #e7e7e78e;
+    gap: 0.5rem;
+}
+
+.container-update >h2{
+    width: 90%;
+    margin: 5.5rem 0 1.5rem 0;
+    font-size: 2rem;
+}
+
+.details{
+    width: 80%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.update-reservation{
+    margin-top: 2rem;
+    width: 10rem;
+    border: none;
+    height: auto;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+    padding: 1rem;
+    margin-bottom: 3rem;
+}

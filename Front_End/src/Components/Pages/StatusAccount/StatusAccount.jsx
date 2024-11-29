@@ -7,9 +7,9 @@ export const StatusAccount = () => {
   return (
     <div>
       STATUS ACCOUNT
-      <footer>
+      {/* <footer>
         <NavBar/>
-      </footer>
+      </footer> */}
     </div>
   )
 }

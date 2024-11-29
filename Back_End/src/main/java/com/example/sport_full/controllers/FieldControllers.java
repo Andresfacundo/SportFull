@@ -3,15 +3,16 @@ package com.example.sport_full.controllers;
 import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.FieldModels;
 import com.example.sport_full.models.UserModels;
+import com.example.sport_full.repositories.ICompanyRepository;
 import com.example.sport_full.repositories.IFieldRepository;
 import com.example.sport_full.repositories.IUserRepository;
+import com.example.sport_full.services.FieldServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/fields")
@@ -19,11 +20,16 @@ public class FieldControllers {
 
     private final IFieldRepository fieldRepository;
     private final IUserRepository userRepository;
+    @Autowired
+    private FieldServices fieldService;
+
+    private final ICompanyRepository companyRepository;
 
     @Autowired
-    public FieldControllers(IFieldRepository fieldRepository, IUserRepository userRepository) {
+    public FieldControllers(IFieldRepository fieldRepository, IUserRepository userRepository, ICompanyRepository companyRepository) {
         this.fieldRepository = fieldRepository;
         this.userRepository = userRepository;
+        this.companyRepository = companyRepository;
     }
 
     // Crear una nueva cancha
@@ -63,43 +69,89 @@ public class FieldControllers {
         }
     }
 
-
-    // Listar todas las canchas
     @GetMapping("/findAll")
-    public List<FieldModels> findAll() {
-        return fieldRepository.findAll();
+    public List<Map<String, Object>> getAllFields() {
+        List<FieldModels> fields = fieldService.getAllFields();
+        List<Map<String, Object>> response = new ArrayList<>();
+
+        for (FieldModels field : fields) {
+            Map<String, Object> fieldMap = new HashMap<>();
+            fieldMap.put("id", field.getId());
+            fieldMap.put("nombre", field.getNombre());
+            fieldMap.put("precio", field.getPrecio());
+            fieldMap.put("estado", field.getEstado());
+            fieldMap.put("tipoCancha", field.getTipoCancha());
+            fieldMap.put("servicios", field.getServicios());
+
+
+            // Incluimos el nombre de la empresa de AdminModels solo una vez
+            if (field.getAdminModels() != null) {
+                fieldMap.put("nombreEmpresa", field.getAdminModels().getNombreEmpresa());
+                fieldMap.put("horaApertura", field.getAdminModels().getHoraApertura());
+                fieldMap.put("horaCierre", field.getAdminModels().getHoraCierre());
+                fieldMap.put("diasApertura", field.getAdminModels().getDiasApertura());
+                fieldMap.put("empresaId", field.getAdminModels().getId());
+
+
+            }
+
+            response.add(fieldMap);
+        }
+        return response;
     }
 
     // Consultar cancha por ID
     @GetMapping("/findById/{id}")
-    public ResponseEntity<FieldModels> findById(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable Long id) {
         Optional<FieldModels> campoOpt = fieldRepository.findById(id);
 
         if (campoOpt.isPresent()) {
-            return ResponseEntity.ok(campoOpt.get());
+            FieldModels campo = campoOpt.get();
+
+            // Crea un mapa para la respuesta
+            Map<String, Object> response = new HashMap<>();
+
+            // Agregar los datos de diasApertura directamente al mapa
+            response.put("diasApertura", campo.getAdminModels().getDiasApertura());
+            response.put("horaApertura", campo.getAdminModels().getHoraApertura());
+            response.put("horaCierre", campo.getAdminModels().getHoraCierre());
+
+
+            // Agregar los campos de FieldModels directamente al mapa
+            response.put("id", campo.getId());
+            response.put("nombre", campo.getNombre());
+            response.put("precio", campo.getPrecio());
+            response.put("estado", campo.getEstado());
+            response.put("servicios", campo.getServicios());
+            response.put("tipoCancha", campo.getTipoCancha());
+
+            return ResponseEntity.ok(response);  // Retorna el mapa con los datos
         } else {
             return ResponseEntity.notFound().build(); // Devuelve un 404 si no se encuentra la cancha
         }
     }
 
-    // Listar canchas por empresa
+
     @GetMapping("/list")
     public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
-        Optional<UserModels> userOptional = userRepository.findById(empresaId);
+        Optional<AdminModels> empresaOptional = companyRepository.findById(empresaId);
 
-        if (userOptional.isPresent()) {
-            UserModels user = userOptional.get();
+        if (empresaOptional.isPresent()) {
+            AdminModels empresa = empresaOptional.get();
 
-            if (!"EMPRESA".equalsIgnoreCase(user.getTipoUsuario())) {
-                return new ResponseEntity<>("El usuario no es de tipo EMPRESA", HttpStatus.UNAUTHORIZED);
+            // Obtener las canchas asociadas a esta empresa
+            List<FieldModels> fields = fieldRepository.findByAdminModels_Id(empresaId);
+
+            if (fields.isEmpty()) {
+                return new ResponseEntity<>("No hay canchas asociadas a esta empresa", HttpStatus.OK);
             }
 
-            List<FieldModels> fields = fieldRepository.findByAdminModels_Id(empresaId);
             return new ResponseEntity<>(fields, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Empresa no encontrada", HttpStatus.NOT_FOUND);
         }
     }
+
 
     // Actualizar una cancha
     @PutMapping("/update")
@@ -139,24 +191,22 @@ public class FieldControllers {
     // Eliminar una cancha
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteField(@RequestParam Long fieldId, @RequestParam Long empresaId) {
+        // Buscar la cancha por su ID
         Optional<FieldModels> fieldOptional = fieldRepository.findById(fieldId);
-        Optional<UserModels> userOptional = userRepository.findById(empresaId);
+        // Buscar la empresa por su ID
+        Optional<AdminModels> adminOptional = companyRepository.findById(empresaId);
 
-        if (fieldOptional.isPresent() && userOptional.isPresent()) {
-            UserModels user = userOptional.get();
+        // Validar si la cancha y la empresa existen
+        if (fieldOptional.isPresent() && adminOptional.isPresent()) {
+            AdminModels admin = adminOptional.get();
+            FieldModels field = fieldOptional.get();
 
-            if (!"EMPRESA".equalsIgnoreCase(user.getTipoUsuario())) {
-                return new ResponseEntity<>("El usuario no es de tipo EMPRESA", HttpStatus.UNAUTHORIZED);
-            }
-            FieldModels fields = fieldOptional.get();
-
-//          verificar que la cancha pertenece a la empresa
             // Verificar que la cancha pertenece a la empresa
-            if (!fields.getAdminModels().getId().equals(user.getId())) {
+            if (!field.getAdminModels().getId().equals(admin.getId())) {
                 return new ResponseEntity<>("La cancha no pertenece a esta empresa", HttpStatus.UNAUTHORIZED);
             }
 
-
+            // Eliminar la cancha
             fieldRepository.deleteById(fieldId);
             return new ResponseEntity<>("Campo eliminado correctamente", HttpStatus.OK);
         } else {

@@ -13,8 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 @CrossOrigin
@@ -34,7 +38,28 @@ public class AdminControllers {
     @Autowired
     AdminServices adminServices;
 
+    // Método para actualizar la imagen de perfil de la empresa
+    @PostMapping("/actualizar-imagen/{empresaId}")
+    public ResponseEntity<?> actualizarImagenEmpresa(@PathVariable("empresaId") Long empresaId,
+                                                     @RequestParam("imgPerfil") MultipartFile imgPerfil) {
+        try {
+            // Buscar la empresa en la base de datos
+            AdminModels empresa = companyRepository.findById(empresaId)
+                    .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
 
+            // Convertir la imagen a bytes
+            byte[] imagenBytes = imgPerfil.getBytes();
+
+            // Actualizar la imagen de perfil en el servicio
+            adminServices.actualizarImagenEmpresa(empresa, imagenBytes);
+
+            return ResponseEntity.ok("Imagen de perfil de la empresa actualizada correctamente.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar la imagen.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
 
     @PutMapping("/{id}")
@@ -48,6 +73,7 @@ public class AdminControllers {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<UserModels> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
@@ -69,13 +95,11 @@ public class AdminControllers {
                 existingUser.setEmail(userModels.getEmail());
             }
 
-            // Encripta la contraseña si se envía una nueva
             if (userModels.getContraseña() != null) {
                 String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
                 existingUser.setContraseña(hashedPassword);
             }
 
-            // Actualiza solo los campos de AdminModels que vienen en la solicitud
             if (userModels.getAdminModels() != null) {
                 AdminModels adminModels = userModels.getAdminModels();
 
@@ -119,13 +143,32 @@ public class AdminControllers {
                     existingUser.getAdminModels().setInstagram(adminModels.getInstagram());
                 }
 
-                // Actualiza o agrega los servicios generales sin duplicados
+                // Actualiza los horarios de apertura y cierre si se envían en la solicitud
+                if (adminModels.getHoraApertura() != null) {
+                    existingUser.getAdminModels().setHoraApertura(adminModels.getHoraApertura());
+                }
+
+                if (adminModels.getHoraCierre() != null) {
+                    existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
+                }
+
+
                 if (adminModels.getServiciosGenerales() != null) {
                     List<String> existingServicios = existingUser.getAdminModels().getServiciosGenerales();
 
                     for (String nuevoServicio : adminModels.getServiciosGenerales()) {
                         if (!existingServicios.contains(nuevoServicio)) {
                             existingServicios.add(nuevoServicio);
+                        }
+                    }
+                }
+
+                if (adminModels.getDiasApertura() != null) {
+                    List<String> existingDias = existingUser.getAdminModels().getDiasApertura();
+
+                    for (String nuevoDia : adminModels.getDiasApertura()) {
+                        if (!existingDias.contains(nuevoDia)) {
+                            existingDias.add(nuevoDia);
                         }
                     }
                 }
@@ -144,6 +187,7 @@ public class AdminControllers {
         return companyRepository.findAll();
     }
 
+
     @GetMapping("/find/{id}")
     public ResponseEntity<UserModels> findById(@PathVariable("id") Long id) {
         Optional<AdminModels> existingAdmin = this.companyRepository.findById(id);
@@ -160,16 +204,6 @@ public class AdminControllers {
         }
     }
 
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> patchAdmin(@PathVariable("id") Long id) {
-        if (this.userRepository.existsById(id)) {
-            this.adminServices.patchAdmin(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAdmin(@PathVariable("id") Long id) {

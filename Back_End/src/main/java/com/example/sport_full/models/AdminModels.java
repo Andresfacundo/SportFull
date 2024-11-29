@@ -1,12 +1,16 @@
 package com.example.sport_full.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Perfil_empresa")
@@ -46,11 +50,31 @@ public class AdminModels implements Serializable {
     @Column(nullable = true, unique = true)
     private String instagram;
 
+    // Horarios de atención
+    @Column(nullable = true)
+    private LocalTime horaApertura;
+
+    @Column(nullable = true)
+    private LocalTime horaCierre;
+
+    @Lob
+    @Column(name = "img_perfil", columnDefinition = "LONGBLOB", nullable = true)
+    private byte[] imgPerfil;
+
     // Nueva colección para los servicios generales
     @ElementCollection
     @CollectionTable(name = "servicios_generales", joinColumns = @JoinColumn(name = "empresa_id"))
     @Column(name = "servicio")
     private List<String> serviciosGenerales;
+
+
+    // Nueva columna para almacenar los días de la semana
+    @ElementCollection
+    @CollectionTable(name = "diasApertura", joinColumns = @JoinColumn(name = "empresa_id"))
+    @Column(name = "diaApertura")
+    private List<String> diasApertura ;
+
+
 
     @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", unique = true)
@@ -58,13 +82,11 @@ public class AdminModels implements Serializable {
     private UserModels userModels;
 
 
-
     @OneToMany(mappedBy = "adminModels")
     private List<ReservationsModels> reservations;
 
 
-    @OneToMany(mappedBy = "adminempresa", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "adminModels", cascade = CascadeType.ALL)
     private List<GestorModels> gestores = new ArrayList<>();
 
     @OneToMany(mappedBy = "adminModels")
@@ -72,6 +94,16 @@ public class AdminModels implements Serializable {
 
 
     // Getters y Setters
+
+
+    public List<String> getDiasApertura() {
+        return diasApertura;
+    }
+
+    public void setDiasApertura(List<String> diasApertura) {
+        this.diasApertura = diasApertura;
+    }
+
     public Long getId() {
         return id;
     }
@@ -200,6 +232,30 @@ public class AdminModels implements Serializable {
 
     public void setFields(List<FieldModels> fields) {
         this.fields = fields;
+    }
+
+    public LocalTime getHoraApertura() {
+        return horaApertura;
+    }
+
+    public void setHoraApertura(LocalTime horaApertura) {
+        this.horaApertura = horaApertura;
+    }
+
+    public LocalTime getHoraCierre() {
+        return horaCierre;
+    }
+
+    public void setHoraCierre(LocalTime horaCierre) {
+        this.horaCierre = horaCierre;
+    }
+
+    public byte[] getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(byte[] imgPerfil) {
+        this.imgPerfil = imgPerfil;
     }
 }
 

@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -95,5 +99,25 @@ public class AdminServices {
                 }
             }
         }, delay, TimeUnit.SECONDS);
+    }
+
+    public void actualizarHorario(AdminModels empresa, LocalTime horaApertura, LocalTime horaCierre) {
+        if (horaApertura.isAfter(horaCierre)) {
+            throw new IllegalArgumentException("La hora de apertura debe ser antes de la hora de cierre.");
+        }
+        empresa.setHoraApertura(horaApertura);
+        empresa.setHoraCierre(horaCierre);
+        // Aquí se guardarían los cambios en la base de datos
+    }
+
+    public boolean validarDisponibilidad(AdminModels adminModels, LocalTime horaReserva) {
+        return !horaReserva.isBefore(adminModels.getHoraApertura()) && !horaReserva.isAfter(adminModels.getHoraCierre());
+    }
+    public void actualizarImagenEmpresa(AdminModels empresa, byte[] imagenBytes) {
+        // Actualizar la imagen en el modelo de la empresa
+        empresa.setImgPerfil(imagenBytes);
+
+        // Guardar los cambios en la base de datos
+        companyRepository.save(empresa);
     }
 }
