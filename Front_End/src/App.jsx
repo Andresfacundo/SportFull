@@ -8,23 +8,23 @@ import { SignUp } from './Components/Pages/SignUp/SignUp'
 import GPS from "./Components/UI/GPS/GPS.jsx";
 
 
-import {HomeClient} from './Components/Pages/Home/HomeClient/HomeClient'
-import {HomeEmpresa} from './Components/Pages/Home/HomeEmpresa/HomeEmpresa'
-import {HomeGestor} from './Components/Pages/Home/HomeGestor/HomeGestor'
+import { HomeClient } from './Components/Pages/Home/HomeClient/HomeClient'
+import { HomeEmpresa } from './Components/Pages/Home/HomeEmpresa/HomeEmpresa'
+import { HomeGestor } from './Components/Pages/Home/HomeGestor/HomeGestor'
 import { ActualizarCliente } from './Components/Pages/ActualizarPerfil/ActualizarCliente/ActualizarCliente'
 import { ActualizarEmpresa } from './Components/Pages/ActualizarPerfil/ActualizarEmpresa/ActualizarEmpresa'
 import { ActualizarGestor } from './Components/Pages/ActualizarPerfil/ActualizarGestor/ActualizarGestor'
-import { BuscarCanchas } from './Components/Pages/BuscarCanchas/BuscarCanchas'
+import { FieldsList } from './Components/Pages/GestionCanchas/FieldsList/FieldsList.jsx'
 import { HistorialCliente } from './Components/Pages/Historial/HistorialCliente/HistorialCliente'
-import {SoporteCliente} from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
+import { SoporteCliente } from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
 import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/AdvancedConfiguration'
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
-import {VerifyEmail} from './Components/Pages/VerifyEmail/VerifyEmail'
+import { VerifyEmail } from './Components/Pages/VerifyEmail/VerifyEmail'
 import Services from './Components/UI/FieldServices/FieldServices'
-import {GestionReservas} from './Components/Pages/GestionReservas/GestionReservas'
-import {StatusAccount} from './Components/Pages/StatusAccount/StatusAccount'
-import {AgregarCancha} from './Components/Pages/AgregarCancha/AgregarCancha'
-import {GestionCanchas} from './Components/Pages/GestionCanchas/GestionCanchas'
+import { GestionReservas } from './Components/Pages/GestionReservas/GestionReservas'
+import { StatusAccount } from './Components/Pages/StatusAccount/StatusAccount'
+import { AgregarCancha } from './Components/Pages/AgregarCancha/AgregarCancha'
+import { GestionCanchas } from './Components/Pages/GestionCanchas/GestionCanchas'
 import { GestionEmpleados } from './Components/Pages/GestionEmpleados/MenuGestionEmpleados/GestionEmpleados.jsx'
 import { GestionReportes } from './Components/Pages/GestionReportes/GestionReportes.jsx'
 import { SmallCard } from './Components/UI/SmallCard/SmallCard.jsx'
@@ -41,12 +41,14 @@ import EditProfile from './Components/Pages/EditProfile/EditProfile.jsx'
 import { BigCard } from './Components/UI/BigCard/BigCard.jsx'
 import { PendingReservations } from './Components/Pages/PendingReservations/PendingReservations.jsx'
 import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
-import  PaymentMethod  from './Components/Pages/PaymentMethod/PaymentMethod.jsx'
+import PaymentMethod from './Components/Pages/PaymentMethod/PaymentMethod.jsx'
+import { SearchFields } from './Components/Pages/GestionCanchas/SearchFields/SearchFields.jsx'
 import './App.css'
 import CardGps from './Components/UI/CardGps/CardGps.jsx'
+import { UpdateReservationDate } from './Components/UI/UpdateReservationDate/UpdateReservationDate.jsx'
 
 function App() {
-  
+
   return (
 
     <Routes >
@@ -55,13 +57,13 @@ function App() {
       <Route path='/Login' element={<Login />} />
       <Route path='/SignUp' element={<SignUp />} />
       <Route path='/GPS' element={<GPS />} />
-      <Route path='/HomeClient' element={<HomeClient/>} />      
+      <Route path='/HomeClient' element={<HomeClient />} />
       <Route path='/HomeEmpresa' element={<HomeEmpresa />} />
       <Route path='/HomeGestor' element={<HomeGestor />} />
       <Route path='/ActualizarCliente' element={<ActualizarCliente />} />
       <Route path='/ActualizarEmpresa' element={<ActualizarEmpresa />} />
       <Route path='/ActualizarGestor' element={<ActualizarGestor />} />
-      <Route path='/BuscarCanchas' element={<BuscarCanchas />} />
+      <Route path='/FieldsList' element={<FieldsList />} />
       <Route path='/HistorialCliente' element={<HistorialCliente />} />
       <Route path='/SoporteCliente' element={<SoporteCliente />} />
       <Route path='/AdvancedConfiguration' element={<AdvancedConfiguration />} />
@@ -88,7 +90,10 @@ function App() {
       <Route path="/EditManager/:id" element={<EditManager />} />
       <Route path="/BigCard" element={<BigCard />} />
       <Route path="/PendingReservations" element={<PendingReservations />} />
-    <Route path="/PaymentMethod" element={<PaymentMethod />} />
+      <Route path="/PaymentMethod" element={<PaymentMethod />} />
+      <Route path="/SearchFields" element={<SearchFields />} />
+      <Route path="/UpdateReservationDate" element={<UpdateReservationDate />} />
+
 
     </Routes>
   )

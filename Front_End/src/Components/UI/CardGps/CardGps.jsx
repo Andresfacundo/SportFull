@@ -70,7 +70,7 @@ const CardGps = () => {
       .then((response) => {
         const dataCompany = response.data; // Toda la data de empresas
         setAllUbic(dataCompany); // Almacena todas las ubicaciones pero no las muestra aún
-  
+
         // Extraer todas las canchas
         const allFields = dataCompany.flatMap((empresa) =>
           empresa.fields.map((field) => ({
@@ -80,81 +80,81 @@ const CardGps = () => {
             nombreEmpresa: empresa.nombreEmpresa,
           }))
         );
-  
+
         console.log("Todas las canchas:", allFields); // Imprime las canchas
-  
+
         geocodeFields(allFields); // Geocodifica, pero no asigna directamente a geocodedFields
       })
       .catch((error) => {
         console.error("Error al buscar las ubicaciones: ", error);
       });
   }, []);
-  
-  
+
+
 
   //esta función capturá lo que el usuario escriba en el input 
   const handleBusquedaChange = (e) => {
     setBusqueda(e.target.value);
   };
 
-//función de búsqueda de empresa
-const handleBusquedaClick = () => {
-  const ubicacionesFiltradas = aplicarFiltros();
+  //función de búsqueda de empresa
+  const handleBusquedaClick = () => {
+    const ubicacionesFiltradas = aplicarFiltros();
 
-  if (ubicacionesFiltradas.length > 0) {
-    setFilteredLocations(ubicacionesFiltradas); // Actualiza el estado con los resultados
-    setUbicacionActual({
-      lat: ubicacionesFiltradas[0].lat,
-      lng: ubicacionesFiltradas[0].lng,
-    });
-  } else {
-    alert("No se encontró ninguna ubicación con los filtros aplicados.");
-    setFilteredLocations([]); // Deja el mapa vacío si no hay resultados
-  }
-};
-
-
-
-
-const aplicarFiltros = () => {
-  let resultado = allUbic;
-
-  filtrosSeleccionados.forEach((filtro) => {
-    switch (filtro.value) {
-      case "precio":
-        resultado = filtrarPorPrecio(resultado, precioMin, precioMax);
-        break;
-      case "ubicacion":
-        if (busqueda.trim() !== "") {
-          resultado = resultado.filter(
-            (ubicacion) =>
-              ubicacion.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
-              ubicacion.direccion?.toLowerCase().includes(busqueda.toLowerCase())
-          );
-        }
-        break;
-      case "disponibilidad":
-        // Lógica para filtrar por disponibilidad
-        break;
-      case "tipoCancha":
-        // Lógica para filtrar por tipo de cancha
-        if (selectedTiposCancha.length > 0) {
-          resultado = resultado.filter((ubicacion) => {
-            const fields = Array.isArray(ubicacion.fields) ? ubicacion.fields : [ubicacion.fields];
-            return fields.some((field) => selectedTiposCancha.includes(field.tipoCancha));
-          });
-        }
-        break;
-      case "servicios":
-        // Lógica para filtrar por servicios
-        break;
-      default:
-        break;
+    if (ubicacionesFiltradas.length > 0) {
+      setFilteredLocations(ubicacionesFiltradas); // Actualiza el estado con los resultados
+      setUbicacionActual({
+        lat: ubicacionesFiltradas[0].lat,
+        lng: ubicacionesFiltradas[0].lng,
+      });
+    } else {
+      alert("No se encontró ninguna ubicación con los filtros aplicados.");
+      setFilteredLocations([]); // Deja el mapa vacío si no hay resultados
     }
-  });
+  };
 
-  return resultado;
-};
+
+
+
+  const aplicarFiltros = () => {
+    let resultado = allUbic;
+
+    filtrosSeleccionados.forEach((filtro) => {
+      switch (filtro.value) {
+        case "precio":
+          resultado = filtrarPorPrecio(resultado, precioMin, precioMax);
+          break;
+        case "ubicacion":
+          if (busqueda.trim() !== "") {
+            resultado = resultado.filter(
+              (ubicacion) =>
+                ubicacion.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+                ubicacion.direccion?.toLowerCase().includes(busqueda.toLowerCase())
+            );
+          }
+          break;
+        case "disponibilidad":
+          // Lógica para filtrar por disponibilidad
+          break;
+        case "tipoCancha":
+          // Lógica para filtrar por tipo de cancha
+          if (selectedTiposCancha.length > 0) {
+            resultado = resultado.filter((ubicacion) => {
+              const fields = Array.isArray(ubicacion.fields) ? ubicacion.fields : [ubicacion.fields];
+              return fields.some((field) => selectedTiposCancha.includes(field.tipoCancha));
+            });
+          }
+          break;
+        case "servicios":
+          // Lógica para filtrar por servicios
+          break;
+        default:
+          break;
+      }
+    });
+
+    return resultado;
+  };
 
 
 
@@ -207,7 +207,7 @@ const aplicarFiltros = () => {
         esArray: Array.isArray(ubicacion.fields),
       }))
     );
-  
+
     return canchas.filter((ubicacion) => {
       if (Array.isArray(ubicacion.fields)) {
         // Caso: fields es un array
@@ -238,9 +238,9 @@ const aplicarFiltros = () => {
         : [...prevTipos, tipo] // Si no está, lo agrega
     );
   };
-  
-  
-  
+
+
+
   const handleFilterChange = (selectedOptions) => {
     setFiltrosSeleccionados(selectedOptions || []);
   };
@@ -249,31 +249,31 @@ const aplicarFiltros = () => {
     <div className="cardGps">
       {/* Mapa */}
       <section className="mapaGps">
-<MapContainer
-  center={ubicacionActual}
-  zoom={14}
-  scrollWheelZoom={true}
-  style={{ height: "400px", width: "100%" }}
->
-  <TileLayer
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  />
-  <SetViewOnClick center={ubicacionActual} />
-  {filteredLocations.length > 0 ? (
-    filteredLocations.map((location, index) => (
-      <Marker
-        key={index}
-        position={[location.lat, location.lng]}
-        icon={icon}
-      >
-        <Popup>{location.nombre}</Popup>
-      </Marker>
-    ))
-  ) : (
-    <p>No hay ubicaciones disponibles para mostrar.</p>
-  )}
-</MapContainer>
+        <MapContainer
+          center={ubicacionActual}
+          zoom={14}
+          scrollWheelZoom={true}
+          style={{ height: "400px", width: "100%" }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <SetViewOnClick center={ubicacionActual} />
+          {filteredLocations.length > 0 ? (
+            filteredLocations.map((location, index) => (
+              <Marker
+                key={index}
+                position={[location.lat, location.lng]}
+                icon={icon}
+              >
+                <Popup>{location.nombre}</Popup>
+              </Marker>
+            ))
+          ) : (
+            <p>No hay ubicaciones disponibles para mostrar.</p>
+          )}
+        </MapContainer>
 
       </section>
 
@@ -295,25 +295,25 @@ const aplicarFiltros = () => {
         <section className="precio">
           <h3>Precio</h3>
           <div className="precio-contenedor">
-          <input
-      type="number"
-      placeholder="min"
-      value={precioMin || ""}
-      onChange={(e) => {
-        const value = e.target.value ? parseFloat(e.target.value) : null;
-        setPrecioMin(value >= 0 ? value : null); // Validar valores positivos
-      }}
-    />
+            <input
+              type="number"
+              placeholder="min"
+              value={precioMin || ""}
+              onChange={(e) => {
+                const value = e.target.value ? parseFloat(e.target.value) : null;
+                setPrecioMin(value >= 0 ? value : null); // Validar valores positivos
+              }}
+            />
             <p> - </p>
             <input
-      type="number"
-      placeholder="max"
-      value={precioMax || ""}
-      onChange={(e) => {
-        const value = e.target.value ? parseFloat(e.target.value) : null;
-        setPrecioMax(value >= 0 ? value : null); // Validar valores positivos
-      }}
-    />
+              type="number"
+              placeholder="max"
+              value={precioMax || ""}
+              onChange={(e) => {
+                const value = e.target.value ? parseFloat(e.target.value) : null;
+                setPrecioMax(value >= 0 ? value : null); // Validar valores positivos
+              }}
+            />
           </div>
         </section>
       )}
@@ -351,30 +351,30 @@ const aplicarFiltros = () => {
 
       {filtrosSeleccionados.some((filtro) => filtro.value === "tipoCancha") && (
         <section className="tipoCancha">
-        <h3>Tipo de cancha</h3>
-<div className="contenedorTipoCancha">
-  <div>
-    <p>Fútbol 5</p>
-    <input
-      type="checkbox"
-      onChange={() => handleTipoCanchaChange("Fútbol 5")}
-    />
-  </div>
-  <div>
-    <p>Fútbol 8</p>
-    <input
-      type="checkbox"
-      onChange={() => handleTipoCanchaChange("Fútbol 8")}
-    />
-  </div>
-  <div>
-    <p>Fútbol 11</p>
-    <input
-      type="checkbox"
-      onChange={() => handleTipoCanchaChange("Fútbol 11")}
-    />
-  </div>
-</div>
+          <h3>Tipo de cancha</h3>
+          <div className="contenedorTipoCancha">
+            <div>
+              <p>Fútbol 5</p>
+              <input
+                type="checkbox"
+                onChange={() => handleTipoCanchaChange("Fútbol 5")}
+              />
+            </div>
+            <div>
+              <p>Fútbol 8</p>
+              <input
+                type="checkbox"
+                onChange={() => handleTipoCanchaChange("Fútbol 8")}
+              />
+            </div>
+            <div>
+              <p>Fútbol 11</p>
+              <input
+                type="checkbox"
+                onChange={() => handleTipoCanchaChange("Fútbol 11")}
+              />
+            </div>
+          </div>
 
         </section>
       )}

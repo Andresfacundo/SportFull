@@ -1,9 +1,7 @@
 
 .cardGps {
-   /* background-color: rgba(1, 1, 1, 0.9);*/
-    width: 90%;
-    height: max-content;
-    margin: 1rem auto;
+    width: 100%;
+    height: auto;
     text-align: center;
     border-radius: 15px;
     border: 3px solid white;
@@ -227,10 +225,6 @@ input::placeholder {
     padding: 10px;       
 }
 
-.titulo-filtro{
-   margin: 1rem auto;
-   
-}
 
 
 .filtro{
@@ -256,9 +250,9 @@ input::placeholder {
   }
   
   .titulo-filtro {
-    font-size: 1.2em;
+    font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin: 10rem 0 4rem 0;
     color: white;
   }
   

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ReservationsModels {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "idCancha", referencedColumnName = "id")
@@ -48,17 +48,31 @@ public class ReservationsModels {
         CANCELADA
     }
 
+    // Relación One-to-One con Pago
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Pago pago;
+
+
+
     private Double costoHora;
 
     private Long costoTotal;
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
     }
 
     public FieldModels getFieldModels() {

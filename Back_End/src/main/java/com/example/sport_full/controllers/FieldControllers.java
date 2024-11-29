@@ -68,6 +68,7 @@ public class FieldControllers {
             return new ResponseEntity<>("Empresa no encontrada", HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/findAll")
     public List<Map<String, Object>> getAllFields() {
         List<FieldModels> fields = fieldService.getAllFields();
@@ -101,15 +102,35 @@ public class FieldControllers {
 
     // Consultar cancha por ID
     @GetMapping("/findById/{id}")
-    public ResponseEntity<FieldModels> findById(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable Long id) {
         Optional<FieldModels> campoOpt = fieldRepository.findById(id);
 
         if (campoOpt.isPresent()) {
-            return ResponseEntity.ok(campoOpt.get());
+            FieldModels campo = campoOpt.get();
+
+            // Crea un mapa para la respuesta
+            Map<String, Object> response = new HashMap<>();
+
+            // Agregar los datos de diasApertura directamente al mapa
+            response.put("diasApertura", campo.getAdminModels().getDiasApertura());
+            response.put("horaApertura", campo.getAdminModels().getHoraApertura());
+            response.put("horaCierre", campo.getAdminModels().getHoraCierre());
+
+
+            // Agregar los campos de FieldModels directamente al mapa
+            response.put("id", campo.getId());
+            response.put("nombre", campo.getNombre());
+            response.put("precio", campo.getPrecio());
+            response.put("estado", campo.getEstado());
+            response.put("servicios", campo.getServicios());
+            response.put("tipoCancha", campo.getTipoCancha());
+
+            return ResponseEntity.ok(response);  // Retorna el mapa con los datos
         } else {
             return ResponseEntity.notFound().build(); // Devuelve un 404 si no se encuentra la cancha
         }
     }
+
 
     @GetMapping("/list")
     public ResponseEntity<?> listFields(@RequestParam Long empresaId) {
