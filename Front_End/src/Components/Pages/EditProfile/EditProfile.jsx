@@ -67,7 +67,7 @@ export const EditProfile = ({ setProfileImage }) => {
   const handleUpdatePreview = () => {
     if (editor) {
       const canvasScaled = editor.getImageScaledToCanvas();
-      const cropped = canvasScaled.toDataURL("image/jpeg");
+      const cropped = canvasScaled.toDataURL();
       setCroppedImage(cropped);
     }
   };
@@ -168,12 +168,18 @@ export const EditProfile = ({ setProfileImage }) => {
       <Header />
       <main className="editPhotoProfile">
         <h2>Editar foto de Perfil</h2>
-        {croppedImage && (
-          <div className="cropped-image-preview">
-            <h3>Vista previa:</h3>
-            <img src={croppedImage} alt="Cropped" style={{ borderRadius: "50%" }} />
-          </div>
-        )}
+        {/* Vista previa de la imagen recortada */}
+      {croppedImage && (
+        <div className="cropped-image-preview">
+          <h3>Vista previa:</h3>
+          <img
+            src={croppedImage}
+            alt="Cropped"
+            style={{ borderRadius: "50%" }}
+          />
+        </div>
+      )}
+
         <Dropzone onDrop={handleDrop} maxFiles={1} accept="image/jpeg, image/png">
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps()} className="dropzone">

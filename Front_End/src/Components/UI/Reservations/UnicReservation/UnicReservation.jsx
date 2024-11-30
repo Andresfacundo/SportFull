@@ -3,10 +3,14 @@ import './UnicReservation.css';
 import ClienteService from '../../../../services/ClienteService';
 import Calendario from '../../Calendario/Calendario';
 import { NavLink, useNavigate } from 'react-router-dom';
+import ModalExitoso from '../../ModalExitoso/ModalExitoso';
 
 
 export const UnicReservation = ({ cancha }) => {
   const [dateTime, setDateTime] = useState({ fechaHoraInicio: '', fechaHoraFin: '' });
+  const [showModal, setShowModal] = useState(false);
+  const [reservaId, setReservaId] = useState('');
+
   const navigate = useNavigate();
 
   const handleDateTimeSelect = (selectedDateTime) => {
@@ -38,19 +42,30 @@ export const UnicReservation = ({ cancha }) => {
       );
 
 
-      alert('Reserva creada exitosamente.');
+      setShowModal(true); // Mostrar el modal tras un registro exitoso
+      setReservaId(response.data.id);
       console.log('Reserva:', response.data);
       console.log(response.data.id);
       
-      const reservaId = response.data.id 
-      navigate('/PaymentMethod', { state: { reservaId } });
-
-
+      
+      
     } catch (error) {
       console.error('Error al crear la reserva:', error.response?.data || error.message);
       alert(`Error al crear la reserva: ${error.response?.data || 'Intenta nuevamente.'}`);
     }
   };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  
+    // Usa el estado reservaId para la navegación
+    if (reservaId) {
+      navigate('/PaymentMethod', { state: { reservaId } });
+    } else {
+      console.error('No se pudo obtener el ID de la reserva');
+    }
+  };
+  
+
 
   return (
     <div className='container_date'>
@@ -62,6 +77,16 @@ export const UnicReservation = ({ cancha }) => {
       >
         Reservar
       </button>
+      {showModal && (
+          <ModalExitoso>
+            <h3 className='tittle_modal'>Confirmación de Reserva</h3>
+            <p className='message'>
+              Reserva creada exitosamente, por favor realiza tu pago para confimar la reserva
+            </p>
+            <button className='cancel' onClick={handleCloseModal}>Realizar pago</button>
+          </ModalExitoso>
+        )}
     </div>
+
   );
 };
