@@ -3,11 +3,8 @@ package com.example.sport_full.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-<<<<<<< HEAD
-=======
-import org.hibernate.annotations.Where;
 
->>>>>>> develop
+
 import java.io.Serializable;
 
 @Entity
@@ -16,20 +13,12 @@ public class ClientModels implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<<<<<<< HEAD
-    private Long id;  // Cambiado de int a Long
-=======
     private Long id;
->>>>>>> develop
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true, unique = true)  // Hacer opcionales las columnas
     private String CC;
 
-<<<<<<< HEAD
-    @Column(nullable = true, unique = true)
-=======
     @Column(nullable = true)  // Hacer opcionales las columnas
->>>>>>> develop
     private String telefono;
 
     @OneToOne
@@ -43,10 +32,6 @@ public class ClientModels implements Serializable {
 
 
     // Getters y Setters
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
     public Long getId() {
         return id;
     }
@@ -75,7 +60,7 @@ public class ClientModels implements Serializable {
         return userModels;
     }
 
-    public void setUserModels(UserModels userModels) {  // Método que faltaba
+    public void setUserModels(UserModels userModels) {
         this.userModels = userModels;
     }
 
@@ -87,4 +72,3 @@ public class ClientModels implements Serializable {
         this.imgPerfil = imgPerfil;
     }
 }
-

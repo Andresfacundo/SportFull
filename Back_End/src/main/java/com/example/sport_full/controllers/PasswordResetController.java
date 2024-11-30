@@ -4,7 +4,7 @@ import com.example.sport_full.services.ResetPasswordService;
 import com.example.sport_full.models.PasswordResetToken;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IUserRepository;
-import com.example.sport_full.repositories.TokenRepository;
+import com.example.sport_full.repositories.IPasswordResetRepository;
 import com.example.sport_full.utils.TokenGenerator;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpStatus;
@@ -21,12 +21,12 @@ import static java.time.LocalDateTime.now;
 public class PasswordResetController {
 
     private final ResetPasswordService resetPasswordService;
-    private final TokenRepository tokenRepository;
+    private final IPasswordResetRepository IPasswordResetRepository;
     private final IUserRepository userRepository;
 
-    public PasswordResetController(ResetPasswordService resetPasswordService, TokenRepository tokenRepository, IUserRepository userRepository) {
+    public PasswordResetController(ResetPasswordService resetPasswordService, IPasswordResetRepository IPasswordResetRepository, IUserRepository userRepository) {
         this.resetPasswordService = resetPasswordService;
-        this.tokenRepository = tokenRepository;
+        this.IPasswordResetRepository = IPasswordResetRepository;
         this.userRepository = userRepository;
     }
 
@@ -41,7 +41,7 @@ public class PasswordResetController {
         UserModels user = optionalUser.get();
         String token = TokenGenerator.generateToken();
         PasswordResetToken resetToken = new PasswordResetToken(token, user.getId(), now().plusMinutes(30));
-        tokenRepository.save(resetToken);
+        IPasswordResetRepository.save(resetToken);
 
         String resetLink = "http://localhost:8080/password/reset-password?token=" + token;
 
@@ -58,7 +58,7 @@ public class PasswordResetController {
     @GetMapping("/reset-password")
     public ResponseEntity<String> showResetForm(@RequestParam String token) {
         // Buscar el token en la base de datos
-        PasswordResetToken resetToken = tokenRepository.findByToken(token);
+        PasswordResetToken resetToken = IPasswordResetRepository.findByToken(token);
 
         if (resetToken == null) {
             return ResponseEntity.badRequest().body("El enlace de restablecimiento es inválido.");
@@ -92,7 +92,7 @@ public class PasswordResetController {
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
         try {
             // Buscar el token de restablecimiento
-            PasswordResetToken resetToken = tokenRepository.findByToken(token);
+            PasswordResetToken resetToken = IPasswordResetRepository.findByToken(token);
             if (resetToken == null) {
                 return ResponseEntity.badRequest().body("Token inválido.");
             }
@@ -118,7 +118,7 @@ public class PasswordResetController {
             userRepository.save(user);
 
             // Eliminar el token después de usarlo
-            tokenRepository.delete(resetToken);
+            IPasswordResetRepository.delete(resetToken);
 
             return ResponseEntity.ok("Contraseña actualizada exitosamente.");
         } catch (Exception e) {
