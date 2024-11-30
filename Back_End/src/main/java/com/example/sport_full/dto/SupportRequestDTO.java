@@ -5,6 +5,7 @@ public class SupportRequestDTO {
     private String correo;
     private String asunto;
     private String mensaje;
+    private Long company;
 
     public String getNombre() {
         return nombre;
@@ -36,6 +37,14 @@ public class SupportRequestDTO {
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
+    }
+
+    public Long getCompany() {
+        return company;
+    }
+
+    public void setCompany(Long company) {
+        this.company = company;
     }
 }
 
