@@ -1,0 +1,43 @@
+.main_advancedUpdates{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    margin-top: 2rem;
+}
+
+.shade_pay{
+    width: 54%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.82rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+.shade_password {
+    width: 51%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.25rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_StatusAccount{
+    width: 64%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.05rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.icon_3{
+    width: 4rem;
+    opacity: 0.4; 
+}

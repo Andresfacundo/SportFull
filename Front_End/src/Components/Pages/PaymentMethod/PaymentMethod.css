@@ -1,0 +1,57 @@
+/* styles/PaymentMethod.css */
+
+/* Estilos generales */
+.payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-image: url(/src/assets/Images/fondos/fondo_long.png);
+    background-size: cover;
+    color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Botón de pago */
+  .payment-button {
+    background-color: #07954A;
+    margin: 10%;
+    font-size: 18px;
+    font-weight: bold;
+    width: 19rem;
+    height: 4rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 7px 6px 10px #07954983;
+  }
+  
+  .payment-button:hover {
+    background-color: #ffdd33;
+    transform: translateY(-2px);
+  }
+  
+  .payment-button:active {
+    transform: translateY(2px);
+  }
+  
+  /* Animación para el contenedor */
+  .payment-container-animation {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  

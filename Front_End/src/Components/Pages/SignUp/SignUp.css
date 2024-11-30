@@ -14,7 +14,7 @@
 
 .logo {
     width: 9rem;
-    margin: 3rem 0 3rem 0;
+    margin: 6rem 0 3rem 0;
 }
 
 .title_signUp {
@@ -160,13 +160,13 @@
     background-color: #073b4c;
     transform: translateY(-145%) scale(1.1);
     padding: 0 0.5rem 0 0.5rem;
+    
 }
 
 .form_text {
     z-index: 100;
     width: max-content;
     height: max-content;
-    margin-left: 1rem;
     margin-top: 1rem;
     display: flex;
     position: relative;
@@ -175,6 +175,7 @@
     align-items: center;
     transform-origin: right center;
     transition: transform .3s;
+    border-radius: 10px;
 }
 
 .form {
@@ -182,3 +183,31 @@
     flex-direction: column;
     align-items: center;
 }
+
+.error-message{
+    width: 70%;
+    height: auto;
+    text-align: center;
+    margin-bottom: 1.8rem;
+    background-color: #914747;
+    padding: 0.5rem;
+    border-radius: 10px;
+    color: #e7e7e7;
+}
+
+/* Contenedor del input de contraseña */
+.password-input-container {
+    position: relative; /* Asegura que el icono se posicione en relación al contenedor */
+    width: 100%; /* Asegúrate de que ocupe el 100% del contenedor padre */
+  }
+  
+  /* Ajuste del input para que tenga un padding extra en el lado derecho */
+  .password-input-container .form_input {
+    width: 18rem; /* O el tamaño que estés utilizando */
+    padding-right: 1rem; /* Espacio suficiente para el icono */
+  }
+
+  .message{
+    text-align: justify;
+  }
+  

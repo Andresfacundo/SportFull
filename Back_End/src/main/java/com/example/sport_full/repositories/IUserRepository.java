@@ -10,4 +10,9 @@ import java.util.Optional;
 @Repository
 public interface IUserRepository extends JpaRepository<UserModels, Long> {
     Optional<UserModels> findByEmail(String email);
+
+    // Nuevo método para buscar por token de verificación
+    Optional<UserModels> findByVerificationToken(String verificationToken);
+
+    boolean existsByEmail(String email);
 }

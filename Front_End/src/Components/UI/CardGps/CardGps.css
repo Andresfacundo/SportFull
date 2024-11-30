@@ -1,0 +1,260 @@
+
+.cardGps {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    border-radius: 15px;
+    border: 3px solid white;
+    background-image: url('../../../assets/Images/fondos/fondo_01.png');
+}
+
+.mapaConGps {
+    width: 100%;
+    height: 10rem;
+    border: 3px solid red;
+}
+
+.cardGps h3 {
+    font-size: 2rem;
+}
+
+.mapaGps{
+    background-color: aqua;
+    width: 100%;
+    height: 18rem;
+    margin-bottom: 10rem;
+}
+
+.mapaGps input {
+    width: 95%;
+    height: 2rem;
+    margin: 5px 0 5px 0;
+    text-align: left;
+    border-radius: 5px;
+    padding-left: 10px;
+    font-size: 20px;
+    
+}
+
+.precio {
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid white;
+    padding-bottom: 3rem;
+}
+.precio h3 {
+    margin-bottom: 2rem;
+
+}
+.precio-contenedor {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.precio input {
+    margin: 5px;
+    border-radius: 10px;
+    text-align: center;    
+    width: 40%;
+    height: 3rem;
+    font-size: 1.5rem;
+    color: white;
+    background-color: #07954A;
+    box-shadow: 0px 0px 5px 1px;
+    border: 3px solid white;
+}
+
+.ubicacion{
+  margin: 15px 15px 2rem 15px;  
+  
+}
+
+.ubicacion h3 {
+    margin: 20px;
+}
+
+.ubicacion input {
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    color: white;
+    background-color: #07954A;
+    text-align: left;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+}
+
+
+.disponibilidad {
+    display: flex;
+    flex-direction: column;
+}
+.disponibilidad input{
+    background-color: #07954A;
+    width: max-content;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: 2rem;
+    
+}
+
+.a-disponibilidad{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 2rem;
+}
+.a-disponibilidad p {
+    font-size: 1.5rem;
+
+}
+
+.a-disponibilidad input {
+    width: 8rem;
+    height: 3rem;
+    padding: 5px;    
+    text-align: center;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+    
+}
+
+.b-disponibilidad {
+    display: flex;
+    justify-content: space-evenly;
+    
+}
+
+.b-disponibilidad p {
+    margin-bottom: 1rem;
+}
+
+.b-disponibilidad  input {
+    width: 5rem;
+    height: 3rem;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+}
+
+
+
+
+.tipoCancha {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+    
+}
+
+.contenedorTipoCancha{
+    display: flex;
+    width: 100%;
+
+}
+
+
+.tipoCancha div {
+    margin: 13px;
+}
+
+.tipoCancha div p {
+    font-size: 1.2rem;
+}
+
+.servicios {
+  width: 100%;
+  margin: 2rem 0px 2rem 0px;
+}
+
+.servicios h3 {
+text-align: left;
+padding: 1rem;
+}
+
+.servicios-contenedor {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.servicios input {
+    width: 8rem;    
+    border-radius: 10px;
+    text-align: center;
+    margin: 15px;
+    background-color: #07954A;
+    color: white;   
+    font-size: 1.25rem;
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+}
+
+.cardGps button {
+    width: 9rem;
+    height: 3rem;
+    margin: 2rem;
+    background-color: #07954A;
+    font-size: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 2px rgb(0, 110, 0);
+    border: 3px solid white;
+}
+
+input::placeholder {
+    color: white;    
+    width: 100%;
+    height: 100%;
+}
+
+.filtros{
+    box-shadow: 0px 0px 5px 2px;
+    border: 3px solid white;
+    margin: 1rem auto;
+    color: white;
+    border-radius: 5px;
+    width: max-content;
+    background-color: #07954A;     
+    padding: 10px;       
+}
+
+
+
+.filtro{
+    height: 10rem;      
+    background-color: #07954A;
+    border: 1px solid #07954A;   
+    font-size: 1rem;
+    outline: none;   
+}
+
+.filtros option{
+    color: white;
+    margin: 10px;   
+    width: 100%;    
+}
+
+/* Estilo para el dropdown */
+.dropdown-filtro {
+    width: 300px; 
+    margin: 10px 0;
+    color: black;
+    
+  }
+  
+  .titulo-filtro {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10rem 0 4rem 0;
+    color: white;
+  }
+  
+  
+  

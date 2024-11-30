@@ -1,0 +1,171 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    overflow-x: hidden;
+}
+.tittle_update{
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.tittle_optional_data{
+
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    
+}
+
+main{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+  
+  /* Título del modal */
+
+  .tittle_modal{
+    font-size: 1.5rem;
+    color: #e7e7e7;
+  }
+
+  /* Input de contraseña */
+  .input_password{
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    color: #E7E7E7;
+    padding-right: 30px;
+    width: 100%;
+    padding-right: 30px;
+    background-color: transparent;
+    border: 1px solid #e7e7e7;
+    box-shadow: none;
+
+  }
+  footer{
+    width: 100vh;
+    height: auto;
+    position: fixed; 
+}
+
+  .input_password:focus{
+    border-color:#07954A; /* Borde rojo al hacer clic */
+    outline: none; /* Quitar el contorno predeterminado */
+    box-shadow: none;
+  }
+  
+  /* Botones del modal */
+
+  .container_button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  .confirm,.cancel{
+    width: 60%;
+    border: none;
+    height: auto;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 1rem 1rem 1rem 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Estilo para el mensaje de error */
+  .modal-content .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
+  .changePassword{
+    color: #e7e7e7;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    font-weight: 200;
+  }
+  
+  .form_input:disabled + .form_text {
+    color: #e7e7e7;
+    cursor: not-allowed;
+    font-size: 1.4rem;
+    background-color: #079549a1;
+    border-style: none;
+    padding: 0 1.5rem 0 1.5rem;
+    display: flex;
+    justify-content: center;
+    width: 80%;
+}
+  .form_input:disabled  {
+    color: #e7e7e7;
+    cursor: not-allowed;
+    font-size: 1.3rem;
+    border-style: none;
+    margin-top: 1rem;
+    text-align: center;
+  }  
+
+  .form_text:disabled{
+    width: 80%;
+  }
+
+  .form-update{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+
+  .password_container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .passwordError{
+    color: #07954A;
+  }
+ 
+  
+  .password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+  }
+
+
+  .input_error {
+    border-color: red; /* Borde rojo cuando hay un error */
+  }
+  
+  .error_message {
+    color: red; /* Mensaje de error en rojo */
+    font-size: 0.9rem; /* Ajustar tamaño si es necesario */
+    margin-top: 0.5rem;
+  }
+  

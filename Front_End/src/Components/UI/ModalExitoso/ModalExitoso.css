@@ -1,0 +1,94 @@
+/* Fondo oscuro con opacidad */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Debe estar por encima de todo lo demás */
+}
+
+/* Contenedor del modal */
+.container-modal {
+    width: 21rem;
+    height: auto;    
+    background-color: #073b4c;
+    border-radius: 15px;
+    color: #e7e7e7;
+    text-align: center;
+    padding-top: 4rem;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1000; /* Debe estar por encima del fondo con opacidad */
+}
+
+/* Check del registro (ícono circular) */
+.check-registro {
+    width: 6rem;
+    height: 6rem;
+    background-color: #07954a;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: 37%;     
+    box-shadow: 0 0px 2px 10px #07954973, 0 0 2px 20px #0795493d, 0  0 2px 30px #07954915;
+}
+
+.imgExito {      
+    width: 70%;
+    margin: 6px 3px 0 0;
+    padding: 10px;                
+}
+
+/* Título del modal */
+.titulo-modal {   
+    font-size: 2rem;    
+    margin: 3rem 1rem;       
+}
+
+/* Estilos para enlaces o botones dentro del modal */
+.container-modal a {
+    margin-top: 5rem;   
+    background-color: #07954a;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 0 10px 1px;    
+    padding: 10px;
+}
+
+.container_children{
+    width: 80%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1.5rem 0 2rem 0;
+    gap: 1.5rem;
+
+}
+
+
+.container_children>button{
+    border: none;
+    height: 4rem;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+    width: auto;
+    padding: 0 1rem ;
+
+}

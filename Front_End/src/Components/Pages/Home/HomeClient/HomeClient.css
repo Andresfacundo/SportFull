@@ -1,0 +1,82 @@
+
+.main_homeClient{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.container_home_client{
+    width: auto;
+    height: auto;
+    padding-bottom: 8rem;
+    overflow-x: hidden;
+}
+
+
+.icon_1{
+    width: 4rem;
+}
+
+
+.icon_2{
+    width: 6rem;
+    opacity: 0.4; 
+}
+
+.icon_3{
+    width: 4rem;
+    opacity: 0.4; 
+}
+.icon_4{
+    width: 4rem;
+    opacity: 0.4; 
+    margin-left: 6rem;
+}
+
+.shade_perfil {
+    width: 37%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.25rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_historial{
+    width: 45%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.4rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+}
+
+.shade_field {
+    width: 60%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.82rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+.shade_support {
+    width: 42%;
+    height: 3rem;
+    display: flex;
+    justify-content: end;
+    position: absolute;
+    top: 1.6rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+footer{
+    width: 100vh;
+    height: auto;
+    position: fixed; 
+}

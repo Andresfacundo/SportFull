@@ -1,0 +1,108 @@
+.main_agregarCancha {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container_agregarCancha {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #073B4C;
+    overflow-x: hidden;
+}
+
+.tittle_agregarCancha {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 4.5rem;
+}
+
+.cancha-type-container {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.cancha-type-container > p {
+    width: auto;
+    font-size: 1.3rem;
+}
+
+.form_input_cancha:focus + .form_text,
+.form_input_cancha:not(:placeholder-shown) + .form_text {
+    background-color: #073b4c;
+    transform: translateY(-145%) scale(1.1);
+    padding: 0 0.5rem;
+}
+
+.form_input_cancha {
+    width: 18rem;
+    height: 3.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: transparent;
+    border: 1.5px solid #e7e7e7;
+    border-radius: 10px;
+    color: #e7e7e7;
+    z-index: 90;
+    outline: none;
+}
+
+.container_types {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.servicios{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1rem 0 2rem 0;
+}
+
+.opciones {
+    width: 20rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.opcion {
+    background-color: #07954A;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    opacity: 0.4; /* Opción no seleccionada (con opacidad) */
+    transition: opacity 0.3s ease;
+}
+
+.opcion.seleccionada {
+    opacity: 1; /* Opción seleccionada */
+}
+
+.opcion:hover {
+    opacity: 0.7;
+}
+
+.servicios > p {
+    font-size: 1.3rem;
+    padding-left: 0.5rem;
+}
+
+.cancha-estado-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+}

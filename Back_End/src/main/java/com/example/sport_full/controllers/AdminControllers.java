@@ -1,0 +1,217 @@
+package com.example.sport_full.controllers;
+
+
+import com.example.sport_full.models.AdminModels;
+import com.example.sport_full.models.FieldModels;
+import com.example.sport_full.models.UserModels;
+import com.example.sport_full.repositories.ICompanyRepository;
+import com.example.sport_full.repositories.IFieldRepository;
+import com.example.sport_full.repositories.IUserRepository;
+import com.example.sport_full.services.AdminServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+@CrossOrigin
+@RestController
+@RequestMapping("/admin")
+public class AdminControllers {
+
+    @Autowired
+    ICompanyRepository companyRepository;
+
+    @Autowired
+    IFieldRepository fieldRepository;
+
+    @Autowired
+    IUserRepository userRepository;
+
+    @Autowired
+    AdminServices adminServices;
+
+    // Método para actualizar la imagen de perfil de la empresa
+    @PostMapping("/actualizar-imagen/{empresaId}")
+    public ResponseEntity<?> actualizarImagenEmpresa(@PathVariable("empresaId") Long empresaId,
+                                                     @RequestParam("imgPerfil") MultipartFile imgPerfil) {
+        try {
+            // Buscar la empresa en la base de datos
+            AdminModels empresa = companyRepository.findById(empresaId)
+                    .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+
+            // Convertir la imagen a bytes
+            byte[] imagenBytes = imgPerfil.getBytes();
+
+            // Actualizar la imagen de perfil en el servicio
+            adminServices.actualizarImagenEmpresa(empresa, imagenBytes);
+
+            return ResponseEntity.ok("Imagen de perfil de la empresa actualizada correctamente.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar la imagen.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserModels> updateAdmin(@PathVariable("id") Long id, @RequestBody UserModels userModels) {
+        Optional<UserModels> existingAdmin = this.userRepository.findById(id);
+        if (existingAdmin.isPresent()) {
+            AdminModels adminModels = userModels.getAdminModels();
+            UserModels updatedUser = this.adminServices.updateAdminAndUser(adminModels, userModels, id);
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<UserModels> patchUpdateAdmin(@PathVariable("id") Long userId, @RequestBody UserModels userModels) {
+        Optional<UserModels> existingUserOpt = userRepository.findById(userId);
+
+        if (existingUserOpt.isPresent()) {
+            UserModels existingUser = existingUserOpt.get();
+
+            // Actualiza solo los campos de UserModels que vienen en la solicitud
+            if (userModels.getNombres() != null) {
+                existingUser.setNombres(userModels.getNombres());
+            }
+
+            if (userModels.getApellidos() != null) {
+                existingUser.setApellidos(userModels.getApellidos());
+            }
+
+            if (userModels.getEmail() != null) {
+                existingUser.setEmail(userModels.getEmail());
+            }
+
+            if (userModels.getContraseña() != null) {
+                String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
+                existingUser.setContraseña(hashedPassword);
+            }
+
+            if (userModels.getAdminModels() != null) {
+                AdminModels adminModels = userModels.getAdminModels();
+
+                if (adminModels.getNIT() != null) {
+                    existingUser.getAdminModels().setNIT(adminModels.getNIT());
+                }
+
+                if (adminModels.getNombreEmpresa() != null) {
+                    existingUser.getAdminModels().setNombreEmpresa(adminModels.getNombreEmpresa());
+                }
+
+                if (adminModels.getTelefonoEmpresa() != null) {
+                    existingUser.getAdminModels().setTelefonoEmpresa(adminModels.getTelefonoEmpresa());
+                }
+
+                if (adminModels.getEmailEmpresa() != null) {
+                    existingUser.getAdminModels().setEmailEmpresa(adminModels.getEmailEmpresa());
+                }
+
+                if (adminModels.getDireccionEmpresa() != null) {
+                    existingUser.getAdminModels().setDireccionEmpresa(adminModels.getDireccionEmpresa());
+                }
+
+                if (adminModels.getCCpropietario() != null) {
+                    existingUser.getAdminModels().setCCpropietario(adminModels.getCCpropietario());
+                }
+
+                if (adminModels.getTelefonoPropietario() != null) {
+                    existingUser.getAdminModels().setTelefonoPropietario(adminModels.getTelefonoPropietario());
+                }
+
+                if (adminModels.getFacebook() != null) {
+                    existingUser.getAdminModels().setFacebook(adminModels.getFacebook());
+                }
+
+                if (adminModels.getWhatsApp() != null) {
+                    existingUser.getAdminModels().setWhatsApp(adminModels.getWhatsApp());
+                }
+
+                if (adminModels.getInstagram() != null) {
+                    existingUser.getAdminModels().setInstagram(adminModels.getInstagram());
+                }
+
+                // Actualiza los horarios de apertura y cierre si se envían en la solicitud
+                if (adminModels.getHoraApertura() != null) {
+                    existingUser.getAdminModels().setHoraApertura(adminModels.getHoraApertura());
+                }
+
+                if (adminModels.getHoraCierre() != null) {
+                    existingUser.getAdminModels().setHoraCierre(adminModels.getHoraCierre());
+                }
+
+
+                if (adminModels.getServiciosGenerales() != null) {
+                    List<String> existingServicios = existingUser.getAdminModels().getServiciosGenerales();
+
+                    for (String nuevoServicio : adminModels.getServiciosGenerales()) {
+                        if (!existingServicios.contains(nuevoServicio)) {
+                            existingServicios.add(nuevoServicio);
+                        }
+                    }
+                }
+
+                if (adminModels.getDiasApertura() != null) {
+                    List<String> existingDias = existingUser.getAdminModels().getDiasApertura();
+
+                    for (String nuevoDia : adminModels.getDiasApertura()) {
+                        if (!existingDias.contains(nuevoDia)) {
+                            existingDias.add(nuevoDia);
+                        }
+                    }
+                }
+            }
+
+            // Guarda los cambios en la base de datos
+            userRepository.save(existingUser);
+            return ResponseEntity.ok(existingUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/find-all")
+    public List<AdminModels> findAll() {
+        return companyRepository.findAll();
+    }
+
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<UserModels> findById(@PathVariable("id") Long id) {
+        Optional<AdminModels> existingAdmin = this.companyRepository.findById(id);
+        if (existingAdmin.isPresent()) {
+            AdminModels admin = existingAdmin.get();
+
+            // Asumiendo que AdminModels tiene un método para obtener el UserModels asociado
+            UserModels user = admin.getUserModels();
+
+            // Aquí podrías personalizar la respuesta si necesitas algún formato específico
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAdmin(@PathVariable("id") Long id) {
+        if (this.userRepository.existsById(id)) {
+            this.userRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+}

@@ -1,0 +1,90 @@
+  .editPhotoProfile{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+.dropzone {
+    width: 300px;
+    height: 200px;
+    border: 2px dashed #cccccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    cursor: pointer;
+  }
+
+  .avatar-selection {
+    display: grid;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    grid-template-columns: repeat(3, 0fr); /* 3 columnas iguales */
+    justify-items: center;
+    align-items: center;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 7px 6px 10px #07954983;
+  }
+  
+  
+  .save-button {
+    margin-top: 3rem;
+    margin: 10%;
+    width: 19rem;
+    border: none;
+    height: 4rem;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+  }
+
+  .preview-button{
+    margin-top: 3rem;
+    width: 19rem;
+    border: none;
+    height: 4rem;
+    background-color: #07954A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+  }
+  
+  .avatar:hover {
+    transform: scale(1.1);
+  }
+
+  .error-message {
+    width: 70%;
+    height: auto;
+    text-align: center;
+    margin-bottom: 1.8rem;
+    background-color: #914747;
+    padding: 0.5rem;
+    border-radius: 10px;
+    color: #e7e7e7;
+  }
+
+  .editPhotoProfile>h2{
+    font-size: 1.8rem;
+  }

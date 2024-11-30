@@ -1,0 +1,134 @@
+.navigation {
+    width: 46vh;
+    height: 5rem;
+    background-color: #073b4c;
+    position: relative;
+    top: -2.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border-radius: 23px; */
+    border-top: 6px solid #e7e7e7;
+}
+
+
+ul {
+    width: 100%;
+    height: auto;
+    display: flex;
+    width: 350px;
+}
+
+li {
+    position: relative;
+    list-style: none;
+    width: 70px;
+    height: 70px;
+    z-index: 1;
+    transition: 0.9s;
+}
+
+.a_navBar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+}
+
+.icon {
+    display: block;
+    line-height: 80px;
+    left: 0.35rem;
+    font-size: 2rem;
+    text-align: center;
+    color: #e7e7e7;
+    transition: 0.5s;
+    
+}
+
+li.active .icon {
+    transform: translateY(-40px);
+}
+
+.text {
+    position: absolute;
+    color: #e7e7e7;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    transition: 0.5s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+li.active .text {
+    opacity: 1;    
+    transform: translateY(-35px);
+}
+
+.indicator {
+    position: absolute;
+    top: -50%;
+    width: 70px;
+    height: 70px;
+    background: #079549 ;
+    border-radius: 50% ;
+    border: 6px solid #e7e7e7;
+    transition: 0.5s;
+}
+
+.indicator::before {
+    content: '';
+    position: absolute;
+    top: 48%;
+    left: -22px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-top-right-radius: 30px;
+    box-shadow: 1px -5px 0 0 #e7e7e7 ;    
+
+}
+
+
+.indicator::after {
+    content: '';
+    position: absolute;
+    top: 48%;
+    right: -22px;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-top-left-radius: 20px;
+    box-shadow: -1px -5px 0 0 #e7e7e7 ;
+
+}
+
+li:nth-child(1).active ~ .indicator
+{
+transform: translateX(calc(-5px * 1 ));
+}
+
+li:nth-child(2).active ~ .indicator
+{
+transform: translateX(calc(64px * 1 ));
+}
+
+li:nth-child(3).active ~ .indicator
+{
+transform: translateX(calc(67px * 2 ));
+}
+
+li:nth-child(4).active ~ .indicator
+{
+transform: translateX(calc(67px * 3 ));
+}
+
+li:nth-child(5).active ~ .indicator
+{
+transform: translateX(calc(68.5px * 4 ));
+}
