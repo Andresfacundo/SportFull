@@ -1,12 +1,12 @@
 package com.example.sport_full.controllers;
 
 
-import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.ClientModels;
 import com.example.sport_full.models.UserModels;
 import com.example.sport_full.repositories.IClientRepository;
 import com.example.sport_full.repositories.IUserRepository;
 import com.example.sport_full.services.ClientServices;
+import com.example.sport_full.services.ConfirmPasswordResetServices;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +30,9 @@ public class ClientControllers {
 
     @Autowired
     IUserRepository userRepository;
+
+    @Autowired
+    ConfirmPasswordResetServices confirmPasswordResetServices;
 
     @PostMapping
     public ClientModels createClient(@RequestBody ClientModels clientModels) {
@@ -108,7 +111,14 @@ public class ClientControllers {
             // Encripta la contraseña si se envía una nueva
             if (userModels.getContraseña() != null) {
                 String hashedPassword = BCrypt.hashpw(userModels.getContraseña(), BCrypt.gensalt());
-                existingUser.setContraseña(hashedPassword) ;// Encripta la contraseña antes de guardarla
+                existingUser.setContraseña(hashedPassword);
+
+                // Enviar correo de confirmación
+                String subject = "Confirmación de cambio de contraseña";
+                String message = "Hola " + existingUser.getNombres() + ",\n\n" +
+                        "Tu contraseña ha sido actualizada exitosamente. Si no reconoces esta acción, por favor contacta con soporte.\n\n" +
+                        "Saludos,\nTu equipo de soporte.";
+                confirmPasswordResetServices.sendEmail(existingUser.getEmail(), subject, message);
             }
 
             if (userModels.getClientModels() != null) {
