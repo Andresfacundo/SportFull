@@ -24,7 +24,7 @@ export const Guest = () => {
     <div style={backgroundStyle} className='container_home_client'>
       <Header />
       <main className='main_homeGuest'>
-        <OptionMenuRight link={'/BuscarCanchas'} shade={'shade_consultCourt'} classNameImg={'icon_1'} icon={icon_01} content={'Consultar Cancha'} />
+        <OptionMenuRight link={'/SearchFields'} shade={'shade_consultCourt'} classNameImg={'icon_1'} icon={icon_01} content={'Consultar Cancha'} />
         <OptionMenuLeft link={'/SignUp'} shade={'shade_register'} classNameImg={'icon_2'} icon={icon_02} content={'Registarse'} />
       </main>
 

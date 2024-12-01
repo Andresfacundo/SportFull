@@ -60,8 +60,8 @@ const PaymentMethod = () => {
       country: "CO",
       lang: "es",
       external: "false",
-      response: "http://localhost:8080/api/pagos/respuesta",
-      confirmation: "http://localhost:8080/api/pagos/confirmacion",
+      response: `https://ced4-152-202-213-216.ngrok-free.app/api/pagos/respuesta?reservation_id=${reservaId}`,
+      confirmation: `https://ced4-152-202-213-216.ngrok-free.app/api/pagos/confirmacion?reservation_id=${reservaId}`,
       method: "popup",
     };
 

@@ -3,7 +3,6 @@ package com.example.sport_full.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 @Entity
@@ -19,13 +18,23 @@ public class Pago {
     private String metodoPago;
     private String descripcion;
     private String factura;
-    private Integer clienteId;
 
-    @Lob
-    private String datosAdicionales;
 
     @Column(nullable = false)
     public LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    // Relación One-to-One con Reservation
+    @OneToOne
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id", unique = true)
+    private ReservationsModels reservation;
+
+    public ReservationsModels getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(ReservationsModels reservation) {
+        this.reservation = reservation;
+    }
 
     public Long getId() {
         return id;
@@ -89,22 +98,6 @@ public class Pago {
 
     public void setFactura(String factura) {
         this.factura = factura;
-    }
-
-    public Integer getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(Integer clienteId) {
-        this.clienteId = clienteId;
-    }
-
-    public String getDatosAdicionales() {
-        return datosAdicionales;
-    }
-
-    public void setDatosAdicionales(String datosAdicionales) {
-        this.datosAdicionales = datosAdicionales;
     }
 
     public LocalDateTime getFechaCreacion() {

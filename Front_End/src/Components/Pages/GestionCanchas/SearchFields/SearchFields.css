@@ -1,0 +1,29 @@
+.main_SearchFields{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.shade_list{
+    width: 58%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 1.25rem;
+    left: 2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
+
+.shade_gps{
+    width: 32%;
+    height: 3rem;
+    display: flex;
+    position: absolute;
+    top: 0.82rem;
+    right: -2rem;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+}
+
