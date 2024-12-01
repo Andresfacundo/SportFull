@@ -148,7 +148,7 @@ export const ActualizarCliente = () => {
     <div style={backgroundStyle} className='container'>
       <Header />
 
-      <main>
+      <main >
 
         <h2 className='tittle_update'>Actualizar Perfil</h2>
         <form onSubmit={saveUser} className='form-update'>
@@ -229,7 +229,7 @@ export const ActualizarCliente = () => {
               }
             }}
           >
-            {isEditable ? 'Guardar Cambios' : 'Actualizar Perfil'}
+            {isEditable ? 'Guardar' : 'Actualizar'}
           </button>
 
           <NavLink className='return' to='/HomeClient'>Volver</NavLink>
@@ -278,6 +278,7 @@ export const ActualizarCliente = () => {
         )}
 
       </main>
+
       <footer>
         <NavBar />
       </footer>

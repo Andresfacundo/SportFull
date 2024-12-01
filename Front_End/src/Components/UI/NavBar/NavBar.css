@@ -9,10 +9,11 @@
     align-items: center;
     /* border-radius: 23px; */
     border-top: 6px solid #e7e7e7;
+    z-index: 1000;
 }
 
 
-ul {
+.navigation >ul {
     width: 100%;
     height: auto;
     display: flex;

@@ -59,12 +59,12 @@
   padding: 1rem;
 }
 
-ul {
+/* ul {
   display: flex;
   flex-direction: column;
   border: 3px solid #e7e7e7;
   padding: 1rem;
-}
+} */
 
 li {
   list-style: none;

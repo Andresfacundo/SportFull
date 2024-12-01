@@ -53,10 +53,12 @@ main{
     box-shadow: none;
 
   }
+
   footer{
     width: 100vh;
     height: auto;
     position: fixed; 
+    top: 96%;
 }
 
   .input_password:focus{

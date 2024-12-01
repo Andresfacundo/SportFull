@@ -46,7 +46,6 @@ import { SearchFields } from './Components/Pages/GestionCanchas/SearchFields/Sea
 import './App.css'
 import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import { UpdateReservationDate } from './Components/UI/UpdateReservationDate/UpdateReservationDate.jsx'
-
 function App() {
 
   return (
@@ -65,7 +64,6 @@ function App() {
       <Route path='/ActualizarGestor' element={<ActualizarGestor />} />
       <Route path='/FieldsList' element={<FieldsList />} />
       <Route path='/HistorialCliente' element={<HistorialCliente />} />
-      <Route path='/SoporteCliente' element={<SoporteCliente />} />
       <Route path='/AdvancedConfiguration' element={<AdvancedConfiguration />} />
       <Route path='/ChangePassword' element={<ChangePassword />} />
       <Route path='/PaymentMethod' element={<PaymentMethod />} />
@@ -93,6 +91,7 @@ function App() {
       <Route path="/PaymentMethod" element={<PaymentMethod />} />
       <Route path="/SearchFields" element={<SearchFields />} />
       <Route path="/UpdateReservationDate" element={<UpdateReservationDate />} />
+      <Route path="/Soporte" element={<SoporteCliente />} />
 
 
     </Routes>

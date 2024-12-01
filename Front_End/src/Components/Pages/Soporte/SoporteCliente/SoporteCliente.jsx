@@ -4,6 +4,8 @@ import './SoporteCliente.css'
 
 export const SoporteCliente = () => {
   return (
-    <div>SoporteCliente</div>
+    <div >
+      SOPORTE
+    </div>
   )
 }

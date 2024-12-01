@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 const NavBar = () => {
- 
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  
+  // Define las rutas y los íconos
+  const items = [
+    { icon: 'home-outline', route: '/HomeClient' },
+    { icon: 'person-outline', route: '/ActualizarCliente' },
+    { icon: 'football-outline', route: '/SearchFields' },
+    { icon: 'send-outline', route: '/Soporte' },
+    { icon: 'eye-outline', route: '/HistorialCliente' },
+  ];
+
+  // Actualiza el índice activo según la ruta actual
+  useEffect(() => {
+    const currentIndex = items.findIndex((item) => item.route === location.pathname);
+    if (currentIndex !== -1) {
+      setActiveIndex(currentIndex);
+    }
+  }, [location.pathname, items]);
+
+  // Maneja el clic y redirige
   const handleClick = (index) => {
     setActiveIndex(index);
+    navigate(items[index].route);
   };
-
-  
-  const items = [
-    { name: 'Home', icon: 'home-outline' },
-    { name: 'Profile', icon: 'person-outline' },
-    { name: 'Canchas', icon: 'football-outline' },
-    { name: 'Messages', icon: 'send-outline' },
-    { name: 'Reservas', icon: 'eye-outline' },
-  ];
 
   return (
     <div className='navigation'>
@@ -32,7 +43,7 @@ const NavBar = () => {
               <span className='icon'>
                 <ion-icon name={item.icon}></ion-icon>
               </span>
-              <span className='text'>{item.name}</span>
+              <span className='text'>{item.route.replace('/', '')}</span>
             </a>
           </li>
         ))}
