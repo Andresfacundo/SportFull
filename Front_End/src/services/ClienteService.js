@@ -14,6 +14,10 @@ class ClienteService {
         return axios.post(API_URL + "/login", credentials);
     }
 
+    //Autenticaion con Google
+    authenticateWithGoogle(data) {
+        return axios.post('/google/authenticate', data);
+      }
     // Cerrar sesión (opcional, si el backend tiene un endpoint para esto)
     logout() {
         localStorage.removeItem('token'); // Elimina el token del almacenamiento local

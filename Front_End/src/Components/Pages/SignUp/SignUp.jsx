@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
+import { GoogleLogin } from 'react-google-login';
 import logo from '../../../assets/Images/logo/3.png';
 import ModalExitoso from '../../UI/ModalExitoso/ModalExitoso';
 
@@ -51,6 +52,34 @@ export const SignUp = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     navigate('/Login'); // Redirigir a la ruta de login cuando se cierra el modal
+  };
+
+  // Callback para éxito del login de Google
+  const onGoogleSuccess = (response) => {
+    const { email, name } = response.profileObj;
+    const [firstName, ...lastName] = name.split(' '); // Dividir nombre completo
+    const user = {
+      nombres: firstName,
+      apellidos: lastName.join(' '),
+      email: email,
+      tipoUsuario: 'CLIENTE', // Puedes ajustar según tu lógica
+    };
+
+    ClienteService.authenticateWithGoogle(user)
+      .then((res) => {
+        console.log('Google login exitoso:', res.data);
+        navigate('/Login');
+      })
+      .catch((err) => {
+        console.error('Error al autenticar con Google:', err);
+        setError('No se pudo iniciar sesión con Google. Intente nuevamente.');
+      });
+  };
+
+  // Callback para error del login de Google
+  const onGoogleFailure = (error) => {
+    console.error('Google login fallido:', error);
+    setError('Error al iniciar sesión con Google.');
   };
 
   return (
@@ -177,6 +206,16 @@ export const SignUp = () => {
 
           <button type="submit" className='register'>Registrarse</button>
           <NavLink className='return' to='/'>Volver</NavLink>
+          <div className="google-signup">
+          <p>O registrarse con:</p>
+          <GoogleLogin
+            clientId="178554007722-k9icve3lr66a9ss2n04abbgrff298q4b.apps.googleusercontent.com"
+            buttonText="Registrarse con Google"
+            onSuccess={onGoogleSuccess}
+            onFailure={onGoogleFailure}
+            cookiePolicy={'single_host_origin'}
+          />
+        </div>
         </form>
 
         {showModal && (
