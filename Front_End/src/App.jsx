@@ -16,7 +16,6 @@ import { ActualizarEmpresa } from './Components/Pages/ActualizarPerfil/Actualiza
 import { ActualizarGestor } from './Components/Pages/ActualizarPerfil/ActualizarGestor/ActualizarGestor'
 import { FieldsList } from './Components/Pages/GestionCanchas/FieldsList/FieldsList.jsx'
 import { HistorialCliente } from './Components/Pages/Historial/HistorialCliente/HistorialCliente'
-import { SoporteCliente } from './Components/Pages/Soporte/SoporteCliente/SoporteCliente'
 import { AdvancedConfiguration } from './Components/Pages/AdvancedConfiguration/AdvancedConfiguration'
 import { ChangePassword } from './Components/Pages/ChangePassword/ChangePassword'
 import { VerifyEmail } from './Components/Pages/VerifyEmail/VerifyEmail'
@@ -46,6 +45,8 @@ import { SearchFields } from './Components/Pages/GestionCanchas/SearchFields/Sea
 import './App.css'
 import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import { UpdateReservationDate } from './Components/UI/UpdateReservationDate/UpdateReservationDate.jsx'
+import Soporte from './Components/Pages/Soporte/Soporte.jsx'
+
 function App() {
 
   return (
@@ -91,7 +92,7 @@ function App() {
       <Route path="/PaymentMethod" element={<PaymentMethod />} />
       <Route path="/SearchFields" element={<SearchFields />} />
       <Route path="/UpdateReservationDate" element={<UpdateReservationDate />} />
-      <Route path="/Soporte" element={<SoporteCliente />} />
+      <Route path="/Soporte" element={<Soporte />} />
 
 
     </Routes>
