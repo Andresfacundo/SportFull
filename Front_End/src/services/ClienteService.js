@@ -240,6 +240,11 @@ class ClienteService {
             }
         });
     }
+
+    //recuperar contraseña
+    recoverPassword(email){
+        return axios.post("http://localhost:8080/password/reset", {email})
+    }
 }
 
 
