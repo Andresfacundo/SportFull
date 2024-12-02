@@ -151,7 +151,6 @@
     border: 1.5px solid #e7e7e7;
     border-radius: 10px;
     color: #e7e7e7;
-    z-index: 90;
     outline: none;
 }
 
@@ -164,7 +163,6 @@
 }
 
 .form_text {
-    z-index: 100;
     width: max-content;
     height: max-content;
     margin-top: 1rem;

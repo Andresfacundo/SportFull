@@ -3,10 +3,14 @@ import './UnicReservation.css';
 import ClienteService from '../../../../services/ClienteService';
 import Calendario from '../../Calendario/Calendario';
 import { NavLink, useNavigate } from 'react-router-dom';
-
+import ModalExitoso from '../../ModalExitoso/ModalExitoso';
 
 export const UnicReservation = ({ cancha }) => {
   const [dateTime, setDateTime] = useState({ fechaHoraInicio: '', fechaHoraFin: '' });
+  const [showModal, setShowModal] = useState(false);
+  const [reservaId, setReservaId] = useState('');
+  const [modalMessage, setModalMessage] = useState(''); // Estado para el mensaje del modal
+
   const navigate = useNavigate();
 
   const handleDateTimeSelect = (selectedDateTime) => {
@@ -14,13 +18,17 @@ export const UnicReservation = ({ cancha }) => {
   };
 
   const handleReservation = async () => {
-    try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user) {
-        alert('Usuario no autenticado. Por favor, inicia sesión.');
-        return;
-      }
+    const user = JSON.parse(localStorage.getItem('user'));
 
+    if (!user) {
+      // Mostrar el modal con el mensaje de registro y redirigir a /SignUp
+      setModalMessage('Por favor registrese para poder realizar una reserva');
+      setShowModal(true);
+      setTimeout(() => navigate('/SignUp'), 5000); // Redirigir después de 2 segundos
+      return;
+    }
+
+    try {
       const reservationData = {
         reservation: dateTime,
         fieldId: cancha.id,
@@ -37,18 +45,25 @@ export const UnicReservation = ({ cancha }) => {
         reservationData.userEmail
       );
 
-
-      alert('Reserva creada exitosamente.');
+      // Mostrar modal de confirmación de reserva
+      setModalMessage('Reserva creada exitosamente, por favor realiza tu pago para confimar la reserva');
+      setShowModal(true);
+      setReservaId(response.data.id);
       console.log('Reserva:', response.data);
-      console.log(response.data.id);
-      
-      const reservaId = response.data.id 
-      navigate('/PaymentMethod', { state: { reservaId } });
-
-
     } catch (error) {
       console.error('Error al crear la reserva:', error.response?.data || error.message);
       alert(`Error al crear la reserva: ${error.response?.data || 'Intenta nuevamente.'}`);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+
+    if (reservaId) {
+      // Redirigir a la página de método de pago si se ha creado una reserva
+      navigate('/PaymentMethod', { state: { reservaId } });
+    } else {
+      console.error('No se pudo obtener el ID de la reserva');
     }
   };
 
@@ -62,6 +77,15 @@ export const UnicReservation = ({ cancha }) => {
       >
         Reservar
       </button>
+      {showModal && (
+        <ModalExitoso>
+          <h3 className='tittle_modal'>Confirmación</h3>
+          <p className='message'>{modalMessage}</p>
+          {modalMessage.includes('realiza tu pago') && (
+            <button className='cancel' onClick={handleCloseModal}>Realizar pago</button>
+          )}
+        </ModalExitoso>
+      )}
     </div>
   );
 };

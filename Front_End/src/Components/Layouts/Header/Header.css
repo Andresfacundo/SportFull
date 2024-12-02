@@ -73,7 +73,14 @@
   .edit_icon.show {
     opacity: 1;
     visibility: visible;
-  }
+    width: 1.5rem;
+    background-color: #079549;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    height: 1.5rem;
+    padding: 2px;
+}
   
   .edit_icon.hide {
     opacity: 0;

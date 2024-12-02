@@ -6,6 +6,8 @@ import OptionMenuLeft from '../../../UI/OptionMenuLeft/OptionMenuLeft';
 import OptionMenuRight from '../../../UI/OptionMenuRight/OptionMenuRight';
 import icon_01 from '../../../../assets/Images/icons/jugador_04.png';
 import icon_02 from '../../../../assets/Images/icons/jugador_03.png';
+import NavBar from '../../../UI/NavBar/NavBar'
+import { BtnSupport } from '../../../Layouts/BtnSupport/BtnSupport';
 
 export const SearchFields = () => {
     const backgroundStyle = {
@@ -25,6 +27,13 @@ export const SearchFields = () => {
       <OptionMenuLeft link={'/CardGps'} shade={'shade_gps'} classNameImg={'icon_2'} icon={icon_02} content={'GPS'} />
 
       </main>
+
+      <BtnSupport />
+ 
+      <footer>
+        <NavBar/>
+      </footer>
+
 
     </div>
   )

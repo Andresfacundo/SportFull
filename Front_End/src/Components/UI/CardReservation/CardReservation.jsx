@@ -28,10 +28,13 @@ export const CardReservation = ({ empresa, cancha, fechaReserva, horaInicio, hor
     }
   };
 
+  // Verifica si el estado permite clickeo
+  const isClickable = estado === 'CONFIRMADA' || estado === 'PENDIENTE';
+
   return (
     <div
-      className={`container-card ${estado === 'CONFIRMADA' ? 'clickable' : ''}`}
-      onClick={estado === 'CONFIRMADA' ? onEdit : null} // Solo permitir clic si está CONFIRMADA
+      className={`container-card ${isClickable ? 'clickable' : ''}`}
+      onClick={isClickable ? onEdit : null} // Permite clic si el estado es CONFIRMADA o PENDIENTE
     >
       <div className="tittle-reservation">
         <h3>Reservación #{id} </h3>

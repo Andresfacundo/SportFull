@@ -1,13 +1,19 @@
-
 .cardGps {
     width: 100%;
+    display: flex;
     height: auto;
+    align-items: center;
+    flex-direction: column;
     text-align: center;
     border-radius: 15px;
     border: 3px solid white;
-    background-image: url('../../../assets/Images/fondos/fondo_01.png');
+    background-color: #1c3c4c;
 }
 
+.container{
+    align-items: center;
+    height: auto;
+}
 .mapaConGps {
     width: 100%;
     height: 10rem;
@@ -18,7 +24,10 @@
     font-size: 2rem;
 }
 
-.mapaGps{
+.empresas >h3{
+    font-size: 1.5rem;
+}
+.mapaGps {
     background-color: aqua;
     width: 100%;
     height: 18rem;
@@ -33,46 +42,58 @@
     border-radius: 5px;
     padding-left: 10px;
     font-size: 20px;
-    
+
 }
 
-.precio {
-    margin-top: 2rem;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid white;
+.precio-filter {
+    align-items: center;
+    width: 90%;
+    display: flex
+;
+    flex-direction: column;
+
     padding-bottom: 3rem;
 }
-.precio h3 {
-    margin-bottom: 2rem;
 
+.precio-contenedor{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
 }
-.precio-contenedor {
+
+.precio-filter h3 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.precio-filter-contenedor {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
 }
 
-.precio input {
+.precio-filter input {
     margin: 5px;
     border-radius: 10px;
-    text-align: center;    
+    text-align: center;
     width: 40%;
     height: 3rem;
     font-size: 1.5rem;
     color: white;
-    background-color: #07954A;
-    box-shadow: 0px 0px 5px 1px;
-    border: 3px solid white;
+    background-color: transparent;
+    border: 2px solid white;
 }
 
-.ubicacion{
-  margin: 15px 15px 2rem 15px;  
-  
+.ubicacion {
+    width: 70%;
+    flex-direction: column;
+    display: flex
+;
+    align-items: center;
 }
 
-.ubicacion h3 {
-    margin: 20px;
-}
 
 .ubicacion input {
     margin: 10px;
@@ -80,9 +101,8 @@
     padding: 10px;
     width: 90%;
     color: white;
-    background-color: #07954A;
+    background-color: transparent;
     text-align: left;
-    box-shadow: 0px 0px 5px 2px;
     border: 3px solid white;
 }
 
@@ -90,91 +110,94 @@
 .disponibilidad {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
-.disponibilidad input{
-    background-color: #07954A;
+
+.disponibilidad input {
+    background-color: transparent;
     width: max-content;
     padding: 5px;
     border-radius: 10px;
     font-size: 2rem;
-    
+
 }
 
-.a-disponibilidad{
+.a-disponibilidad {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     margin: 2rem;
 }
+
 .a-disponibilidad p {
     font-size: 1.5rem;
 
 }
 
 .a-disponibilidad input {
-    width: 8rem;
-    height: 3rem;
-    padding: 5px;    
+    width: 5rem;
+    height: 2rem;
+    padding: 5px;
     text-align: center;
-    box-shadow: 0px 0px 5px 2px;
     border: 3px solid white;
-    
+
+}
+
+.ubicacion>h3{
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .b-disponibilidad {
     display: flex;
     justify-content: space-evenly;
-    
+    gap: 1rem;
+    align-items: center;
+
 }
 
 .b-disponibilidad p {
     margin-bottom: 1rem;
 }
 
-.b-disponibilidad  input {
-    width: 5rem;
-    height: 3rem;
+.b-disponibilidad input {
+    width: 2rem;
+    height: 2rem;
     border-radius: 5px;
     text-align: center;
-    box-shadow: 0px 0px 5px 2px;
-    border: 3px solid white;
+  border: 3px solid white;
 }
 
 
 
 
-.tipoCancha {
+
+
+.contenedorTipoCancha {
     display: flex;
-    flex-direction: column;
+    gap: 1rem;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    margin: 2rem;
-    
-}
-
-.contenedorTipoCancha{
-    display: flex;
-    width: 100%;
-
+    margin-top: 1rem;
 }
 
 
-.tipoCancha div {
-    margin: 13px;
-}
 
 .tipoCancha div p {
     font-size: 1.2rem;
 }
 
 .servicios {
-  width: 100%;
-  margin: 2rem 0px 2rem 0px;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .servicios h3 {
-text-align: left;
-padding: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
 }
 
 .servicios-contenedor {
@@ -183,78 +206,233 @@ padding: 1rem;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    gap: 1rem;
 }
+
+/* Ocultar el checkbox original */
+.servicios-contenedor input[type="checkbox"] {
+    display: none;
+  }
+  
+  /* Estilo del checkbox personalizado */
+  .servicios-contenedor input[type="checkbox"] + label::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-radius: 50%; /* Hacerlo redondo */
+    margin-right: 8px;
+    vertical-align: middle;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  /* Cuando el checkbox está marcado */
+  .servicios-contenedor input[type="checkbox"]:checked + label::before {
+    background-color: #07954A; /* Fondo verde */
+    border-color: #07954A; /* Borde verde */
+  }
+  
+  /* Estilo del texto del label */
+  .servicios-contenedor label {
+    cursor: pointer;
+    font-size: 16px;
+    color: #e7e7e7;
+  }
+  
 
 .servicios input {
-    width: 8rem;    
     border-radius: 10px;
     text-align: center;
-    margin: 15px;
+    color: white;
+    
+}
+.btn-arrive{
+    width: auto;
+    border: none;
+    height: 3rem;
+    padding: 0 1rem 0 1rem ;
     background-color: #07954A;
-    color: white;   
-    font-size: 1.25rem;
-    box-shadow: 0px 0px 5px 2px;
-    border: 3px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
 }
 
-.cardGps button {
-    width: 9rem;
-    height: 3rem;
-    margin: 2rem;
-    background-color: #07954A;
+.empresas{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 70%;
+    align-items: center;
+    margin-bottom: 4rem;
+    
+}
+
+.lista-empresas{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    align-items: center;
+    
+}
+
+
+.search {
+    width: auto;
+    height: auto;
     font-size: 2rem;
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px 2px rgb(0, 110, 0);
-    border: 3px solid white;
+    background-color: transparent;
+    border-radius: 50%;
+    border-style: none;
+}
+
+.search>img {
+    width: 2rem;
+
 }
 
 input::placeholder {
-    color: white;    
+    color: white;
     width: 100%;
     height: 100%;
 }
 
-.filtros{
-    box-shadow: 0px 0px 5px 2px;
-    border: 3px solid white;
+.filtros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 1rem auto;
-    color: white;
     border-radius: 5px;
-    width: max-content;
-    background-color: #07954A;     
-    padding: 10px;       
-}
+    gap: 0.5rem;
+
+} 
+
+/* .css-13cymwt-control{
+    width: 3rem;
+} */
 
 
-
-.filtro{
-    height: 10rem;      
+.filtro {
+    height: 10rem;
     background-color: #07954A;
-    border: 1px solid #07954A;   
+    border: 1px solid #07954A;
     font-size: 1rem;
-    outline: none;   
+    outline: none;
 }
 
-.filtros option{
+.filtros option {
     color: white;
-    margin: 10px;   
-    width: 100%;    
+    margin: 10px;
+    width: 100%;
 }
 
 /* Estilo para el dropdown */
 .dropdown-filtro {
-    width: 300px; 
+    width: 300px;
     margin: 10px 0;
     color: black;
-    
-  }
-  
-  .titulo-filtro {
+
+}
+
+.titulo-filtro {
     font-size: 2rem;
     font-weight: bold;
-    margin: 10rem 0 4rem 0;
     color: white;
-  }
-  
-  
-  
+}
+
+.return-filter {
+    width: auto;
+    border: none;
+    height: 3rem;
+    background-color: #07954A;
+    display: flex;
+    padding: 0 2rem 0 2rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 7px 6px 10px #07954983;
+    font-size: 1.2rem;
+}
+
+/* Estilo para la sección de tipoCancha */
+.tipoCancha {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.tipoCancha h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Estilo para cada opción */
+.contenedorTipoCancha div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Estilo para los textos */
+.contenedorTipoCancha p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Estilo para los checkboxes (haciendo que parezcan radio buttons) */
+.contenedorTipoCancha input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.contenedorTipoCancha input[type="checkbox"]:checked {
+    background-color: #56c56b;
+    /* Color verde cuando está marcado */
+
+    border-color: #56c56b;
+    /* Asegura que el borde coincida con el color de selección */
+}
+
+
+
+
+.contenedorTipoCancha div:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.tarjeta-empresa{
+    width: 100%;
+    height:auto;
+    border: 5px solid #e7e7e78e;
+    background-color: #073b4c;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.tarjeta-empresa>p{
+    font-size: 1.5rem;
+}

@@ -83,7 +83,6 @@
 }
 
 .form_text {
-    z-index: 100;
     position: absolute;
     top: -2.8rem;
     left: 1rem;
