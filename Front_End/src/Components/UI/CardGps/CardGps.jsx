@@ -210,23 +210,61 @@ const CardGps = () => {
     return resultado;
   };
 
+  // const geocodeFields = async (fields) => {
+  //   const newLocations = await Promise.all(
+  //     fields.map(async (field) => {
+  //       try {
+  //         const response = await axios.get(
+  //           `https://nominatim.openstreetmap.org/search`,
+  //           {
+  //             params: {
+  //               q: field.direccionEmpresa,
+  //               format: "json",
+  //               addressdetails: 1,
+  //               limit: 1,
+  //               countrycodes: "CO",
+  //             },
+  //           }
+  //         );
+  
+  //         if (response.data.length > 0) {
+  //           const location = response.data[0];
+  //           return {
+  //             lat: parseFloat(location.lat),
+  //             lng: parseFloat(location.lon),
+  //             nombre: field.nombreEmpresa,
+  //             direccion: field.direccionEmpresa,
+  //             id_empresa: field.id_empresa,
+  //             fields: field, // Asegúrate de incluir la información del campo
+  //           };
+  //         }
+  //         return null;
+  //       } catch (error) {
+  //         console.error(`Error en la geocodificación: `, error);
+  //         return null;
+  //       }
+  //     })
+  //   );
+  
+  //   const validLocations = newLocations.filter((location) => location !== null);
+  //   setGeocodedFields(validLocations);
+  //   setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
+  //   setFilteredLocations(validLocations);
+  // };
+
   const geocodeFields = async (fields) => {
     const newLocations = await Promise.all(
       fields.map(async (field) => {
         try {
-          const response = await axios.get(
-            `https://nominatim.openstreetmap.org/search`,
-            {
-              params: {
-                q: field.direccionEmpresa,
-                format: "json",
-                addressdetails: 1,
-                limit: 1,
-                countrycodes: "CO",
-              },
-            }
-          );
-  
+          const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+            params: {
+              q: field.direccionEmpresa,
+              format: "json",
+              addressdetails: 1,
+              limit: 1,
+              countrycodes: "CO",
+            },
+          });
           if (response.data.length > 0) {
             const location = response.data[0];
             return {
@@ -235,7 +273,7 @@ const CardGps = () => {
               nombre: field.nombreEmpresa,
               direccion: field.direccionEmpresa,
               id_empresa: field.id_empresa,
-              fields: field, // Asegúrate de incluir la información del campo
+              fields: field,
             };
           }
           return null;
@@ -245,11 +283,13 @@ const CardGps = () => {
         }
       })
     );
-  
     const validLocations = newLocations.filter((location) => location !== null);
+    console.log('Ubicaciones geocodificadas:', validLocations); // Agrega un log para depurar
     setGeocodedFields(validLocations);
-    setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
+    setAllUbic(validLocations);
+    setFilteredLocations(validLocations);
   };
+  
   
 
   // Nueva función para filtrar por precio
