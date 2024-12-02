@@ -1,0 +1,55 @@
+
+
+.contenedor-soporte{
+    
+    background-color: #073B4C;
+    overflow-x: hidden;
+}
+
+.img-soporte{
+    width: 8rem;
+    margin-bottom: 4rem;
+}
+
+.title_soporte {
+    font-size: 2.8rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
+
+
+@media (width > 1000px ) {
+
+    .contenedor-soporte{
+        text-align: center;
+    }
+
+    .soporte-duo {
+        display: flex;
+        gap: 3rem;      
+    }
+
+    .subContenedor-soporte input {
+        width: 90%;
+    }
+
+    .mensaje-soporte{
+        width: 90%;
+    }
+
+   .btn-soporte{
+      margin-left: 50%;
+      width: max-content;
+      padding: 5px;
+   }
+
+   .contenedor-titulo-imagen{
+    margin: 3rem;
+   }
+
+   .img-soporte{
+    width: 25rem;
+    height: 25rem;
+   }
+}

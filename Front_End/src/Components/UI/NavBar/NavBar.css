@@ -7,12 +7,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border-radius: 23px; */
     border-top: 6px solid #e7e7e7;
+    z-index: 1000;
 }
 
-
-ul {
+.navigation > ul {
     width: 100%;
     height: auto;
     display: flex;
@@ -47,11 +46,10 @@ li {
     text-align: center;
     color: #e7e7e7;
     transition: 0.5s;
-    
 }
 
 li.active .icon {
-    transform: translateY(-40px);
+    transform: translateY(-35px);
 }
 
 .text {
@@ -75,8 +73,8 @@ li.active .text {
     top: -50%;
     width: 70px;
     height: 70px;
-    background: #079549 ;
-    border-radius: 50% ;
+    background: #079549;
+    border-radius: 50%;
     border: 6px solid #e7e7e7;
     transition: 0.5s;
 }
@@ -90,10 +88,8 @@ li.active .text {
     height: 20px;
     background-color: transparent;
     border-top-right-radius: 30px;
-    box-shadow: 1px -5px 0 0 #e7e7e7 ;    
-
+    box-shadow: 1px -5px 0 0 #e7e7e7;
 }
-
 
 .indicator::after {
     content: '';
@@ -104,31 +100,55 @@ li.active .text {
     height: 20px;
     background-color: transparent;
     border-top-left-radius: 20px;
-    box-shadow: -1px -5px 0 0 #e7e7e7 ;
-
+    box-shadow: -1px -5px 0 0 #e7e7e7;
 }
 
-li:nth-child(1).active ~ .indicator
-{
-transform: translateX(calc(-5px * 1 ));
+li:nth-child(1).active ~ .indicator {
+    transform: translateX(calc(-5px * 1));
 }
 
-li:nth-child(2).active ~ .indicator
-{
-transform: translateX(calc(64px * 1 ));
+li:nth-child(2).active ~ .indicator {
+    transform: translateX(calc(64px * 1));
 }
 
-li:nth-child(3).active ~ .indicator
-{
-transform: translateX(calc(67px * 2 ));
+li:nth-child(3).active ~ .indicator {
+    transform: translateX(calc(67px * 2));
 }
 
-li:nth-child(4).active ~ .indicator
-{
-transform: translateX(calc(67px * 3 ));
+li:nth-child(4).active ~ .indicator {
+    transform: translateX(calc(67px * 3));
 }
 
-li:nth-child(5).active ~ .indicator
-{
-transform: translateX(calc(68.5px * 4 ));
+li:nth-child(5).active ~ .indicator {
+    transform: translateX(calc(68.5px * 4));
+}
+
+/* Estilos para el popup del nombre */
+.name-popup {
+    position: absolute;
+    top: -40px; /* Posiciona el nombre encima del ícono */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #e7e7e7;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    opacity: 0;
+    animation: fade-in-out 2s ease-in-out forwards;
+    text-align: center;
+}
+
+/* Animación de entrada y salida */
+@keyframes fade-in-out {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }

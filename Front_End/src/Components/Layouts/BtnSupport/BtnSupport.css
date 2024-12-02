@@ -1,0 +1,23 @@
+.btn_soporte{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border-style: none;
+    object-fit: cover;
+    border-radius: 50%;
+    position: fixed;
+    top: 78%;
+    right: 1rem;
+    background-color: transparent;
+    z-index: 1000;
+    background-color: #073b4c ;
+    border: 5px solid #e7e7e78e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.btn_soporte>img{
+    width: 3rem;
+}

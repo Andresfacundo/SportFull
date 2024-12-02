@@ -95,7 +95,7 @@ export const Login = () => {
             )}
           </label>
 
-          <NavLink className={'recover_password'} to="/recover-password">¿Olvidó su contraseña?</NavLink>
+          {/* <NavLink className={'recover_password'} to="/recover-password">¿Olvidó su contraseña?</NavLink> */}
 
           <button type="submit" className='login'>Iniciar Sesión</button>
           <NavLink className={'return'} to='/'>Volver</NavLink>

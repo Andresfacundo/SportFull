@@ -18,7 +18,7 @@
     
 }
 
-main{
+.main-perfilEmpresa{
     width: 100%;
     height: auto;
     display: flex;
@@ -130,7 +130,7 @@ main{
     padding: 0 1.5rem 0 1.5rem;
     display: flex;
     justify-content: center;
-    width: 80%;
+    width: 84%;
 }
   .form_input:disabled  {
     color: #e7e7e7;
