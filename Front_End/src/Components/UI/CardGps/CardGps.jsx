@@ -227,7 +227,6 @@ const CardGps = () => {
     return resultado;
   };
 
-<<<<<<< HEAD
   // const geocodeFields = async (fields) => {
   //   const newLocations = await Promise.all(
   //     fields.map(async (field) => {
@@ -269,8 +268,6 @@ const CardGps = () => {
   //   setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
   //   setFilteredLocations(validLocations);
   // };
-=======
->>>>>>> 4df55284217e57594695c611ae1d523f41df525b
 
 const geocodeFields = async (fields) => {
   // Imprimir cuántas canchas se están procesando
@@ -326,12 +323,6 @@ const geocodeFields = async (fields) => {
   if (validLocations.length > 0) {
     setGeocodedFields(validLocations);
     setAllUbic(validLocations);
-<<<<<<< HEAD
-    setFilteredLocations(validLocations);
-  };
-
-
-=======
     setFilteredLocations(validLocations); // Asegúrate de mostrar las ubicaciones válidas en el mapa
   } else {
     console.warn("No se pudieron geocodificar canchas válidas.");
@@ -340,7 +331,6 @@ const geocodeFields = async (fields) => {
 
 
   
->>>>>>> 4df55284217e57594695c611ae1d523f41df525b
 
   // Nueva función para filtrar por precio
   const filtrarPorPrecio = (canchas, precioMin, precioMax) => {
