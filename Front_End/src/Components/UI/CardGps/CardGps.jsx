@@ -5,6 +5,8 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import L from "leaflet";
+import "leaflet-routing-machine";
+import { Polyline } from "react-leaflet";
 import "./CardGps.css";
 
 // Icono personalizado para Leaflet
@@ -15,6 +17,11 @@ const icon = new L.Icon({
   popupAnchor: [-3, -76],
 });
 
+const currentLocationIcon = new L.Icon({
+  iconUrl: "src/assets/Images/icons/ubi-actual.png", // Cambia a la ruta de tu ícono
+  iconSize: [40, 40], // Tamaño del ícono
+  iconAnchor: [20, 40], // Punto de anclaje
+});
 
 // Componente para centrar el mapa dinámicamente
 const SetViewOnClick = ({ center }) => {
@@ -38,8 +45,13 @@ const CardGps = () => {
   const [filteredLocations, setFilteredLocations] = useState([]);
   const [selectedTiposCancha, setSelectedTiposCancha] = useState([]);
   const [selectedServicios, setSelectedServicios] = useState([]);
-
-
+  const [ruta, setRuta] = useState(null);
+  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
+  const [ubicacionReal, setUbicacionReal] = useState({
+    lat: 4.533889,
+    lng: -75.681389,
+  });
+  const [allCompanies, setAllCompanies] = useState([]);
 
 
   const opcionesFiltros = [
@@ -55,7 +67,11 @@ const CardGps = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUbicacionActual({
+          setUbicacionReal({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setUbicacionActual({ // Mantén el mapa centrado inicialmente en la ubicación real
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
@@ -70,10 +86,9 @@ const CardGps = () => {
     axios
       .get(`http://localhost:8080/admin/find-all`)
       .then((response) => {
-        const dataCompany = response.data; // Toda la data de empresas
-        setAllUbic(dataCompany); // Almacena todas las ubicaciones pero no las muestra aún
-  
-        // Extraer todas las canchas
+        const dataCompany = response.data;
+        setAllCompanies(dataCompany); // Guarda las empresas originales
+        // Continúa con la lógica de extracción y geocodificación
         const allFields = dataCompany.flatMap((empresa) =>
           empresa.fields.map((field) => ({
             ...field,
@@ -82,112 +97,118 @@ const CardGps = () => {
             nombreEmpresa: empresa.nombreEmpresa,
           }))
         );
-  
-        console.log("Todas las canchas:", allFields); // Imprime las canchas
-  
-        geocodeFields(allFields); // Geocodifica, pero no asigna directamente a geocodedFields
+        geocodeFields(allFields); // Llama a la geocodificación
       })
       .catch((error) => {
         console.error("Error al buscar las ubicaciones: ", error);
       });
-  }, []);
-  
-  
 
-  //esta función capturá lo que el usuario escriba en el input 
+  }, []);
+
+  //esta función capturá lo que el usuario escriba en el input
   const handleBusquedaChange = (e) => {
     setBusqueda(e.target.value);
   };
 
-//función de búsqueda de empresa
-const handleBusquedaClick = () => {
-  const ubicacionesFiltradas = aplicarFiltros();
+  //función de búsqueda de empresa
+  const handleBusquedaClick = () => {
+    setRuta(null);
+    setShowCurrentLocation(false); // Asegúrate de ocultar la ubicación actual
+    const ubicacionesFiltradas = aplicarFiltros();
 
-  if (ubicacionesFiltradas.length > 0) {
-    setFilteredLocations(ubicacionesFiltradas); // Actualiza el estado con los resultados
-    setUbicacionActual({
-      lat: ubicacionesFiltradas[0].lat,
-      lng: ubicacionesFiltradas[0].lng,
-    });
-  } else {
-    alert("No se encontró ninguna ubicación con los filtros aplicados.");
-    setFilteredLocations([]); // Deja el mapa vacío si no hay resultados
-  }
-};
+    if (ubicacionesFiltradas.length > 0) {
+      setFilteredLocations(ubicacionesFiltradas);
+      setUbicacionActual({
+        lat: ubicacionesFiltradas[0].lat,
+        lng: ubicacionesFiltradas[0].lng,
+      });
+    } else {
+      alert("No se encontró ninguna ubicación con los filtros aplicados.");
+      setFilteredLocations([]);
+    }
+  };
 
 
   // Manejar cambio en los checkboxes de servicios
   const handleServicioChange = (servicio) => {
-    setSelectedServicios((prevServicios) =>
-      prevServicios.includes(servicio)
-        ? prevServicios.filter((s) => s !== servicio) // Elimina el servicio si ya estaba seleccionado
-        : [...prevServicios, servicio] // Agrega el servicio si no estaba seleccionado
+    setSelectedServicios(
+      (prevServicios) =>
+        prevServicios.includes(servicio)
+          ? prevServicios.filter((s) => s !== servicio) // Elimina el servicio si ya estaba seleccionado
+          : [...prevServicios, servicio] // Agrega el servicio si no estaba seleccionado
     );
   };
 
+  const aplicarFiltros = () => {
+    let resultado = allUbic;
 
-
-const aplicarFiltros = () => {
-  let resultado = allUbic;
-
-  filtrosSeleccionados.forEach((filtro) => {
-    switch (filtro.value) {
-      case "precio":
-        resultado = filtrarPorPrecio(resultado, precioMin, precioMax);
-        break;
-      case "ubicacion":
-        if (busqueda.trim() !== "") {
-          resultado = resultado.filter(
-            (ubicacion) =>
-              ubicacion.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
-              ubicacion.direccion?.toLowerCase().includes(busqueda.toLowerCase())
-          );
-        }
-        break;
-      case "disponibilidad":
-        // Lógica para filtrar por disponibilidad
-        break;
-      case "tipoCancha":
-        // Lógica para filtrar por tipo de cancha
-        if (selectedTiposCancha.length > 0) {
-          resultado = resultado.filter((ubicacion) => {
-            const fields = Array.isArray(ubicacion.fields) ? ubicacion.fields : [ubicacion.fields];
-            return fields.some((field) => selectedTiposCancha.includes(field.tipoCancha));
-          });
-        }
-        break;
-      case "servicios":
-        // Lógica para filtrar por servicios
-        if (selectedServicios.length > 0) {
-          resultado = resultado.filter((ubicacion) => {
-            if (Array.isArray(ubicacion.fields)) {
-              // Revisa cada cancha dentro de la ubicación
-              return ubicacion.fields.some((field) => {
-                const serviciosCancha = field.servicios || [];
+    filtrosSeleccionados.forEach((filtro) => {
+      switch (filtro.value) {
+        case "precio":
+          resultado = filtrarPorPrecio(resultado, precioMin, precioMax);
+          break;
+        case "ubicacion":
+          if (busqueda.trim() !== "") {
+            resultado = resultado.filter(
+              (ubicacion) =>
+                ubicacion.nombre
+                  ?.toLowerCase()
+                  .includes(busqueda.toLowerCase()) ||
+                ubicacion.direccion
+                  ?.toLowerCase()
+                  .includes(busqueda.toLowerCase())
+            );
+          }
+          break;
+        case "disponibilidad":
+          // Lógica para filtrar por disponibilidad
+          break;
+        case "tipoCancha":
+          // Lógica para filtrar por tipo de cancha
+          if (selectedTiposCancha.length > 0) {
+            resultado = resultado.filter((ubicacion) => {
+              const fields = Array.isArray(ubicacion.fields)
+                ? ubicacion.fields
+                : [ubicacion.fields];
+              return fields.some((field) =>
+                selectedTiposCancha.includes(field.tipoCancha)
+              );
+            });
+          }
+          break;
+        case "servicios":
+          // Lógica para filtrar por servicios
+          if (selectedServicios.length > 0) {
+            resultado = resultado.filter((ubicacion) => {
+              if (Array.isArray(ubicacion.fields)) {
+                // Revisa cada cancha dentro de la ubicación
+                return ubicacion.fields.some((field) => {
+                  const serviciosCancha = field.servicios || [];
+                  return selectedServicios.every((servicio) =>
+                    serviciosCancha.includes(servicio)
+                  );
+                });
+              } else if (
+                ubicacion.fields &&
+                typeof ubicacion.fields === "object"
+              ) {
+                // Caso único (fields no es un array)
+                const serviciosCancha = ubicacion.fields.servicios || [];
                 return selectedServicios.every((servicio) =>
                   serviciosCancha.includes(servicio)
                 );
-              });
-            } else if (ubicacion.fields && typeof ubicacion.fields === "object") {
-              // Caso único (fields no es un array)
-              const serviciosCancha = ubicacion.fields.servicios || [];
-              return selectedServicios.every((servicio) =>
-                serviciosCancha.includes(servicio)
-              );
-            }
-            return false;
-          });
-        }
-        break;
-      default:
-        break;
-    }
-  });
+              }
+              return false;
+            });
+          }
+          break;
+        default:
+          break;
+      }
+    });
 
-  return resultado;
-};
-
-
+    return resultado;
+  };
 
   const geocodeFields = async (fields) => {
     const newLocations = await Promise.all(
@@ -205,7 +226,7 @@ const aplicarFiltros = () => {
               },
             }
           );
-
+  
           if (response.data.length > 0) {
             const location = response.data[0];
             return {
@@ -213,8 +234,8 @@ const aplicarFiltros = () => {
               lng: parseFloat(location.lon),
               nombre: field.nombreEmpresa,
               direccion: field.direccionEmpresa,
-              fields: field,
-              servicios: field.servicios,
+              id_empresa: field.id_empresa,
+              fields: field, // Asegúrate de incluir la información del campo
             };
           }
           return null;
@@ -224,9 +245,12 @@ const aplicarFiltros = () => {
         }
       })
     );
-
-    setAllUbic(newLocations.filter((location) => location !== null));
+  
+    const validLocations = newLocations.filter((location) => location !== null);
+    setGeocodedFields(validLocations);
+    setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
   };
+  
 
   // Nueva función para filtrar por precio
   const filtrarPorPrecio = (canchas, precioMin, precioMax) => {
@@ -239,7 +263,7 @@ const aplicarFiltros = () => {
         esArray: Array.isArray(ubicacion.fields),
       }))
     );
-  
+
     return canchas.filter((ubicacion) => {
       if (Array.isArray(ubicacion.fields)) {
         // Caso: fields es un array
@@ -264,49 +288,109 @@ const aplicarFiltros = () => {
 
   //Filtrar por tipo cancha
   const handleTipoCanchaChange = (tipo) => {
-    setSelectedTiposCancha((prevTipos) =>
-      prevTipos.includes(tipo)
-        ? prevTipos.filter((t) => t !== tipo) // Si ya está, lo elimina
-        : [...prevTipos, tipo] // Si no está, lo agrega
+    setSelectedTiposCancha(
+      (prevTipos) =>
+        prevTipos.includes(tipo)
+          ? prevTipos.filter((t) => t !== tipo) // Si ya está, lo elimina
+          : [...prevTipos, tipo] // Si no está, lo agrega
     );
   };
-  
-  
-  
+
   const handleFilterChange = (selectedOptions) => {
     setFiltrosSeleccionados(selectedOptions || []);
   };
+
+  //función para calcular ruta
+  const calcularRuta = async (ubicacionDestino) => {
+    const { lat: origenLat, lng: origenLng } = ubicacionReal;
+    const { lat: destinoLat, lng: destinoLng } = ubicacionDestino;
+
+    try {
+      const response = await axios.get(
+        `https://router.project-osrm.org/route/v1/driving/${origenLng},${origenLat};${destinoLng},${destinoLat}`,
+        {
+          params: {
+            overview: "full",
+            geometries: "geojson",
+          },
+        }
+      );
+
+      const data = response.data;
+      if (data.routes.length > 0) {
+        setRuta(data.routes[0].geometry);
+        setFilteredLocations([
+          {
+            lat: destinoLat,
+            lng: destinoLng,
+            nombre: "Destino",
+          },
+        ]);
+        setShowCurrentLocation(true); // Muestra la ubicación actual solo al calcular la ruta
+        setUbicacionActual({
+          lat: destinoLat,
+          lng: destinoLng,
+        });
+      } else {
+        alert("No se encontró una ruta.");
+      }
+    } catch (error) {
+      console.error("Error al calcular la ruta:", error);
+      alert("Hubo un problema al calcular la ruta.");
+    }
+  };
+
+
 
   return (
     <div className="cardGps">
       {/* Mapa */}
       <section className="mapaGps">
-<MapContainer
-  center={ubicacionActual}
-  zoom={14}
-  scrollWheelZoom={true}
-  style={{ height: "400px", width: "100%" }}
->
-  <TileLayer
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  />
-  <SetViewOnClick center={ubicacionActual} />
-  {filteredLocations.length > 0 ? (
-    filteredLocations.map((location, index) => (
-      <Marker
-        key={index}
-        position={[location.lat, location.lng]}
-        icon={icon}
-      >
-        <Popup>{location.nombre}</Popup>
-      </Marker>
-    ))
-  ) : (
-    <p>No hay ubicaciones disponibles para mostrar.</p>
-  )}
-</MapContainer>
+        <MapContainer
+          center={ubicacionActual}
+          zoom={14}
+          scrollWheelZoom={true}
+          style={{ height: "400px", width: "100%" }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <SetViewOnClick center={ubicacionActual} />
 
+          {/* Marcador para la ubicación actual */}
+          {showCurrentLocation && (
+            <Marker
+              position={[ubicacionReal.lat, ubicacionReal.lng]}
+              icon={currentLocationIcon}
+            >
+              <Popup>Tu ubicación actual</Popup>
+            </Marker>
+          )}
+
+          {/* Mostrar ruta si existe */}
+          {ruta && (
+            <Polyline
+              positions={ruta.coordinates.map(([lng, lat]) => [lat, lng])} // Convierte las coordenadas
+              color="blue"
+            />
+          )}
+
+          {/* Otros marcadores */}
+          {filteredLocations.length > 0 ? (
+            filteredLocations.map((location, index) => (
+              <Marker
+                key={index}
+                position={[location.lat, location.lng]}
+                icon={icon}
+              >
+                <Popup>{location.nombre}</Popup>
+              </Marker>
+            ))
+          ) : (
+            <p>No hay ubicaciones disponibles para mostrar.</p>
+          )}
+        </MapContainer>
       </section>
 
       {/* Filtros */}
@@ -327,25 +411,29 @@ const aplicarFiltros = () => {
         <section className="precio">
           <h3>Precio</h3>
           <div className="precio-contenedor">
-          <input
-      type="number"
-      placeholder="min"
-      value={precioMin || ""}
-      onChange={(e) => {
-        const value = e.target.value ? parseFloat(e.target.value) : null;
-        setPrecioMin(value >= 0 ? value : null); // Validar valores positivos
-      }}
-    />
+            <input
+              type="number"
+              placeholder="min"
+              value={precioMin || ""}
+              onChange={(e) => {
+                const value = e.target.value
+                  ? parseFloat(e.target.value)
+                  : null;
+                setPrecioMin(value >= 0 ? value : null); // Validar valores positivos
+              }}
+            />
             <p> - </p>
             <input
-      type="number"
-      placeholder="max"
-      value={precioMax || ""}
-      onChange={(e) => {
-        const value = e.target.value ? parseFloat(e.target.value) : null;
-        setPrecioMax(value >= 0 ? value : null); // Validar valores positivos
-      }}
-    />
+              type="number"
+              placeholder="max"
+              value={precioMax || ""}
+              onChange={(e) => {
+                const value = e.target.value
+                  ? parseFloat(e.target.value)
+                  : null;
+                setPrecioMax(value >= 0 ? value : null); // Validar valores positivos
+              }}
+            />
           </div>
         </section>
       )}
@@ -353,61 +441,67 @@ const aplicarFiltros = () => {
       {filtrosSeleccionados.some((filtro) => filtro.value === "ubicacion") && (
         <section className="ubicacion">
           <h3>Ubicación</h3>
-          <input type="text" placeholder="Dirección" value={busqueda} onChange={handleBusquedaChange} />
+          <input
+            type="text"
+            placeholder="Dirección"
+            value={busqueda}
+            onChange={handleBusquedaChange}
+          />
         </section>
       )}
 
-      {filtrosSeleccionados.some((filtro) => filtro.value === "disponibilidad") && (
-        <section className="disponibilidad">
-          <h3>Disponibilidad</h3>
-          <div className="a-disponibilidad">
-            <p>Hora</p>
-            <input type="text" />
-          </div>
-          <div className="b-disponibilidad">
-            <div>
-              <p>Día</p>
-              <input type="number" />
+      {filtrosSeleccionados.some(
+        (filtro) => filtro.value === "disponibilidad"
+      ) && (
+          <section className="disponibilidad">
+            <h3>Disponibilidad</h3>
+            <div className="a-disponibilidad">
+              <p>Hora</p>
+              <input type="text" />
             </div>
-            <div>
-              <p>Mes</p>
-              <input type="number" />
+            <div className="b-disponibilidad">
+              <div>
+                <p>Día</p>
+                <input type="number" />
+              </div>
+              <div>
+                <p>Mes</p>
+                <input type="number" />
+              </div>
+              <div>
+                <p>Año</p>
+                <input type="number" />
+              </div>
             </div>
-            <div>
-              <p>Año</p>
-              <input type="number" />
-            </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
 
       {filtrosSeleccionados.some((filtro) => filtro.value === "tipoCancha") && (
         <section className="tipoCancha">
-        <h3>Tipo de cancha</h3>
-<div className="contenedorTipoCancha">
-  <div>
-    <p>Fútbol 5</p>
-    <input
-      type="checkbox"
-      onChange={() => handleTipoCanchaChange("Fútbol 5")}
-    />
-  </div>
-  <div>
-    <p>Fútbol 8</p>
-    <input
-      type="checkbox"
-      onChange={() => handleTipoCanchaChange("Fútbol 8")}
-    />
-  </div>
-  <div>
-    <p>Fútbol 11</p>
-    <input
-      type="checkbox"
-      onChange={() => handleTipoCanchaChange("Fútbol 11")}
-    />
-  </div>
-</div>
-
+          <h3>Tipo de cancha</h3>
+          <div className="contenedorTipoCancha">
+            <div>
+              <p>Fútbol 5</p>
+              <input
+                type="checkbox"
+                onChange={() => handleTipoCanchaChange("Fútbol 5")}
+              />
+            </div>
+            <div>
+              <p>Fútbol 8</p>
+              <input
+                type="checkbox"
+                onChange={() => handleTipoCanchaChange("Fútbol 8")}
+              />
+            </div>
+            <div>
+              <p>Fútbol 11</p>
+              <input
+                type="checkbox"
+                onChange={() => handleTipoCanchaChange("Fútbol 11")}
+              />
+            </div>
+          </div>
         </section>
       )}
 
@@ -440,7 +534,43 @@ const aplicarFiltros = () => {
         </section>
       )}
 
-      <button onClick={handleBusquedaClick}>Buscar</button>
+      <button className="search" onClick={handleBusquedaClick}>
+        Buscar
+      </button>
+
+      {/* Tarjetas de empresas */}
+      <section className="empresas">
+        <h3>Empresas registradas</h3>
+        <div className="lista-empresas">
+          {allCompanies.length > 0 ? (
+            allCompanies.map((empresa, index) => (
+              <div key={index} className="tarjeta-empresa">
+                <p>
+                  <strong>Nombre:</strong> {empresa.nombreEmpresa}
+                </p>
+                <button
+                  className="btn-arrive"
+                  onClick={() => {
+                    const location = geocodedFields.find(
+                      (field) => field.id_empresa === empresa.id
+                    );
+                    if (location) {
+                      calcularRuta({ lat: location.lat, lng: location.lng });
+                    } else {
+                      alert("No se encontraron coordenadas para esta empresa.");
+                    }
+                  }}
+                >
+                  Cómo llegar
+                </button>
+
+              </div>
+            ))
+          ) : (
+            <p>No hay empresas registradas.</p>
+          )}
+        </div>
+      </section>
     </div>
   );
 };
