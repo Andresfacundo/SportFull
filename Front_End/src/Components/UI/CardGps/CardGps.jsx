@@ -210,53 +210,23 @@ const CardGps = () => {
     return resultado;
   };
 
-  // const geocodeFields = async (fields) => {
-  //   const newLocations = await Promise.all(
-  //     fields.map(async (field) => {
-  //       try {
-  //         const response = await axios.get(
-  //           `https://nominatim.openstreetmap.org/search`,
-  //           {
-  //             params: {
-  //               q: field.direccionEmpresa,
-  //               format: "json",
-  //               addressdetails: 1,
-  //               limit: 1,
-  //               countrycodes: "CO",
-  //             },
-  //           }
-  //         );
-  
-  //         if (response.data.length > 0) {
-  //           const location = response.data[0];
-  //           return {
-  //             lat: parseFloat(location.lat),
-  //             lng: parseFloat(location.lon),
-  //             nombre: field.nombreEmpresa,
-  //             direccion: field.direccionEmpresa,
-  //             id_empresa: field.id_empresa,
-  //             fields: field, // Asegúrate de incluir la información del campo
-  //           };
-  //         }
-  //         return null;
-  //       } catch (error) {
-  //         console.error(`Error en la geocodificación: `, error);
-  //         return null;
-  //       }
-  //     })
-  //   );
-  
-  //   const validLocations = newLocations.filter((location) => location !== null);
-  //   setGeocodedFields(validLocations);
-  //   setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
-  //   setFilteredLocations(validLocations);
-  // };
 
-  const geocodeFields = async (fields) => {
-    const newLocations = await Promise.all(
-      fields.map(async (field) => {
-        try {
-          const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+const geocodeFields = async (fields) => {
+  // Imprimir cuántas canchas se están procesando
+  console.log(`Procesando ${fields.length} canchas para geocodificación.`);
+  
+  const newLocations = await Promise.all(
+    fields.map(async (field) => {
+      try {
+        // Verificar si la dirección está disponible antes de hacer la solicitud
+        if (!field.direccionEmpresa) {
+          console.error(`Dirección faltante para la cancha: ${field.nombreEmpresa}`);
+          return null; // Ignorar canchas sin dirección
+        }
+
+        const response = await axios.get(
+          `https://nominatim.openstreetmap.org/search`,
+          {
             params: {
               q: field.direccionEmpresa,
               format: "json",
@@ -264,32 +234,44 @@ const CardGps = () => {
               limit: 1,
               countrycodes: "CO",
             },
-          });
-          if (response.data.length > 0) {
-            const location = response.data[0];
-            return {
-              lat: parseFloat(location.lat),
-              lng: parseFloat(location.lon),
-              nombre: field.nombreEmpresa,
-              direccion: field.direccionEmpresa,
-              id_empresa: field.id_empresa,
-              fields: field,
-            };
           }
-          return null;
-        } catch (error) {
-          console.error(`Error en la geocodificación: `, error);
-          return null;
+        );
+
+        if (response.data.length > 0) {
+          const location = response.data[0];
+          return {
+            lat: parseFloat(location.lat),
+            lng: parseFloat(location.lon),
+            nombre: field.nombreEmpresa,
+            direccion: field.direccionEmpresa,
+            id_empresa: field.id_empresa,
+            fields: field, // Información del campo
+          };
+        } else {
+          console.warn(`No se encontró geolocalización para la dirección: ${field.direccionEmpresa}`);
+          return null; // No se encontró ubicación
         }
-      })
-    );
-    const validLocations = newLocations.filter((location) => location !== null);
-    console.log('Ubicaciones geocodificadas:', validLocations); // Agrega un log para depurar
+      } catch (error) {
+        console.error(`Error en la geocodificación de ${field.nombreEmpresa}: `, error);
+        return null; // Si ocurre un error, no devolver nada
+      }
+    })
+  );
+
+  // Filtrar solo ubicaciones válidas
+  const validLocations = newLocations.filter((location) => location !== null);
+
+  // Actualizar el estado con las ubicaciones geocodificadas válidas
+  if (validLocations.length > 0) {
     setGeocodedFields(validLocations);
     setAllUbic(validLocations);
-    setFilteredLocations(validLocations);
-  };
-  
+    setFilteredLocations(validLocations); // Asegúrate de mostrar las ubicaciones válidas en el mapa
+  } else {
+    console.warn("No se pudieron geocodificar canchas válidas.");
+  }
+};
+
+
   
 
   // Nueva función para filtrar por precio
