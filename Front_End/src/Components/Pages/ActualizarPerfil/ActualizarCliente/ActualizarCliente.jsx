@@ -49,9 +49,12 @@ export const ActualizarCliente = () => {
 
     //obtener datos del usuario
     const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
-
+    const client = user.clientModels;
     // Obtén el ID del usuario desde localStorage
     const userId = user.id;
+
+    //obtener imgPerfil para guardar la misma
+    const imgPerfil = user.ClientModels?.imgPerfil;
 
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
@@ -74,6 +77,7 @@ export const ActualizarCliente = () => {
           nombres,  // Actualizar el campo 'nombres' con los nuevos datos
           apellidos, // Actualizar el campo 'apellidos'    // Actualizar el campo 'email'
           clientModels: {
+            ...client,
             telefono,
             cc
           }
@@ -129,12 +133,22 @@ export const ActualizarCliente = () => {
         console.error(error);
         setPasswordError('Ocurrió un error al validar la contraseña');
       });
+
+
   };
+
+  const handleCloseModal = () => {
+    setModalPassword(''); // Limpia la contraseña
+    setPasswordError(''); // Limpia el mensaje de error
+    setShowPassword(false); // Oculta la contraseña
+    setShowModal(false); // Cierra el modal
+  };
+
   return (
     <div style={backgroundStyle} className='container'>
       <Header />
 
-      <main>
+      <main >
 
         <h2 className='tittle_update'>Actualizar Perfil</h2>
         <form onSubmit={saveUser} className='form-update'>
@@ -215,7 +229,7 @@ export const ActualizarCliente = () => {
               }
             }}
           >
-            {isEditable ? 'Guardar Cambios' : 'Actualizar Perfil'}
+            {isEditable ? 'Guardar' : 'Actualizar'}
           </button>
 
           <NavLink className='return' to='/HomeClient'>Volver</NavLink>
@@ -225,36 +239,48 @@ export const ActualizarCliente = () => {
         {/* Modal para ingresar la contraseña */}
         {showModal && (
           <ModalExitoso>
-            <h3 className='tittle_modal'>Validar contraseña</h3>
-            <div className='password_container'>
-              {passwordError && <p className='error_message'>{passwordError}</p>}
-              <input
-                className={`input_password ${passwordError ? 'input_error' : ''}`}
-                type={showPassword ? 'text' : 'password'}
-                placeholder='Ingresa tu contraseña'
-                value={modalPassword || ''}
-                onChange={(e) => setModalPassword(e.target.value)}
-              />
-              <div className='container_button'>
-                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
-                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
+            <h3 className="tittle_modal">Validar contraseña</h3>
+            <div className="password_container">
+              {passwordError && <p className="error_message">{passwordError}</p>}
+              <div className='container-input-validate'>
+
+              <div className="input_password_wrapper">
+                <input
+                  className="input_password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Ingresa tu contraseña"
+                  value={modalPassword || ""}
+                  onChange={(e) => setModalPassword(e.target.value)}
+                />
               </div>
-              {modalPassword && (
-                <span
-                  className='password-toggle-icon'
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-                </span>
-              )}
+              <div className="toggle_password_visibility">
+                <label>
+                  <input
+                    className="checkbox_custom"
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                  />
+                  <span>Mostrar contraseña</span>
+                </label>
+              </div>
+              </div>
+              <div className="container_button">
+                <button className="confirm" onClick={validatePasswordAndUpdate}>
+                  Confirmar
+                </button>
+                <button className="cancel" onClick={handleCloseModal}>
+                  Cancelar
+                </button>
+              </div>
             </div>
           </ModalExitoso>
         )}
 
       </main>
+
       <footer>
-        <NavBar/>
+        <NavBar />
       </footer>
     </div>
   )

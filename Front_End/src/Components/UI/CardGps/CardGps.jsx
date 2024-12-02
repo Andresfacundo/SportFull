@@ -1,10 +1,14 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
-import Select from "react-select";
+import Select from 'react-select';
+import imgSearch from '../../../assets/Images/icons/lupa.png';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import L from "leaflet";
+import fondo_long from '../../../../src/assets/Images/fondos/fondo_long.png';
+import { NavLink, useNavigate } from 'react-router-dom';
+
 import "leaflet-routing-machine";
 import { Polyline } from "react-leaflet";
 import "./CardGps.css";
@@ -31,6 +35,19 @@ const SetViewOnClick = ({ center }) => {
 };
 
 const CardGps = () => {
+  const backgroundStyle = {
+    backgroundImage: `url(${fondo_long})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    height: 'auto',
+    width: '100%',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2rem '
+
+  };
+
   const [busqueda, setBusqueda] = useState("");
   const [filtrosSeleccionados, setFiltrosSeleccionados] = useState([]);
   const [ubicacionActual, setUbicacionActual] = useState({
@@ -226,7 +243,7 @@ const CardGps = () => {
   //             },
   //           }
   //         );
-  
+
   //         if (response.data.length > 0) {
   //           const location = response.data[0];
   //           return {
@@ -245,7 +262,7 @@ const CardGps = () => {
   //       }
   //     })
   //   );
-  
+
   //   const validLocations = newLocations.filter((location) => location !== null);
   //   setGeocodedFields(validLocations);
   //   setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
@@ -289,8 +306,8 @@ const CardGps = () => {
     setAllUbic(validLocations);
     setFilteredLocations(validLocations);
   };
-  
-  
+
+
 
   // Nueva función para filtrar por precio
   const filtrarPorPrecio = (canchas, precioMin, precioMax) => {
@@ -383,7 +400,7 @@ const CardGps = () => {
 
 
   return (
-    <div className="cardGps">
+    <div style={backgroundStyle} className='container'  >
       {/* Mapa */}
       <section className="mapaGps">
         <MapContainer
@@ -444,11 +461,14 @@ const CardGps = () => {
           className="dropdown-filtro"
           placeholder="Selecciona filtros"
         />
+        <button className="search" onClick={handleBusquedaClick}>
+          <img src={imgSearch} alt="" />
+        </button>
       </div>
 
       {/* Secciones dinámicas basadas en filtros */}
       {filtrosSeleccionados.some((filtro) => filtro.value === "precio") && (
-        <section className="precio">
+        <section className="precio-filter">
           <h3>Precio</h3>
           <div className="precio-contenedor">
             <input
@@ -480,17 +500,17 @@ const CardGps = () => {
 
       {filtrosSeleccionados.some((filtro) => filtro.value === "ubicacion") && (
         <section className="ubicacion">
-          <h3>Ubicación</h3>
+          <h3>Nombre-Dirección</h3>
           <input
             type="text"
-            placeholder="Dirección"
+            placeholder="Nombre-Dirección"
             value={busqueda}
             onChange={handleBusquedaChange}
           />
         </section>
       )}
 
-      {filtrosSeleccionados.some(
+      {/* {filtrosSeleccionados.some(
         (filtro) => filtro.value === "disponibilidad"
       ) && (
           <section className="disponibilidad">
@@ -514,7 +534,7 @@ const CardGps = () => {
               </div>
             </div>
           </section>
-        )}
+        )} */}
 
       {filtrosSeleccionados.some((filtro) => filtro.value === "tipoCancha") && (
         <section className="tipoCancha">
@@ -524,22 +544,28 @@ const CardGps = () => {
               <p>Fútbol 5</p>
               <input
                 type="checkbox"
+                id="futbol5"
                 onChange={() => handleTipoCanchaChange("Fútbol 5")}
               />
+              <div className="custom-checkbox"></div> {/* Checkbox personalizado */}
             </div>
             <div>
               <p>Fútbol 8</p>
               <input
                 type="checkbox"
+                id="futbol8"
                 onChange={() => handleTipoCanchaChange("Fútbol 8")}
               />
+              <div className="custom-checkbox"></div> {/* Checkbox personalizado */}
             </div>
             <div>
               <p>Fútbol 11</p>
               <input
                 type="checkbox"
+                id="futbol11"
                 onChange={() => handleTipoCanchaChange("Fútbol 11")}
               />
+              <div className="custom-checkbox"></div> {/* Checkbox personalizado */}
             </div>
           </div>
         </section>
@@ -574,19 +600,18 @@ const CardGps = () => {
         </section>
       )}
 
-      <button className="search" onClick={handleBusquedaClick}>
-        Buscar
-      </button>
+
 
       {/* Tarjetas de empresas */}
       <section className="empresas">
-        <h3>Empresas registradas</h3>
+        <h3>Resultado busqueda </h3>
         <div className="lista-empresas">
           {allCompanies.length > 0 ? (
             allCompanies.map((empresa, index) => (
               <div key={index} className="tarjeta-empresa">
                 <p>
-                  <strong>Nombre:</strong> {empresa.nombreEmpresa}
+                  {/* <strong>Empresa:</strong>  */}
+                  {empresa.nombreEmpresa}
                 </p>
                 <button
                   className="btn-arrive"
@@ -611,6 +636,10 @@ const CardGps = () => {
           )}
         </div>
       </section>
+
+      {/* <NavLink className="return-filter" to='/HomeClient'>
+          Volver
+        </NavLink> */}
     </div>
   );
 };

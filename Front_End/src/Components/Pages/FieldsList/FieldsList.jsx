@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import './BuscarCanchas.css';
-import { Header } from '../../../Components/Layouts/Header/Header';
+import './FieldsList.css';
+import { Header } from '../../Layouts/Header/Header';
 import fondo_long from '../../../assets/Images/fondos/fondo_long.png';
 import { SmallCard } from '../../UI/SmallCard/SmallCard';
 import ClienteService from '../../../services/ClienteService';
 import NavBar from '../../UI/NavBar/NavBar';
 import { BigCard } from '../../UI/BigCard/BigCard'; // Importar el modal
 
-export const BuscarCanchas = () => {
+export const FieldsList = () => {
   const backgroundStyle = {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',

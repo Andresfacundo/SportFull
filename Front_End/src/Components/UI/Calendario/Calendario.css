@@ -59,12 +59,12 @@
   padding: 1rem;
 }
 
-ul {
+/* ul {
   display: flex;
   flex-direction: column;
   border: 3px solid #e7e7e7;
   padding: 1rem;
-}
+} */
 
 li {
   list-style: none;
@@ -86,7 +86,7 @@ li button {
 
 /* Contenedor del calendario */
 .react-calendar {
-  background-color: #079549a1;
+  background-color: #07954969;
   /* Fondo principal */
   color: #e7e7e7;
   border: none;
@@ -185,6 +185,11 @@ li button {
 .react-calendar__decade-view__years button:focus,
 .react-calendar__year-view__months button:focus {
   outline: none;
+}
+
+
+.react-calendar__tile:disabled {
+  background-color: #07954900;
 }
 
 .container_horas{

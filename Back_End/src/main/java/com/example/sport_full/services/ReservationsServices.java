@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -100,7 +102,7 @@ public class ReservationsServices {
         Executors.newSingleThreadScheduledExecutor().schedule(() -> {
             // Verificar el estado de la reserva y actualizar si sigue en PENDIENTE
             actualizarEstadoSiNoConfirmada(reservation);
-        }, 60, TimeUnit.SECONDS);
+        }, 240, TimeUnit.SECONDS);
     }
 
     // Método que cambia el estado a CANCELADA si la reserva sigue en PENDIENTE después de 30 segundos
@@ -115,6 +117,7 @@ public class ReservationsServices {
             }
         }
     }
+
     public List<ReservationsModels> getAllReservations() {
         return reservationsRepository.findAll();
     }
@@ -129,6 +132,35 @@ public class ReservationsServices {
 
     public List<ReservationsModels> getReservationsByAdmin(AdminModels admin) {
         return reservationsRepository.findByFieldModels_AdminModels(admin);
+    }
+
+    // Método para obtener el valor total de reservas de una empresa, filtrado por estado y/o cancha
+    public Double getTotalReservationsValue(Long empresaId, ReservationsModels.estadoReserva estado, Long canchaId,LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin) {
+
+        if (canchaId != null  && !reservationsRepository.existsByAdminModels_IdAndFieldModels_Id(empresaId, canchaId)){
+            throw new IllegalArgumentException("La cancha no pertenece a la empresa");
+        }
+
+        List<ReservationsModels> reservations;
+        // Filtrar según los parámetros que no sean null
+        if (estado != null && canchaId != null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndFieldModels_IdAndEstadoReserva(empresaId, canchaId, estado);
+        } else if (estado != null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndEstadoReserva(empresaId, estado);
+        } else if (canchaId != null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndFieldModels_Id(empresaId, canchaId);
+        } else if (fechaHoraInicio !=null && fechaHoraFin !=null) {
+            reservations = reservationsRepository.findByAdminModels_IdAndFechaHoraInicioBetween(empresaId,fechaHoraInicio, fechaHoraFin);
+
+        } else {
+            reservations = reservationsRepository.findByAdminModels_Id(empresaId);
+
+        }
+
+        // Calcular el valor total sumando el costo de cada reserva filtrada
+        return reservations.stream()
+                .mapToDouble(ReservationsModels::getCostoTotal)
+                .sum();
     }
 
     public ReservationsModels updateReservation(Long reservationId, ReservationsModels updatedReservation) {
@@ -193,7 +225,6 @@ public class ReservationsServices {
                 .collect(Collectors.toList());
     }
 
-
     private List<String> generarHorarios(LocalTime inicio, LocalTime fin) {
         List<String> horarios = new ArrayList<>();
         LocalTime actual = inicio;
@@ -209,5 +240,41 @@ public class ReservationsServices {
 
     private String formatHorario(LocalTime inicio, LocalTime fin) {
         return String.format("%02d:00-%02d:00", inicio.getHour(), fin.getHour());
+    }
+
+    public ReservationsModels partialUpdateReservation(Long reservationId, Map<String, Object> updates) {
+        ReservationsModels reservation = reservationsRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+
+        // Calcula la duración original
+        Duration originalDuration = Duration.between(reservation.getFechaHoraInicio(), reservation.getFechaHoraFin());
+
+        // Variables para los nuevos valores (si se proporcionan)
+        LocalDateTime newFechaHoraInicio = reservation.getFechaHoraInicio();
+        LocalDateTime newFechaHoraFin = reservation.getFechaHoraFin();
+
+        // Validar y actualizar fechaHoraInicio
+        if (updates.containsKey("fechaHoraInicio")) {
+            String fechaHoraInicioStr = (String) updates.get("fechaHoraInicio");
+            newFechaHoraInicio = LocalDateTime.parse(fechaHoraInicioStr); // Convierte la cadena a LocalDateTime
+        }
+
+        // Validar y actualizar fechaHoraFin
+        if (updates.containsKey("fechaHoraFin")) {
+            String fechaHoraFinStr = (String) updates.get("fechaHoraFin");
+            newFechaHoraFin = LocalDateTime.parse(fechaHoraFinStr); // Convierte la cadena a LocalDateTime
+        }
+
+        // Validar que la nueva duración sea igual a la original
+        Duration newDuration = Duration.between(newFechaHoraInicio, newFechaHoraFin);
+        if (!newDuration.equals(originalDuration)) {
+            throw new IllegalArgumentException("La duración de la reprogramación debe ser igual a la duración original");
+        }
+
+        // Si la validación pasa, actualiza la reserva
+        reservation.setFechaHoraInicio(newFechaHoraInicio);
+        reservation.setFechaHoraFin(newFechaHoraFin);
+
+        return reservationsRepository.save(reservation);
     }
 }

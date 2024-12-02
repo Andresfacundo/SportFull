@@ -1,26 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 const NavBar = () => {
- 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [visibleIndex, setVisibleIndex] = useState(null); // Índice del nombre visible temporalmente
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  
-  const handleClick = (index) => {
-    setActiveIndex(index);
-  };
-
-  
+  // Define las rutas, íconos y nombres personalizados
   const items = [
-    { name: 'Home', icon: 'home-outline' },
-    { name: 'Profile', icon: 'person-outline' },
-    { name: 'Canchas', icon: 'football-outline' },
-    { name: 'Messages', icon: 'send-outline' },
-    { name: 'Reservas', icon: 'eye-outline' },
+    { icon: 'home-outline', route: '/HomeClient', name: 'Inicio' },
+    { icon: 'person-outline', route: '/ActualizarCliente', name: 'Perfil' },
+    { icon: 'football-outline', route: '/SearchFields', name: 'Canchas' },
+    { icon: 'send-outline', route: '/Soporte', name: 'Soporte' },
+    { icon: 'eye-outline', route: '/HistorialCliente', name: 'Historial' },
   ];
 
+  // Actualiza el índice activo según la ruta actual
+  useEffect(() => {
+    const currentIndex = items.findIndex((item) => item.route === location.pathname);
+    if (currentIndex !== -1) {
+      setActiveIndex(currentIndex);
+    }
+  }, [location.pathname, items]);
+
+  // Maneja el clic, muestra el nombre temporalmente y redirige
+  const handleClick = (index) => {
+    setActiveIndex(index);
+    setVisibleIndex(index); // Muestra el nombre
+    setTimeout(() => setVisibleIndex(null), 2000); // Oculta el nombre después de 2 segundos
+    navigate(items[index].route);
+  };
+
   return (
-    <div className='navigation'>
+    <div className="navigation">
       <ul>
         {items.map((item, index) => (
           <li
@@ -28,15 +42,17 @@ const NavBar = () => {
             className={`list ${activeIndex === index ? 'active' : ''}`}
             onClick={() => handleClick(index)}
           >
-            <a className='a_navbar' href='#'>
-              <span className='icon'>
+            <div className="nav-item">
+              {visibleIndex === index && (
+                <span className="name-popup">{item.name}</span>
+              )}
+              <span className="icon">
                 <ion-icon name={item.icon}></ion-icon>
               </span>
-              <span className='text'>{item.name}</span>
-            </a>
+            </div>
           </li>
         ))}
-        <div className='indicator'></div>
+        <div className="indicator"></div>
       </ul>
     </div>
   );
