@@ -240,6 +240,19 @@ class ClienteService {
             }
         });
     }
+
+    // Enviar petición de soporte
+    sendSupportRequest(request) {
+        const token = localStorage.getItem('token'); // Obtén el token de autenticación, si es necesario
+        return axios.post(`http://localhost:8080/api/soporte/enviar`, request, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Incluye el token si el endpoint lo requiere
+                'Content-Type': 'application/json'  // Asegura que el contenido sea JSON
+            }
+        });
+    }
+
+    
 }
 
 

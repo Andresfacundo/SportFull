@@ -185,6 +185,10 @@ export const HistorialCliente = () => {
         </div>
       </main>
 
+      <footer>
+        <NavBar/>
+      </footer>
+
       {modalOpen && selectedReservation && (
         <UpdateReservationDate
           reservation={selectedReservation}

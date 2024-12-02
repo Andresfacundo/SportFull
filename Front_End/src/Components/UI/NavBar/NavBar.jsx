@@ -4,16 +4,17 @@ import './NavBar.css';
 
 const NavBar = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [visibleIndex, setVisibleIndex] = useState(null); // Índice del nombre visible temporalmente
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Define las rutas y los íconos
+  // Define las rutas, íconos y nombres personalizados
   const items = [
-    { icon: 'home-outline', route: '/HomeClient' },
-    { icon: 'person-outline', route: '/ActualizarCliente' },
-    { icon: 'football-outline', route: '/SearchFields' },
-    { icon: 'send-outline', route: '/Soporte' },
-    { icon: 'eye-outline', route: '/HistorialCliente' },
+    { icon: 'home-outline', route: '/HomeClient', name: 'Inicio' },
+    { icon: 'person-outline', route: '/ActualizarCliente', name: 'Perfil' },
+    { icon: 'football-outline', route: '/SearchFields', name: 'Canchas' },
+    { icon: 'send-outline', route: '/Soporte', name: 'Soporte' },
+    { icon: 'eye-outline', route: '/HistorialCliente', name: 'Historial' },
   ];
 
   // Actualiza el índice activo según la ruta actual
@@ -24,14 +25,16 @@ const NavBar = () => {
     }
   }, [location.pathname, items]);
 
-  // Maneja el clic y redirige
+  // Maneja el clic, muestra el nombre temporalmente y redirige
   const handleClick = (index) => {
     setActiveIndex(index);
+    setVisibleIndex(index); // Muestra el nombre
+    setTimeout(() => setVisibleIndex(null), 2000); // Oculta el nombre después de 2 segundos
     navigate(items[index].route);
   };
 
   return (
-    <div className='navigation'>
+    <div className="navigation">
       <ul>
         {items.map((item, index) => (
           <li
@@ -39,15 +42,17 @@ const NavBar = () => {
             className={`list ${activeIndex === index ? 'active' : ''}`}
             onClick={() => handleClick(index)}
           >
-            <a className='a_navbar' href='#'>
-              <span className='icon'>
+            <div className="nav-item">
+              {visibleIndex === index && (
+                <span className="name-popup">{item.name}</span>
+              )}
+              <span className="icon">
                 <ion-icon name={item.icon}></ion-icon>
               </span>
-              <span className='text'>{item.route.replace('/', '')}</span>
-            </a>
+            </div>
           </li>
         ))}
-        <div className='indicator'></div>
+        <div className="indicator"></div>
       </ul>
     </div>
   );
