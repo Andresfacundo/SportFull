@@ -52,15 +52,19 @@ export const Login = () => {
   return (
     <div className='container-login'>
 
-      <img className='logo' src={logo} alt='img' />
 
       <main className='main_login'>
 
-        <h1 className='title-login'>Iniciar sesión</h1>
+        <div className='responsivo-main'>
+
+              <img className='logo-login' src={logo} alt='img' />
+        </div>
+
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={handleLogin} className='form'>
+        <form onSubmit={handleLogin} className='form-login'>
+              <h1 className='title-login'>Iniciar sesión</h1>
           <label className='form_label'>
             <input
               type='email'

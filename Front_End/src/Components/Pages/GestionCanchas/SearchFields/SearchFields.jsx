@@ -23,8 +23,8 @@ export const SearchFields = () => {
       <Header/>
 
       <main className='main_SearchFields'>
-      <OptionMenuRight link={'/FieldsList'} shade={'shade_list'} classNameImg={'icon_1'} icon={icon_01} content={'Listar Canchas'} />
-      <OptionMenuLeft link={'/CardGps'} shade={'shade_gps'} classNameImg={'icon_2'} icon={icon_02} content={'GPS'} />
+      <OptionMenuRight link={'/FieldsList'} shade={'shade_list'} classNameImg={'icon_1'} icon={icon_01} content={'Listar Canchas'} right='actualizar_perfil_right-two' />
+      <OptionMenuLeft link={'/CardGps'} shade={'shade_gps'} classNameImg={'icon_2'} icon={icon_02} content={'GPS'} right='actualizar_perfil_right-two'/>
 
       </main>
 

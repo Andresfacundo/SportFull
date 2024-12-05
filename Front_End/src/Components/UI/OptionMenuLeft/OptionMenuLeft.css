@@ -19,9 +19,28 @@
     clip-path: polygon(0 0, 100% 0%, 100% 100%, 9% 100%);
     font-weight: 400;
     font-size: clamp(23px, 2vw, 24px);
-        white-space: nowrap;
+    white-space: nowrap;
 }
 .content_option{
-    width: auto;
+    width: 5rem;
     height: auto;
+}
+
+
+@media (width > 1200px) {
+    .menu_options_left{
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 3px solid red;
+        
+        
+    }
+
+    .actualizar_perfil_left {
+        width: 20rem;
+          
+        clip-path: none;    
+    }
 }

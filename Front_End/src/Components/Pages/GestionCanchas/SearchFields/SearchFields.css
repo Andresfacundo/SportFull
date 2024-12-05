@@ -5,6 +5,7 @@
     flex-direction: column;
     gap: 4rem;
     margin-top: 3rem;
+    
 }
 
 .shade_list{
@@ -15,6 +16,7 @@
     top: 1.25rem;
     left: 2rem;
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+    display: none;
 }
 
 
@@ -26,5 +28,34 @@
     top: 0.82rem;
     right: -2rem;
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
+    display: none;
 }
 
+@media (width > 1200px ) {
+    .shade_gps{
+        width: 9%;
+    }
+
+    .shade_list{
+        width: 16.5%;
+    }
+
+    .shade_list{
+       display: none;
+    }
+    
+    
+    .shade_gps{
+        display: none;
+}
+
+    .main_SearchFields{
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;        
+        margin: 0;
+     }
+}

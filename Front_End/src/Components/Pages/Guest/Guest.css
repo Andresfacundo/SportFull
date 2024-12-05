@@ -26,3 +26,13 @@
     right: -2rem;
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
+
+@media (width > 1000px) {
+    .shade_consultCourt {
+        width: 18.5%;
+    }
+
+    .shade_register{
+        width: 14%;
+    }
+}

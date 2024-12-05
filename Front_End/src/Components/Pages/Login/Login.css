@@ -9,12 +9,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #073B4C;
+    background-color: #073B4C;    
 }
 
-.logo {
+.logo-login {
     width: 15rem;
-    margin-top: 6rem;
+    margin-top: 4rem;
+    margin-bottom: 3rem;
 }
 
 .login,
@@ -49,7 +50,7 @@
     font-weight: 400;
 }
 
-.form {
+.form-login {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -103,4 +104,57 @@
     color: #e7e7e7;
     text-align: center;
     margin-bottom: 1rem;
+}
+
+.responsivo-main{
+    text-align: center;   
+}
+
+@media (width > 1200px) {
+    .container-login {
+        width: 100%;
+        height: 100%;   
+        background-image: linear-gradient(180deg, #073B4C,#073B4C, #07954A, #073b4c,#073B4C );   
+           
+           
+    }
+
+    .logo-login {
+        width: 20rem;
+        margin: 0;      
+                      
+    }
+    
+    .title-login {
+        font-size: 2.8rem;
+        margin-bottom: 3rem;
+        font-weight: 400;
+    }
+
+    .login {
+        margin-top: 1rem;        
+    }
+
+    .main_login{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 80%;
+        height: 80%;         
+        margin: 2rem;      
+        border: 3px solid red;     
+        padding: 2rem;          
+        background-image: url("../../../assets/Images/fondos/fondo_long.png");
+        background-position: center;
+        border: 3px solid #073B4C;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px 5px #29b86c;
+    }
+
+    .form-login {               
+       border-left: 3px solid white;       
+       padding-left: 8rem;
+              
+    }    
 }

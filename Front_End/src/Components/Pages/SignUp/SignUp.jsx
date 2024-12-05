@@ -53,12 +53,26 @@ export const SignUp = () => {
     navigate('/Login'); // Redirigir a la ruta de login cuando se cierra el modal
   };
 
+
+
+
+
+
+
+
   return (
     <div className='signUp'>
-      <img className='logo' src={logo} alt='img' />
 
+      <div className='contenedor-principal'>
+
+      <div className='contenedor-registro-responsivo'>
+           <img className='logo-registro' src={logo} alt='img' />
+      </div>
+      <div className='contenedor-registro-responsivo-two'>
+
+            <h1 className='title_signUp'>Registrarse</h1>
+      
       <main className='main_SignUp'>
-        <h1 className='title_signUp'>Registrarse</h1>
 
         {error && <p className="error-message">{error}</p>}
 
@@ -147,8 +161,27 @@ export const SignUp = () => {
             </div>
           </label>
 
-          <div className="account-type-container">
-            <p>Seleccione el tipo de cuenta</p>
+          
+        </form>
+
+        {showModal && (
+          <ModalExitoso>
+            <h3 className='tittle_modal'>Gracias por registrarse</h3>
+            <p className='message'>
+              Para completar su registro, por favor verifique su dirección de
+              correo electrónico haciendo clic en el enlace que hemos enviado a:
+            </p>
+            <p><strong>{email}</strong></p>
+            <button className='cancel' onClick={handleCloseModal}>Cerrar</button>
+          </ModalExitoso>
+        )}     
+
+        </main> 
+       </div>
+
+
+  <div className='registro-ultima-seccion'>
+        <p className='parrafo-tipo-cuenta'>Seleccione el tipo de cuenta</p>
             <label className="radio-option">
               <input
                 type="radio"
@@ -173,24 +206,12 @@ export const SignUp = () => {
               <span className="custom-radio"></span>
               Empresa
             </label>
-          </div>
-
           <button type="submit" className='register'>Registrarse</button>
           <NavLink className='return' to='/'>Volver</NavLink>
-        </form>
 
-        {showModal && (
-          <ModalExitoso>
-            <h3 className='tittle_modal'>Gracias por registrarse</h3>
-            <p className='message'>
-              Para completar su registro, por favor verifique su dirección de
-              correo electrónico haciendo clic en el enlace que hemos enviado a:
-            </p>
-            <p><strong>{email}</strong></p>
-            <button className='cancel' onClick={handleCloseModal}>Cerrar</button>
-          </ModalExitoso>
-        )}
-      </main>
+  </div>
+
+     </div>
     </div>
   );
 };

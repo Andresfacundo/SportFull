@@ -85,7 +85,7 @@ function App() {
       <Route path="/AddEmployee" element={<AgregarEmpleado />} />
       <Route path="/DeleteEmployee" element={<EliminarEmpleado />} />
       <Route path="/UpdateEmployee" element={<ActualizarEmpleado />} />
-      <Route path="/ShowEmployee" element={<ConsultarEmpleados />} />
+      <Route path="/ShowE mployee" element={<ConsultarEmpleados />} />
       <Route path="/EditManager/:id" element={<EditManager />} />
       <Route path="/BigCard" element={<BigCard />} />
       <Route path="/PendingReservations" element={<PendingReservations />} />
@@ -93,8 +93,6 @@ function App() {
       <Route path="/SearchFields" element={<SearchFields />} />
       <Route path="/UpdateReservationDate" element={<UpdateReservationDate />} />
       <Route path="/Soporte" element={<Soporte />} />
-
-
     </Routes>
   )
 }
