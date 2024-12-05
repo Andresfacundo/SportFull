@@ -8,6 +8,7 @@ import axios from "axios";
 import L from "leaflet";
 import fondo_long from '../../../../src/assets/Images/fondos/fondo_long.png';
 import { NavLink, useNavigate } from 'react-router-dom';
+import pLimit from "p-limit";
 
 import "leaflet-routing-machine";
 import { Polyline } from "react-leaflet";
@@ -74,7 +75,7 @@ const CardGps = () => {
   const opcionesFiltros = [
     { value: "precio", label: "Precio" },
     { value: "ubicacion", label: "Ubicación" },
-    { value: "disponibilidad", label: "Disponibilidad" },
+    // { value: "disponibilidad", label: "Disponibilidad" },
     { value: "tipoCancha", label: "Tipo de Cancha" },
     { value: "servicios", label: "Servicios" },
   ];
@@ -132,7 +133,7 @@ const CardGps = () => {
     setRuta(null);
     setShowCurrentLocation(false); // Asegúrate de ocultar la ubicación actual
     const ubicacionesFiltradas = aplicarFiltros();
-
+  
     if (ubicacionesFiltradas.length > 0) {
       setFilteredLocations(ubicacionesFiltradas);
       setUbicacionActual({
@@ -140,11 +141,15 @@ const CardGps = () => {
         lng: ubicacionesFiltradas[0].lng,
       });
     } else {
-      alert("No se encontró ninguna ubicación con los filtros aplicados.");
-      setFilteredLocations([]);
+      alert("No se encontró ninguna ubicación con los filtros aplicados. Mostrando todas las empresas registradas.");
+      setFilteredLocations(allUbic); // Mostrar todas las ubicaciones
+      setUbicacionActual({
+        lat: allUbic[0]?.lat || 4.533889,
+        lng: allUbic[0]?.lng || -75.681389,
+      });
     }
   };
-
+  
 
   // Manejar cambio en los checkboxes de servicios
   const handleServicioChange = (servicio) => {
@@ -227,59 +232,18 @@ const CardGps = () => {
     return resultado;
   };
 
-  // const geocodeFields = async (fields) => {
-  //   const newLocations = await Promise.all(
-  //     fields.map(async (field) => {
-  //       try {
-  //         const response = await axios.get(
-  //           `https://nominatim.openstreetmap.org/search`,
-  //           {
-  //             params: {
-  //               q: field.direccionEmpresa,
-  //               format: "json",
-  //               addressdetails: 1,
-  //               limit: 1,
-  //               countrycodes: "CO",
-  //             },
-  //           }
-  //         );
-
-  //         if (response.data.length > 0) {
-  //           const location = response.data[0];
-  //           return {
-  //             lat: parseFloat(location.lat),
-  //             lng: parseFloat(location.lon),
-  //             nombre: field.nombreEmpresa,
-  //             direccion: field.direccionEmpresa,
-  //             id_empresa: field.id_empresa,
-  //             fields: field, // Asegúrate de incluir la información del campo
-  //           };
-  //         }
-  //         return null;
-  //       } catch (error) {
-  //         console.error(`Error en la geocodificación: `, error);
-  //         return null;
-  //       }
-  //     })
-  //   );
-
-  //   const validLocations = newLocations.filter((location) => location !== null);
-  //   setGeocodedFields(validLocations);
-  //   setAllUbic(validLocations); // Actualiza allUbic con las ubicaciones geocodificadas
-  //   setFilteredLocations(validLocations);
-  // };
+//geocodificar canchas
 
 const geocodeFields = async (fields) => {
-  // Imprimir cuántas canchas se están procesando
   console.log(`Procesando ${fields.length} canchas para geocodificación.`);
-  
-  const newLocations = await Promise.all(
-    fields.map(async (field) => {
+  const limit = pLimit(5); // Limita a 5 solicitudes simultáneas
+
+  const geocodingPromises = fields.map((field) =>
+    limit(async () => {
       try {
-        // Verificar si la dirección está disponible antes de hacer la solicitud
         if (!field.direccionEmpresa) {
           console.error(`Dirección faltante para la cancha: ${field.nombreEmpresa}`);
-          return null; // Ignorar canchas sin dirección
+          return null;
         }
 
         const response = await axios.get(
@@ -303,34 +267,34 @@ const geocodeFields = async (fields) => {
             nombre: field.nombreEmpresa,
             direccion: field.direccionEmpresa,
             id_empresa: field.id_empresa,
-            fields: field, // Información del campo
+            fields: field,
           };
         } else {
           console.warn(`No se encontró geolocalización para la dirección: ${field.direccionEmpresa}`);
-          return null; // No se encontró ubicación
+          return null;
         }
       } catch (error) {
         console.error(`Error en la geocodificación de ${field.nombreEmpresa}: `, error);
-        return null; // Si ocurre un error, no devolver nada
+        return null;
       }
     })
   );
 
-  // Filtrar solo ubicaciones válidas
+  const newLocations = await Promise.all(geocodingPromises);
   const validLocations = newLocations.filter((location) => location !== null);
 
-  // Actualizar el estado con las ubicaciones geocodificadas válidas
   if (validLocations.length > 0) {
-    setGeocodedFields(validLocations);
-    setAllUbic(validLocations);
-    setFilteredLocations(validLocations); // Asegúrate de mostrar las ubicaciones válidas en el mapa
+    setGeocodedFields((prev) => [...prev, ...validLocations]);
+    setAllUbic((prev) => [...prev, ...validLocations]);
+    setFilteredLocations((prev) => [...prev, ...validLocations]);
   } else {
     console.warn("No se pudieron geocodificar canchas válidas.");
   }
 };
 
 
-  
+
+
 
   // Nueva función para filtrar por precio
   const filtrarPorPrecio = (canchas, precioMin, precioMax) => {
@@ -421,6 +385,12 @@ const geocodeFields = async (fields) => {
   };
 
 
+  //estado derivado para mostar canchas dependiendo del filtro
+
+  const filteredCompanies = allCompanies.filter((empresa) =>
+    filteredLocations.some((location) => location.id_empresa === empresa.id)
+  );
+  
 
   return (
     <div style={backgroundStyle} className='container'  >
@@ -626,39 +596,36 @@ const geocodeFields = async (fields) => {
 
 
       {/* Tarjetas de empresas */}
-      <section className="empresas">
-        <h3>Resultado busqueda </h3>
-        <div className="lista-empresas">
-          {allCompanies.length > 0 ? (
-            allCompanies.map((empresa, index) => (
-              <div key={index} className="tarjeta-empresa">
-                <p>
-                  {/* <strong>Empresa:</strong>  */}
-                  {empresa.nombreEmpresa}
-                </p>
-                <button
-                  className="btn-arrive"
-                  onClick={() => {
-                    const location = geocodedFields.find(
-                      (field) => field.id_empresa === empresa.id
-                    );
-                    if (location) {
-                      calcularRuta({ lat: location.lat, lng: location.lng });
-                    } else {
-                      alert("No se encontraron coordenadas para esta empresa.");
-                    }
-                  }}
-                >
-                  Cómo llegar
-                </button>
-
-              </div>
-            ))
-          ) : (
-            <p>No hay empresas registradas.</p>
-          )}
+<section className="empresas">
+  <h3>Resultado búsqueda</h3>
+  <div className="lista-empresas">
+    {filteredCompanies.length > 0 ? (
+      filteredCompanies.map((empresa, index) => (
+        <div key={index} className="tarjeta-empresa">
+          <p>{empresa.nombreEmpresa}</p>
+          <button
+            className="btn-arrive"
+            onClick={() => {
+              const location = geocodedFields.find(
+                (field) => field.id_empresa === empresa.id
+              );
+              if (location) {
+                calcularRuta({ lat: location.lat, lng: location.lng });
+              } else {
+                alert("No se encontraron coordenadas para esta empresa.");
+              }
+            }}
+          >
+            Cómo llegar
+          </button>
         </div>
-      </section>
+      ))
+    ) : (
+      <p>No hay empresas que cumplan con los filtros aplicados.</p>
+    )}
+  </div>
+</section>
+
 
       {/* <NavLink className="return-filter" to='/HomeClient'>
           Volver
