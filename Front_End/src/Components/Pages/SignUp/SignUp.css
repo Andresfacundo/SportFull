@@ -209,3 +209,47 @@
     text-align: justify;
   }
   
+  /* Ocultar las validaciones de contraseña inicialmente */
+.password-validations {
+    display: none; /* Inicialmente oculta */
+    flex-direction: column;
+    list-style: none;
+    margin: 10px 0;
+  }
+  
+  /* Mostrar las validaciones cuando la clase 'show' esté activa */
+  .password-validations.show {
+    display: flex; /* Mostrar las validaciones cuando se active 'show' */
+  }
+  
+  .password-validations li {
+    display: flex;
+    align-items: flex-start; 
+    font-size: 14px;
+    margin-bottom: -54px; 
+    border: none; 
+    text-decoration: none; 
+  }
+  
+  /* Estilo para las validaciones correctas */
+  .password-validations li.valid {
+    color: #07954A; 
+    width: 100%;
+    position: relative;
+    right: 14%;
+    top: -40%;
+  }
+  
+  /* Estilo para las validaciones incorrectas */
+  .password-validations li.invalid {
+    color: #914747;
+    width: 100%;
+    position: relative;
+    right: 14%;
+    top: -40%; 
+  }
+  
+  .password-validations li span {
+    margin-right: 8px; /* Espacio entre el ícono y el texto */
+  }
+  

@@ -18,7 +18,42 @@ export const SignUp = () => {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
 
+  // Estados para las validaciones
+  const [passwordValidations, setPasswordValidations] = useState({
+    hasNumber: false,
+    hasSpecialChar: false,
+    hasUppercase: false,
+    noRepeatedChars: false,
+  });
+  const [showPasswordValidations, setShowPasswordValidations] = useState(false); // Control para mostrar las validaciones
+
   const navigate = useNavigate();
+
+  const validatePassword = (password) => {
+    if (password === '') {
+      setPasswordValidations({
+        hasNumber: false,
+        hasSpecialChar: false,
+        hasUppercase: false,
+        noRepeatedChars: false,
+      });
+      setShowPasswordValidations(false); // Ocultar validaciones si la contraseña está vacía
+    } else {
+      setPasswordValidations({
+        hasNumber: /\d/.test(password),
+        hasSpecialChar: /[!@#$%^&*]/.test(password),
+        hasUppercase: /[A-Z]/.test(password),
+        noRepeatedChars: !/(.)\1/.test(password),
+      });
+      setShowPasswordValidations(true); // Mostrar validaciones cuando hay texto en la contraseña
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setContraseña(value);
+    validatePassword(value);
+  };
 
   const saveUser = (e) => {
     e.preventDefault();
@@ -99,7 +134,7 @@ export const SignUp = () => {
             <span className='form_text'>Correo</span>
           </label>
 
-          {/* Campo de contraseña con icono show/hide condicional */}
+          {/* Campo de contraseña */}
           <label className='form_label'>
             <div className='password-input-container'>
               <input
@@ -107,7 +142,7 @@ export const SignUp = () => {
                 placeholder=' '
                 className='form_input'
                 value={contraseña}
-                onChange={(e) => setContraseña(e.target.value)}
+                onChange={handlePasswordChange}
                 required
               />
               <span className='form_text'>Contraseña</span>
@@ -122,6 +157,24 @@ export const SignUp = () => {
               )}
             </div>
           </label>
+
+          {/* Validaciones de contraseña */}
+          <div className={`password-validations ${showPasswordValidations ? 'show' : ''}`}>
+              <ul>
+                <li className={passwordValidations.hasNumber ? 'valid' : 'invalid'}>
+                  {passwordValidations.hasNumber ? '✓' : 'X'} Al menos un número.
+                </li>
+                <li className={passwordValidations.hasSpecialChar ? 'valid' : 'invalid'}>
+                  {passwordValidations.hasSpecialChar ? '✓' : 'X'} Un carácter especial (!@#$%^&*).
+                </li>
+                <li className={passwordValidations.hasUppercase ? 'valid' : 'invalid'}>
+                  {passwordValidations.hasUppercase ? '✓' : 'X'} Una letra mayúscula.
+                </li>
+                <li className={passwordValidations.noRepeatedChars ? 'valid' : 'invalid'}>
+                  {passwordValidations.noRepeatedChars ? '✓' : 'X'} No repetir caracteres consecutivos.
+                </li>
+              </ul>
+            </div>
 
           {/* Campo de confirmación de contraseña con icono show/hide condicional */}
           <label className='form_label'>
