@@ -20,6 +20,8 @@ export const HomeGestor = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
   return (
     <div style={backgroundStyle} className='container'>

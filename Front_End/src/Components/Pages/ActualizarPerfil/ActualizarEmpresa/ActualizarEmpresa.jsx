@@ -39,7 +39,7 @@ export const ActualizarEmpresa = () => {
   const [horaApertura, setHoraApertura] = useState(null);
   const [horaCierre, setHoraCierre] = useState(null);
   const [serviciosGenerales, setServiciosGenerales] = useState(''); // Estado para los servicios generales
-
+  const [diasApertura, setDiasApertura] = useState('');
 
   const navigate = useNavigate();
   // useEffect para cargar los datos del usuario al montar el componente
@@ -64,9 +64,8 @@ export const ActualizarEmpresa = () => {
       setInstagram(user.adminModels?.instagram || '');
       setHoraApertura(user.adminModels?.horaApertura || '');
       setHoraCierre(user.adminModels?.horaCierre || '');
-      setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || ''); // Cargar servicios generales separados por comas
-
-
+      setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || '');
+      setDiasApertura(user.adminModels?.diasApertura?.join(', ') || '');
     }
   }, []);
 
@@ -75,12 +74,15 @@ export const ActualizarEmpresa = () => {
 
     //obtener datos del usuario
     const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
+    const admin = user.adminModels;
 
     // Obtén el ID del usuario desde localStorage
     const userId = user.id;
 
     // Convertir la cadena de servicios separados por comas en un array
     const serviciosArray = serviciosGenerales.split(',').map(servicio => servicio.trim());
+    const diasAperturaArray= diasApertura.split(',').map(dia => dia.trim());
+
 
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
@@ -100,7 +102,9 @@ export const ActualizarEmpresa = () => {
         instagram,
         horaApertura,
         horaCierre,
-        serviciosGenerales: serviciosArray
+        serviciosGenerales: serviciosArray,
+        diasApertura: diasAperturaArray
+
       }
     };
 
@@ -116,6 +120,7 @@ export const ActualizarEmpresa = () => {
           apellidos,
           email,
           adminModels: {
+            ...admin,
             telefonoPropietario,
             ccpropietario,
             nombreEmpresa,
@@ -128,7 +133,9 @@ export const ActualizarEmpresa = () => {
             instagram,
             horaApertura,
             horaCierre,
-            serviciosGenerales: serviciosArray
+            serviciosGenerales: serviciosArray,
+            diasApertura: diasAperturaArray
+
           }
         };
 
@@ -306,8 +313,9 @@ export const ActualizarEmpresa = () => {
             />
             <span className='form_text'>Telefono</span>
           </label>
-                    {/* horarios de atencion */}
-                    <label className='form_label'>
+
+          {/* horarios de atencion */}
+          <label className='form_label'>
             <input
               type='time'
               placeholder=' '
@@ -365,7 +373,6 @@ export const ActualizarEmpresa = () => {
             <span className='form_text'>WhatsApp</span>
           </label>
 
-
           <label className='form_label'>
             <input
               type='text'
@@ -377,6 +384,18 @@ export const ActualizarEmpresa = () => {
             />
             <span className='form_text'>Servicios Generales</span>
           </label>
+          <label className='form_label'>
+            <input
+              type='text'
+              placeholder=' '
+              className='form_input'
+              value={diasApertura} // Asignar el valor del estado
+              onChange={(e) => setDiasApertura(e.target.value)} // Actualizar el estado
+              disabled={!isEditable}
+            />
+            <span className='form_text'>Dias De Apertura</span>
+          </label>
+
 
           <NavLink
             className={'changePassword'}

@@ -81,7 +81,7 @@ export const Header = ({ children }) => {
             <CurrentDate />
           </div>
           <div className='container_user'>
-            <div className='container_img'>
+            <div className='container_img_header'>
               <img className='img_manager' src={imgGuest} alt="Foto de perfil" />
             </div>
             <h2 className='nameUser'>Invitado</h2>
