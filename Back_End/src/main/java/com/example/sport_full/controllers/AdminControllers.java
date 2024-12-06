@@ -1,6 +1,7 @@
 package com.example.sport_full.controllers;
 
 
+import com.example.sport_full.dto.AdminDTO;
 import com.example.sport_full.models.AdminModels;
 import com.example.sport_full.models.FieldModels;
 import com.example.sport_full.models.UserModels;
@@ -17,6 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.io.IOException;
 import java.util.List;
@@ -214,4 +220,30 @@ public class AdminControllers {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/find-all-no-img")
+    public List<AdminDTO> findAllNoImg() {
+        return companyRepository.findAll().stream().map(admin -> {
+            AdminDTO dto = new AdminDTO();
+            dto.setId(admin.getId());
+            dto.setNIT(admin.getNIT());
+            dto.setNombreEmpresa(admin.getNombreEmpresa());
+            dto.setTelefonoEmpresa(admin.getTelefonoEmpresa());
+            dto.setEmailEmpresa(admin.getEmailEmpresa());
+            dto.setDireccionEmpresa(admin.getDireccionEmpresa());
+            dto.setCCpropietario(admin.getCCpropietario());
+            dto.setTelefonoPropietario(admin.getTelefonoPropietario());
+            dto.setFacebook(admin.getFacebook());
+            dto.setWhatsApp(admin.getWhatsApp());
+            dto.setInstagram(admin.getInstagram());
+            dto.setHoraApertura(admin.getHoraApertura());
+            dto.setHoraCierre(admin.getHoraCierre());
+            dto.setServiciosGenerales(admin.getServiciosGenerales());
+            dto.setDiasApertura(admin.getDiasApertura());
+            dto.setFields(admin.getFields());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
 }
