@@ -18,6 +18,8 @@ export const GestionCanchas = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
 
@@ -26,15 +28,19 @@ export const GestionCanchas = () => {
     <div style={backgroundStyle} className='container'>
       <Header />
       <main className='main_gestionCanchas'>
-        <OptionMenuRight link={'/AgregarCancha'} shade={'shade_addfield'} classNameImg={'icon_1'} icon={icon_01} content={'Agregar Cancha'} />
-        <OptionMenuLeft link={'/DeleteFields'} shade={'shade_dropfield'} classNameImg={'icon_2'} icon={icon_02} content={'Eliminar Cancha'} />
-        <OptionMenuRight link={'/SelectUpdateField'} shade={'shade_updatefield'} classNameImg={'icon_3'} icon={icon_03} content={'Actualizar Cancha'} />
-        <OptionMenuLeft link={'/ShowFields'} shade={'shade_consultfield'} classNameImg={'icon_4'} icon={icon_04} content={'Consultar Canchas'} />
+        <img className='img-left' src={icon_03} alt="" />
+        <div className='container-options-admin'>
 
+          <OptionMenuRight link={'/AgregarCancha'} shade={'shade_addfield'} classNameImg={'icon_1'} icon={icon_01} content={'Agregar Cancha'} />
+          <OptionMenuLeft link={'/DeleteFields'} shade={'shade_dropfield'} classNameImg={'icon_2'} icon={icon_02} content={'Eliminar Cancha'} />
+          <OptionMenuRight link={'/SelectUpdateField'} shade={'shade_updatefield'} classNameImg={'icon_3'} icon={icon_03} content={'Actualizar Cancha'} />
+          <OptionMenuLeft link={'/ShowFields'} shade={'shade_consultfield'} classNameImg={'icon_4'} icon={icon_04} content={'Consultar Canchas'} />
+        </div>
+        <img className='img-right' src={icon_03} alt="" />
       </main>
-      {/* <footer>
+      <footer className='footer_empresa'>
         <NavBar />
-      </footer> */}
+      </footer>
     </div>
 
   )

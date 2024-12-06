@@ -1,8 +1,8 @@
 .header_home {
-    width: 485px;
+    width: 500px;
     height: 350px;
     background-color: #079549a1;
-    transform: translate(-12px, -125px) rotate(-20.93deg);
+    transform: translate(38px, -118px) rotate(-20.93deg);
     border-radius: 120px;
     border: 10px solid #e7e7e78e;
     box-shadow: -5px 10px 15px rgba(0, 0, 0, 0.6);
@@ -16,13 +16,14 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    top: 10rem;
+    top: 9rem;
     right: 5rem;
     transform: rotate(20.93deg);
     overflow: hidden;
 
 }
-.container_user{
+
+.container_user {
     width: auto;
     height: auto;
     display: flex;
@@ -30,15 +31,15 @@
     align-items: center;
 }
 
-.container_user>img{
+.container_user>img {
     width: 8rem;
 }
 
-.container_user>h2{
+.container_user>h2 {
     font-size: 2.5rem;
 }
 
-.container_options{
+.container_options {
     width: 80%;
     height: auto;
     display: flex;
@@ -47,20 +48,21 @@
     gap: 1rem;
 }
 
-.container_options>h4{
+.container_options>h4 {
     font-weight: 400;
 }
 
-.icon_options{
+.icon_options {
     width: 1.5rem;
 }
 
-.icon_logout{
+.icon_logout {
     width: 1.5rem;
 }
 
 .edit_icon {
-    margin-top: -30px; /* Ajusta para cambiar la distancia entre la imagen y el icono */
+    margin-top: -30px;
+    /* Ajusta para cambiar la distancia entre la imagen y el icono */
     margin-left: -17%;
     border: 3px solid;
     border-radius: 50%;
@@ -68,9 +70,21 @@
     visibility: hidden;
     cursor: pointer;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
+}
 
-  .edit_icon.show {
+.container_img_header{
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    
+}
+
+.edit_icon.show {
     opacity: 1;
     visibility: visible;
     width: 1.5rem;
@@ -81,8 +95,54 @@
     height: 1.5rem;
     padding: 2px;
 }
-  
-  .edit_icon.hide {
+
+.edit_icon.hide {
     opacity: 0;
     visibility: hidden;
-  }
+}
+
+ @media (min-width: 1280px) {
+
+    .header_home {
+        width: 100%;
+        transform: translate(0px, -100px) rotate(0deg);
+        height: 200px;
+        border-radius: 0;
+        background-color: #07954975;
+    }
+
+    .edit_icon.show{
+        position: relative;
+        top: 3rem;
+        width: 1rem;
+        height: 1rem;
+        left: 5rem;
+    }
+
+    .container_header{
+        transform: rotate(0deg);
+        width: 100%;
+        top: 6rem;
+        flex-direction: row-reverse;
+        right: 40px;
+    }
+
+    .container_user{
+        width: 44%;
+        justify-content: left;
+    }
+
+    .container_img_header{
+        width: 6rem;
+        height: 6rem;
+    }
+
+    .container_options{
+        width: 50%;
+    }
+
+ 
+
+
+
+} 

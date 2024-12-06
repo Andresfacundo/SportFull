@@ -4,13 +4,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 6rem;
 }
 
 .container_agregarCancha {
-    min-height: 100vh;
     width: 100%;
+    height: 100%;
     background-color: #073B4C;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .tittle_agregarCancha {
@@ -47,18 +50,17 @@
     border: 1.5px solid #e7e7e7;
     border-radius: 10px;
     color: #e7e7e7;
-    z-index: 90;
     outline: none;
 }
 
-.container_types {
+.container_types_addfield {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
-.servicios{
+.servicios_addField{
     width: auto;
     display: flex;
     flex-direction: column;

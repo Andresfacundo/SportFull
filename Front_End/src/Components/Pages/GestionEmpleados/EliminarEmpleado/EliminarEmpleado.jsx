@@ -4,7 +4,7 @@ import { Header } from '../../../Layouts/Header/Header';
 import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ShowManager from '../../../UI/ShowManager/ShowManager';
 import ClienteService from '../../../../services/ClienteService'; // Importar el servicio
-
+import NavBar from '../../../UI/NavBar/NavBar';
 
 export const EliminarEmpleado = () => {
 
@@ -12,8 +12,10 @@ export const EliminarEmpleado = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   // Estado para almacenar los gestores
@@ -79,25 +81,29 @@ export const EliminarEmpleado = () => {
 
       <main className='main_Managers'>
         <h2 className='title_manager'>Gestores</h2>
+        <div className='container-listCards'>
 
-        {/* Si hay más de un gestor , mapea sobre el arreglo y crea una ShowManager para cada uno */}
-        {managers.length > 0 ? (
-          managers.map((manager, index) => (
-            <ShowManager
-              key={index}
-              nombres={manager.userModels?.nombres || 'nombres'}
-              apellidos={manager.userModels?.apellidos || 'apellidos'}
-              nombreBoton={'Eliminar'}
-              funtionOnClick={() => handleDelete(manager.id)}
-            >
-            </ShowManager>
-          ))
-        ) : (
-          <p>No hay Gestores disponibles.</p>
-        )}
+          {/* Si hay más de un gestor , mapea sobre el arreglo y crea una ShowManager para cada uno */}
+          {managers.length > 0 ? (
+            managers.map((manager, index) => (
+              <ShowManager
+                key={index}
+                nombres={manager.userModels?.nombres || 'nombres'}
+                apellidos={manager.userModels?.apellidos || 'apellidos'}
+                nombreBoton={'Eliminar'}
+                funtionOnClick={() => handleDelete(manager.id)}
+              >
+              </ShowManager>
+            ))
+          ) : (
+            <p>No hay Gestores disponibles.</p>
+          )}
+        </div>
 
       </main>
-
+      <footer className='footer_empresa'>
+                <NavBar />
+      </footer>
     </div>
   )
 }

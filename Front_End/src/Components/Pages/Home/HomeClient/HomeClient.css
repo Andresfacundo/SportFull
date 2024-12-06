@@ -3,8 +3,10 @@
     width: 100%;
     height: auto;
     display: flex;
-    flex-direction: column;
-    gap: 4rem;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8rem;
 }
 
 .container_home_client{
@@ -75,8 +77,8 @@
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
 
-footer{
-    width: 100vh;
+.footer_client{
+    width: 100%;
     height: auto;
     position: fixed; 
 }

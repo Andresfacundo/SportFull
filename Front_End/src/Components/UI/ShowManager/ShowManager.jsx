@@ -8,7 +8,6 @@ const ShowManager = ({nombres,apellidos,imgManager,nombreBoton,funtionOnClick}) 
             <div className='container_data'>
                 <div className='container_img'>
                     <img className='img_manager' src={imgManager} alt="" />
-
                 </div>
                 <div className='data_manager'>
                     <h3 className='nombres'>{nombres} </h3>

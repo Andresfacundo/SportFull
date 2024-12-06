@@ -1,4 +1,11 @@
-.shade_ManageFields{
+*{
+    margin: 0;
+    padding: 0;
+    color: #e7e7e7;
+}
+
+
+.shade_ManageFields {
     width: 62%;
     height: 3rem;
     display: flex;
@@ -8,18 +15,18 @@
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
 
-.shade_ManageReservations{
-    width: 64%;
+.shade_ManageReservations {
+    width: 68%;
     height: 3rem;
     display: flex;
     position: absolute;
     top: 1.4rem;
     left: 2rem;
-    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
 
-.shade_ManageEmployees{
-    width: 69%;
+.shade_dashborad {
+    width: 42%;
     height: 3rem;
     display: flex;
     position: absolute;
@@ -28,17 +35,17 @@
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
 
-.shade_ManageReports{
+.shade_ManageReports {
     width: 64%;
     height: 3rem;
     display: flex;
     position: absolute;
     top: 1.3rem;
     left: 2rem;
-    box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
+    box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
 
-.shade_support{
+.shade_support {
     width: 41%;
     height: 3rem;
     display: flex;
@@ -48,11 +55,110 @@
     box-shadow: -35px 5px 3px rgba(0, 0, 0, 0.6);
 }
 
-.main_homeEmpresa{
+.main_homeEmpresa {
+    width: 100%;
+    height: auto;
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8rem;
+}
+
+.container-options-admin {
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
     gap: 3rem;
-    margin-bottom: 3rem;
+}
+
+.icon_1 {
+    width: 4rem;
+}
+
+
+.icon_2 {
+    width: 6rem;
+    opacity: 0.4;
+}
+
+.icon_3 {
+    width: 4rem;
+    opacity: 0.4;
+}
+
+.icon_4 {
+    width: 4rem;
+    opacity: 0.4;
+    margin-left: 6rem;
+}
+
+.img-left,
+.img-right {
+    display: none;
+}
+
+.footer_empresa {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 96%;
+
+}
+
+
+@media (min-width: 1280px){
+
+    .main_homeEmpresa {
+        width: 100%;
+        /* margin-left: 25rem; */
+        gap: 1rem;
+        justify-content: space-evenly;
+    }
+
+
+    .icon_1,
+    .icon_2,
+    .icon_3,
+    .icon_4,
+    .shade_dashborad,
+    .shade_ManageFields,
+    .shade_perfil,
+    .shade_ManageReports,
+    .shade_ManageReservations {
+        display: none;
+    }
+
+
+    .actualizar_perfil_right,
+    .actualizar_perfil_left {
+        width: 15rem;
+        height: 3rem;
+        clip-path: none;
+        padding: 0 3rem;
+        border-radius: 15px;
+        gap: 1rem;
+
+    }
+
+    .menu_options_right,
+    .menu_options_left {
+        justify-content: center;
+    }
+
+    .img-left,
+    .img-right {
+        display: block;
+        width: 10rem;
+        height: auto;
+        opacity: 20%;
+    }
+
+
+    .container-options-admin {
+        width: 30%;
+        gap: 1rem;
+    }
+
 }

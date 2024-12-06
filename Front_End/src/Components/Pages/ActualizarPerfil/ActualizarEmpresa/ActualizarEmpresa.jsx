@@ -17,6 +17,8 @@ export const ActualizarEmpresa = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   //main
@@ -39,7 +41,7 @@ export const ActualizarEmpresa = () => {
   const [horaApertura, setHoraApertura] = useState(null);
   const [horaCierre, setHoraCierre] = useState(null);
   const [serviciosGenerales, setServiciosGenerales] = useState(''); // Estado para los servicios generales
-
+  const [diasApertura, setDiasApertura] = useState('');
 
   const navigate = useNavigate();
   // useEffect para cargar los datos del usuario al montar el componente
@@ -64,9 +66,8 @@ export const ActualizarEmpresa = () => {
       setInstagram(user.adminModels?.instagram || '');
       setHoraApertura(user.adminModels?.horaApertura || '');
       setHoraCierre(user.adminModels?.horaCierre || '');
-      setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || ''); // Cargar servicios generales separados por comas
-
-
+      setServiciosGenerales(user.adminModels?.serviciosGenerales?.join(', ') || '');
+      setDiasApertura(user.adminModels?.diasApertura?.join(', ') || '');
     }
   }, []);
 
@@ -75,12 +76,15 @@ export const ActualizarEmpresa = () => {
 
     //obtener datos del usuario
     const user = JSON.parse(localStorage.getItem('user'));  // Obtiene la cadena JSON desde el localStorage
+    const admin = user.adminModels;
 
     // Obtén el ID del usuario desde localStorage
     const userId = user.id;
 
     // Convertir la cadena de servicios separados por comas en un array
     const serviciosArray = serviciosGenerales.split(',').map(servicio => servicio.trim());
+    const diasAperturaArray = diasApertura.split(',').map(dia => dia.trim());
+
 
     // Crea un objeto con los datos del usuario a actualizar
     const updatedUser = {
@@ -100,7 +104,9 @@ export const ActualizarEmpresa = () => {
         instagram,
         horaApertura,
         horaCierre,
-        serviciosGenerales: serviciosArray
+        serviciosGenerales: serviciosArray,
+        diasApertura: diasAperturaArray
+
       }
     };
 
@@ -116,6 +122,7 @@ export const ActualizarEmpresa = () => {
           apellidos,
           email,
           adminModels: {
+            ...admin,
             telefonoPropietario,
             ccpropietario,
             nombreEmpresa,
@@ -128,7 +135,9 @@ export const ActualizarEmpresa = () => {
             instagram,
             horaApertura,
             horaCierre,
-            serviciosGenerales: serviciosArray
+            serviciosGenerales: serviciosArray,
+            diasApertura: diasAperturaArray
+
           }
         };
 
@@ -183,6 +192,13 @@ export const ActualizarEmpresa = () => {
         setPasswordError('Ocurrió un error al validar la contraseña');
       });
   };
+
+  const handleCloseModal = () => {
+    setModalPassword(''); // Limpia la contraseña
+    setPasswordError(''); // Limpia el mensaje de error
+    setShowPassword(false); // Oculta la contraseña
+    setShowModal(false); // Cierra el modal
+  };
   return (
     <div style={backgroundStyle} className='container'>
       <Header />
@@ -191,192 +207,218 @@ export const ActualizarEmpresa = () => {
 
         <h2 className='tittle_update'>Actualizar Perfil</h2>
         <form onSubmit={saveUser} className='form-update'>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={nombres || ''}
-              onChange={(e) => setNombres(e.target.value)}
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Nombres</span>
-          </label>
 
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={apellidos || ''}
-              onChange={(e) => setApellidos(e.target.value)}
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Apellidos</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='email'
-              placeholder=' '
-              className='form_input'
-              value={email || ''}
-              disabled={true}
-            />
-            <span className='form_text'>Correo</span>
-          </label>
+          <div className='part1_form'>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={nombres || ''}
+                onChange={(e) => setNombres(e.target.value)}
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Nombres</span>
+            </label>
 
-          <label className='form_label'>
-            <input
-              type='number'
-              placeholder=' '
-              className='form_input'
-              value={ccpropietario || ''}  // Asignar el estado
-              onChange={(e) => setCCadmin(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={apellidos || ''}
+                onChange={(e) => setApellidos(e.target.value)}
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Apellidos</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='email'
+                placeholder=' '
+                className='form_input'
+                value={email || ''}
+                disabled={true}
+              />
+              <span className='form_text'>Correo</span>
+            </label>
 
-            />
-            <span className='form_text'>Cedula</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='number'
-              placeholder=' '
-              className='form_input'
-              value={telefonoPropietario || ''}  // Asignar el estado
-              onChange={(e) => setTelefonoPropietario(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
+            <label className='form_label'>
+              <input
+                type='number'
+                placeholder=' '
+                className='form_input'
+                value={ccpropietario || ''}  // Asignar el estado
+                onChange={(e) => setCCadmin(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
 
-            />
-            <span className='form_text'>Telefono</span>
-          </label>
+              />
+              <span className='form_text'>Cedula</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='number'
+                placeholder=' '
+                className='form_input'
+                value={telefonoPropietario || ''}  // Asignar el estado
+                onChange={(e) => setTelefonoPropietario(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
 
-          <h3 className='tittle_update'>Datos Empresa</h3>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={nombreEmpresa || ''}  // Asignar el estado
-              onChange={(e) => setNombreEmpresa(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Nombre Empresa</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={NIT || ''}  // Asignar el estado
-              onChange={(e) => setNit(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>NIT</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='email'
-              placeholder=' '
-              className='form_input'
-              value={emailEmpresa || ''}  // Asignar el estado
-              onChange={(e) => setEmailEmpresa(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Correo Empresa</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={direccionEmpresa || ''}  // Asignar el estado
-              onChange={(e) => setDireccionEmpresa(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Dirección</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='number'
-              placeholder=' '
-              className='form_input'
-              value={telefonoEmpresa || ''}  // Asignar el estado
-              onChange={(e) => setTelefonoEmpresa(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Telefono</span>
-          </label>
-                    {/* horarios de atencion */}
-                    <label className='form_label'>
-            <input
-              type='time'
-              placeholder=' '
-              className='form_input'
-              value={horaApertura || ''}  // Asignar el estado
-              onChange={(e) => setHoraApertura(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Hora Apertura</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='time'
-              placeholder=' '
-              className='form_input'
-              value={horaCierre || ''}  // Asignar el estado
-              onChange={(e) => setHoraCierre(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Hora Cierre</span>
-          </label>
+              />
+              <span className='form_text'>Telefono</span>
+            </label>
 
-          <h3 className='tittle_update'>Redes Sociales</h3>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={facebook || ''}  // Asignar el estado
-              onChange={(e) => setFacebook(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Facebook</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={instagram || ''}  // Asignar el estado
-              onChange={(e) => setInstagram(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Instagram</span>
-          </label>
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={whatsApp || ''}  // Asignar el estado
-              onChange={(e) => setWhatsApp(e.target.value)}  // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>WhatsApp</span>
-          </label>
+          </div>
 
 
-          <label className='form_label'>
-            <input
-              type='text'
-              placeholder=' '
-              className='form_input'
-              value={serviciosGenerales} // Asignar el valor del estado
-              onChange={(e) => setServiciosGenerales(e.target.value)} // Actualizar el estado
-              disabled={!isEditable}
-            />
-            <span className='form_text'>Servicios Generales</span>
-          </label>
+          <div className='part2_form'>
+
+            <h3 className='tittle_update'>Datos Empresa</h3>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={nombreEmpresa || ''}  // Asignar el estado
+                onChange={(e) => setNombreEmpresa(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Nombre Empresa</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={NIT || ''}  // Asignar el estado
+                onChange={(e) => setNit(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>NIT</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='email'
+                placeholder=' '
+                className='form_input'
+                value={emailEmpresa || ''}  // Asignar el estado
+                onChange={(e) => setEmailEmpresa(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Correo Empresa</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={direccionEmpresa || ''}  // Asignar el estado
+                onChange={(e) => setDireccionEmpresa(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Dirección</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='number'
+                placeholder=' '
+                className='form_input'
+                value={telefonoEmpresa || ''}  // Asignar el estado
+                onChange={(e) => setTelefonoEmpresa(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Telefono</span>
+            </label>
+
+            {/* horarios de atencion */}
+            <label className='form_label'>
+              <input
+                type='time'
+                placeholder=' '
+                className='form_input'
+                value={horaApertura || ''}  // Asignar el estado
+                onChange={(e) => setHoraApertura(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Hora Apertura</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='time'
+                placeholder=' '
+                className='form_input'
+                value={horaCierre || ''}  // Asignar el estado
+                onChange={(e) => setHoraCierre(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Hora Cierre</span>
+            </label>
+
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={serviciosGenerales} // Asignar el valor del estado
+                onChange={(e) => setServiciosGenerales(e.target.value)} // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Servicios Generales</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={diasApertura} // Asignar el valor del estado
+                onChange={(e) => setDiasApertura(e.target.value)} // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Dias De Apertura</span>
+            </label>
+
+          </div>
+
+          <div className='part3_form'>
+            <h3 className='tittle_update'>Redes Sociales</h3>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={facebook || ''}  // Asignar el estado
+                onChange={(e) => setFacebook(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Facebook</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={instagram || ''}  // Asignar el estado
+                onChange={(e) => setInstagram(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>Instagram</span>
+            </label>
+            <label className='form_label'>
+              <input
+                type='text'
+                placeholder=' '
+                className='form_input'
+                value={whatsApp || ''}  // Asignar el estado
+                onChange={(e) => setWhatsApp(e.target.value)}  // Actualizar el estado
+                disabled={!isEditable}
+              />
+              <span className='form_text'>WhatsApp</span>
+            </label>
+
+          </div>
+
+
+
 
           <NavLink
             className={'changePassword'}
@@ -405,37 +447,47 @@ export const ActualizarEmpresa = () => {
         {/* Modal para ingresar la contraseña */}
         {showModal && (
           <ModalExitoso>
-            <h3 className='tittle_modal'>Validar contraseña</h3>
-            <div className='password_container'>
-              {passwordError && <p className='error_message'>{passwordError}</p>}
-              <input
-                className={`input_password ${passwordError ? 'input_error' : ''}`}
-                type={showPassword ? 'text' : 'password'}
-                placeholder='Ingresa tu contraseña'
-                value={modalPassword || ''}
-                onChange={(e) => setModalPassword(e.target.value)}
-              />
-              <div className='container_button'>
-                <button className='confirm' onClick={validatePasswordAndUpdate}>Confirmar</button>
-                <button className='cancel' onClick={() => setShowModal(false)}>Cancelar</button>
-              </div>
-              {modalPassword && (
-                <span
-                  className='password-toggle-icon'
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <i className={showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'}></i>
-                </span>
-              )}
+            <h3 className="tittle_modal">Validar contraseña</h3>
+            <div className="password_container">
+              {passwordError && <p className="error_message">{passwordError}</p>}
+              <div className='container-input-validate'>
 
+              <div className="input_password_wrapper">
+                <input
+                  className="input_password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Ingresa tu contraseña"
+                  value={modalPassword || ""}
+                  onChange={(e) => setModalPassword(e.target.value)}
+                />
+              </div>
+              <div className="toggle_password_visibility">
+                <label>
+                  <input
+                    className="checkbox_custom"
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                  />
+                  <span>Mostrar contraseña</span>
+                </label>
+              </div>
+              </div>
+              <div className="container_button">
+                <button className="confirm" onClick={validatePasswordAndUpdate}>
+                  Confirmar
+                </button>
+                <button className="cancel" onClick={handleCloseModal}>
+                  Cancelar
+                </button>
+              </div>
             </div>
           </ModalExitoso>
         )}
 
       </main>
 
-      <footer>
+      <footer className='footer_empresa'>
         <NavBar />
       </footer>
     </div>

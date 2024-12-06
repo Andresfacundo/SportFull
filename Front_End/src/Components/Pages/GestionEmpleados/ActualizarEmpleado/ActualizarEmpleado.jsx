@@ -7,6 +7,7 @@ import fondo_long from '../../../../assets/Images/fondos/fondo_long.png';
 import ShowManager from '../../../UI/ShowManager/ShowManager';
 import ClienteService from '../../../../services/ClienteService'; // Importar el servicio
 import { useNavigate } from 'react-router-dom';
+import NavBar from '../../../UI/NavBar/NavBar';
 
 
 export const ActualizarEmpleado = () => {
@@ -15,8 +16,10 @@ export const ActualizarEmpleado = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   const navigate = useNavigate(); // Para redirigir
@@ -59,6 +62,7 @@ useEffect(() => {
 
       <main className='main_Managers'>
         <h2 className='title_manager'>Gestores</h2>
+        <div className='container-listCards'>
 
         {/* Si hay más de un gestor , mapea sobre el arreglo y crea una ShowManager para cada uno */}
         {managers.length > 0 ? (
@@ -75,9 +79,12 @@ useEffect(() => {
         ) : (
           <p>No hay Gestores disponibles.</p>
         )}
+        </div>
 
       </main>
-
+      <footer className='footer_empresa'>
+                <NavBar />
+      </footer>
     </div>
   )
 }

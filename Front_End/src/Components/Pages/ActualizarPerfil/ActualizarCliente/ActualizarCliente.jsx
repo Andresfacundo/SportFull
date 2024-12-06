@@ -16,6 +16,8 @@ export const ActualizarCliente = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   //main
@@ -148,7 +150,7 @@ export const ActualizarCliente = () => {
     <div style={backgroundStyle} className='container'>
       <Header />
 
-      <main >
+      <main className='main-perfilEmpresa'>
 
         <h2 className='tittle_update'>Actualizar Perfil</h2>
         <form onSubmit={saveUser} className='form-update'>
@@ -244,26 +246,26 @@ export const ActualizarCliente = () => {
               {passwordError && <p className="error_message">{passwordError}</p>}
               <div className='container-input-validate'>
 
-              <div className="input_password_wrapper">
-                <input
-                  className="input_password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Ingresa tu contraseña"
-                  value={modalPassword || ""}
-                  onChange={(e) => setModalPassword(e.target.value)}
-                />
-              </div>
-              <div className="toggle_password_visibility">
-                <label>
+                <div className="input_password_wrapper">
                   <input
-                    className="checkbox_custom"
-                    type="checkbox"
-                    checked={showPassword}
-                    onChange={() => setShowPassword(!showPassword)}
+                    className="input_password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Ingresa tu contraseña"
+                    value={modalPassword || ""}
+                    onChange={(e) => setModalPassword(e.target.value)}
                   />
-                  <span>Mostrar contraseña</span>
-                </label>
-              </div>
+                </div>
+                <div className="toggle_password_visibility">
+                  <label>
+                    <input
+                      className="checkbox_custom"
+                      type="checkbox"
+                      checked={showPassword}
+                      onChange={() => setShowPassword(!showPassword)}
+                    />
+                    <span>Mostrar contraseña</span>
+                  </label>
+                </div>
               </div>
               <div className="container_button">
                 <button className="confirm" onClick={validatePasswordAndUpdate}>
@@ -279,7 +281,7 @@ export const ActualizarCliente = () => {
 
       </main>
 
-      <footer>
+      <footer className='footer_empresa'>
         <NavBar />
       </footer>
     </div>

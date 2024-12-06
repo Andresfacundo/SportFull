@@ -6,12 +6,12 @@
     align-items: center;
 }
 
-.container_agregarCancha {
+/* .container_agregarCancha {
     min-height: 100vh;
     width: 100%;
     background-color: #073B4C;
     overflow-x: hidden;
-}
+} */
 
 .tittle_agregarCancha {
     font-size: 2rem;
@@ -47,7 +47,6 @@
     border: 1.5px solid #e7e7e7;
     border-radius: 10px;
     color: #e7e7e7;
-    z-index: 90;
     outline: none;
 }
 

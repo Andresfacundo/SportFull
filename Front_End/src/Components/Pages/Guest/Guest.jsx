@@ -18,10 +18,12 @@ export const Guest = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
   return (
 
-    <div style={backgroundStyle} className='container_home_client'>
+    <div style={backgroundStyle} className='container'>
       <Header />
       <main className='main_homeGuest'>
         <OptionMenuRight link={'/SearchFields'} shade={'shade_consultCourt'} classNameImg={'icon_1'} icon={icon_01} content={'Consultar Cancha'} />

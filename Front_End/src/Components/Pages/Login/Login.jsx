@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import ClienteService from '../../../services/ClienteService';
-import logo from '../../../assets/Images/logo/3.png';
+import logo from '../../../assets/Images/logo/logo_01.png';
 import './Login.css';
 
 export const Login = () => {
@@ -52,15 +52,21 @@ export const Login = () => {
   return (
     <div className='container-login'>
 
-      <img className='logo' src={logo} alt='img' />
 
       <main className='main_login'>
 
-        <h1 className='title-login'>Iniciar sesión</h1>
+        <div className='responsivo-main'>
 
-        {error && <p className="error-message">{error}</p>}
+          <img className='logo_login' src={logo} alt='img' />
+          <h2 className='slogan_register'>Reserva tu pasión, juega sin parar.</h2>
 
-        <form onSubmit={handleLogin} className='form'>
+        </div>
+
+
+
+        <form onSubmit={handleLogin} className='form-login'>
+          <h1 className='title-login'>Iniciar sesión</h1>
+          {error && <p className="error-message">{error}</p>}
           <label className='form_label'>
             <input
               type='email'

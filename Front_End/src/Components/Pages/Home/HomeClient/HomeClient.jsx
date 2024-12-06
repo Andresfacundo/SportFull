@@ -17,23 +17,32 @@ export const HomeClient = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   return (
-    <div style={backgroundStyle} className='container_home_client'>
+    <div style={backgroundStyle} className='container'>
       <Header/>
       <main className='main_homeClient'>
+      <img className='img-left' src={icon_03} alt="" />
+      <div className='container-options-admin'>
+
         <OptionMenuRight link={'/ActualizarCliente'} shade={'shade_perfil'} classNameImg={'icon_1'} icon={icon_01} content={'Perfil'} />
         <OptionMenuLeft link={'/SearchFields'} shade={'shade_field'} classNameImg={'icon_2'} icon={icon_02} content={'Buscar Canchas'} />
         <OptionMenuRight link={'/HistorialCliente'} shade={'shade_historial'} classNameImg={'icon_3'} icon={icon_03} content={'Historial'} />
+        </div>
+
+        <img className='img-right' src={icon_03} alt="" />
+
       </main>
 
       <BtnSupport />
 
 
-      <footer>
+      <footer className='footer_empresa'>
         <NavBar/>
       </footer>
 

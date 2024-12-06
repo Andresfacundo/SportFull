@@ -1,41 +1,56 @@
-*{
+* {
     margin: 0;
     padding: 0;
     color: #e7e7e7;
 }
 
-.container_welcome{
+.container_welcome {
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-} 
 
-.title_Welcome{
-    font-size: 2.8rem;
-    margin-top: 5rem;
 }
 
-.logo_welcome{
+.main_welcome_sub {
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.title_Welcome {
+    font-size: 2.8rem;
+    margin-top: 5rem;
+
+}
+
+.logo_welcome {
     width: 10rem;
     margin-top: 6rem;
 }
 
-.slogan{
-    width: 13rem;
+.slogan {
+    width: 14rem;
     font-size: 1.2rem;
     margin-bottom: 5rem;
     text-align: center;
 }
 
-.salir{
+.salir {
     color: #07954A;
 }
 
-.option_welcome{
+.main_welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.option_welcome {
     width: 19rem;
-    height:4rem;
+    height: 4rem;
     background-color: #07954A;
     margin-bottom: 2rem;
     display: flex;
@@ -43,10 +58,73 @@
     align-items: center;
     border-radius: 10px;
     text-decoration: none;
-    box-shadow: 7px 6px 10px #07954983; 
+    box-shadow: 7px 6px 10px #07954983;
 
 }
 
-.main_welcome{
+.main_welcome {
     display: flex;
 }
+
+@media(width > 1000px) {
+
+    .main_welcome {
+        width: 90%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        ;
+        align-items: center;
+        margin: 5rem;
+        /*  background-color: #073b4c;*/
+    }
+
+    .logo_welcome {
+        width: 11rem;
+        margin: 1px auto;
+        margin-top: 6rem;
+    }
+
+    .main_welcome_sub {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        text-align: center;
+        width: 40%;
+        height: 100%;
+        /*  background-image: url("../../../assets/Images/fondos/fondo_01.png");  */
+        /*   background-color: #073b4c;           */
+    }
+
+    .main_welcome_two {
+
+        width: 20%;
+        height: 50%;
+        padding-top: 5rem;
+
+    }
+
+
+    .title_Welcome {
+        font-size: 5rem;
+        margin-top: 0.50rem;
+    }
+
+    .slogan {
+        width: 13rem;
+        font-size: 1rem;
+        margin: 1px auto;
+
+    }
+
+}
+
+/*
+@media (width > 1150px){
+    .logo_welcome{
+        
+        margin-top: 7rem;
+    }
+        
+}*/

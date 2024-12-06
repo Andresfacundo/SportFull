@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './AgregarCancha.css';
 import { Header } from '../../../Components/Layouts/Header/Header';
-import { NavLink, useNavigate } from 'react-router-dom'; 
+import { NavLink, useNavigate } from 'react-router-dom';
 import NavBar from '../../UI/NavBar/NavBar';
 import ClienteService from '../../../services/ClienteService';  // Importar ClienteService para la petición
 
 export const AgregarCancha = () => {
+
+    const backgroundStyle = {
+        backgroundColor: '#073B4C',
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+    };
     const [seleccionados, setSeleccionados] = useState({});
     const [servicios, setServicios] = useState([]);
     const [nombre, setNombre] = useState('');
@@ -45,24 +53,24 @@ export const AgregarCancha = () => {
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario desde el localStorage
         if (!user) {
             setErrorMsg("No se pudo obtener la información del usuario.");
             return;
         }
-        
+
         const empresaId = user.id; // ID de la empresa
-    
+
         // Obtener los servicios seleccionados
         const selectedServices = Object.keys(seleccionados).filter((servicio) => seleccionados[servicio]);
-    
+
         // Validar campos obligatorios
         if (!nombre || !tipoCancha || !precio || selectedServices.length === 0) {
             setErrorMsg('Por favor, completa todos los campos y selecciona al menos un servicio.');
             return;
         }
-    
+
         // Crear el objeto de la cancha
         const cancha = {
             nombre: nombre,
@@ -71,12 +79,12 @@ export const AgregarCancha = () => {
             estado: estado,
             servicios: selectedServices
         };
-    
+
         // Llamar a la API para crear la cancha
         try {
             const response = await ClienteService.createField(cancha, empresaId);
             console.log('Cancha creada exitosamente:', response.data);
-    
+
             // Actualizar localStorage con los nuevos datos
             const updatedUser = {
                 ...user,
@@ -88,7 +96,7 @@ export const AgregarCancha = () => {
             console.log(updatedUser)// Agregar la nueva cancha al array de canchas
             
             localStorage.setItem('user', JSON.stringify(updatedUser)); // Guardar el nuevo usuario en localStorage
-    
+
             navigate('/GestionCanchas'); // Redirigir a la página de gestión de canchas
             setErrorMsg('');  // Limpiar el mensaje de error
         } catch (error) {
@@ -96,10 +104,10 @@ export const AgregarCancha = () => {
             setErrorMsg(`Error al crear la cancha: ${mensajeError}`);
         }
     };
-    
+
 
     return (
-        <div className='container_agregarCancha'>
+        <div style={backgroundStyle} className='container'>
             <Header />
 
             <main className='main_agregarCancha'>
@@ -121,7 +129,7 @@ export const AgregarCancha = () => {
 
                     <div className="cancha-type-container">
                         <p>Tipo de Cancha</p>
-                        <div className='container_types'>
+                        <div className='container_types_addfield '>
                             <label className="radio-option">
                                 <input
                                     type="radio"
@@ -157,7 +165,7 @@ export const AgregarCancha = () => {
                     </div>
 
                     {/* Mostrar los servicios generales dinámicamente */}
-                    <div className="servicios">
+                    <div className="servicios_addField">
                         <p>Servicios</p>
                         <div className="opciones">
                             {servicios.length > 0 ? (
@@ -222,7 +230,7 @@ export const AgregarCancha = () => {
                     <NavLink className='return' to='/GestionCanchas'>Volver</NavLink>
                 </form>
             </main>
-            <footer>
+            <footer className='footer_empresa'>
                 <NavBar />
             </footer>
         </div>

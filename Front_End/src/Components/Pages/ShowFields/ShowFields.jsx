@@ -13,6 +13,8 @@ export const ShowFields = () => {
         backgroundPosition: 'center',
         height: '100%',
         width: '100%',
+        display: 'flex',
+        flexDirection: 'column'
     };
 
     // Hook para el estado de usuario
@@ -25,6 +27,8 @@ export const ShowFields = () => {
 
             <main className='main_ShowFields'>
                 <h2>Canchas</h2>
+                <div className='container-listCards'>
+
                 {/* Si hay más de una cancha, mapea sobre el arreglo y crea una SmallCard para cada una */}
                 {fields.length > 0 ? (
                     fields.map((field, index) => (
@@ -34,12 +38,12 @@ export const ShowFields = () => {
                             nombreCancha={field.nombre || 'Cancha'}
                         >
                             <div className="item">
-                            <span className="big-text"></span>
+                                <span className="big-text"></span>
 
                                 <a href='#' className="regular-text">{field.tipoCancha}</a>
                             </div>
                             <div className="item">
-                            <span className="big-text"></span>
+                                <span className="big-text"></span>
 
                                 <a href='#' className="regular-text">${field.precio.toFixed(0)}</a>
                             </div>
@@ -52,7 +56,12 @@ export const ShowFields = () => {
                 ) : (
                     <p>No hay canchas disponibles.</p>
                 )}
+                </div>
             </main>
+            <footer className='footer_empresa'>
+                <NavBar />
+            </footer>
+
         </div>
     )
 }

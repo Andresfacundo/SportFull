@@ -41,3 +41,9 @@
     width: 4rem;
     opacity: 0.4; 
 }
+
+@media (min-width: 1280px){
+    .shade_password{
+        display: none;
+    }
+}

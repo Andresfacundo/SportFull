@@ -8,6 +8,15 @@ import { Header } from '../../Layouts/Header/Header';
 import NavBar from '../../UI/NavBar/NavBar';
 
 const Soporte = () => {
+
+
+  const backgroundStyle = {
+    backgroundColor: '#073B4C',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
+  };
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
   const [nombres, setNombres] = useState('');
@@ -46,10 +55,10 @@ const Soporte = () => {
   };
 
   return (
-    <div className="contenedor-soporte">
+    <div style={backgroundStyle} className='container'>
       <Header />
 
-      <main>
+      <main className='main_soporte'>
         <h1 className="title_soporte">Soporte</h1>
         <img className="img-soporte" src={imgSoporte} alt="" />
 
@@ -93,8 +102,7 @@ const Soporte = () => {
           </label>
 
           <label className="form_label">
-            <input
-              type="text"
+            <textarea
               placeholder=" "
               className="form_input"
               value={mensaje}
@@ -103,6 +111,7 @@ const Soporte = () => {
             />
             <span className="form_text">Mensaje</span>
           </label>
+
 
           <button type="submit" className="register">
             Enviar Mensaje
@@ -113,8 +122,8 @@ const Soporte = () => {
         </form>
       </main>
 
-      <footer>
-        <NavBar/>
+      <footer className='footer_empresa'>
+        <NavBar />
       </footer>
 
     </div>

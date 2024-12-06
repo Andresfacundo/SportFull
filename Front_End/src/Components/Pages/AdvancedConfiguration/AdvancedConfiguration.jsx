@@ -15,8 +15,10 @@ export const AdvancedConfiguration = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   const [userType, setUserType] = useState(null);
@@ -49,16 +51,11 @@ export const AdvancedConfiguration = () => {
 
       <main className='main_advancedUpdates'>
         <OptionMenuRight link={'/ChangePassword'} shade={'shade_password'} classNameImg={'icon_1'} icon={icon_01} content={'Contraseña'} />
-        <OptionMenuLeft link={'/PaymentMethod'} shade={'shade_pay'} classNameImg={'icon_2'} icon={icon_02} content={'Metodo Pago'} />
-        <OptionMenuRight link={'/StatusAccount'} shade={'shade_StatusAccount'} classNameImg={'icon_01'} icon={icon_01} content={'Estado de Cuenta'} />
 
         {/* Usamos un botón que navega dinámicamente según el tipo de usuario */}
         <button className='return' onClick={handleNavigation}>Volver</button>
       </main>
-{/* 
-      <footer>
-        <NavBar/>
-      </footer> */}
+
     </div>
   );
 };
