@@ -46,6 +46,8 @@ import './App.css'
 import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import { UpdateReservationDate } from './Components/UI/UpdateReservationDate/UpdateReservationDate.jsx'
 import Soporte from './Components/Pages/Soporte/Soporte.jsx'
+import Dashboard from './Components/UI/Dashboard/Dashboard.jsx'
+
 
 function App() {
 
@@ -93,6 +95,7 @@ function App() {
       <Route path="/SearchFields" element={<SearchFields />} />
       <Route path="/UpdateReservationDate" element={<UpdateReservationDate />} />
       <Route path="/Soporte" element={<Soporte />} />
+      <Route path="/Dashboard" element={<Dashboard />} />  
 
 
     </Routes>
