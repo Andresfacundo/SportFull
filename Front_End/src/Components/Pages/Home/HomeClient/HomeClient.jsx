@@ -17,7 +17,7 @@ export const HomeClient = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
     display: 'flex',
     flexDirection: 'column'
@@ -42,7 +42,7 @@ export const HomeClient = () => {
       <BtnSupport />
 
 
-      <footer className='footer_client'>
+      <footer className='footer_empresa'>
         <NavBar/>
       </footer>
 

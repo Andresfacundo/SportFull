@@ -34,7 +34,7 @@ export const HomeEmpresa = () => {
           <OptionMenuRight link={'/ActualizarEmpresa'} shade={'shade_perfil'} classNameImg={'icon_1'} icon={icon_01} content={'Perfil'} />
           <OptionMenuLeft link={'/GestionCanchas'} shade={'shade_ManageFields'} classNameImg={'icon_2'} icon={icon_02} content={'Gestión Canchas'} />
           <OptionMenuRight link={'/GestionEmpleados'} shade={'shade_ManageReservations'} classNameImg={'icon_3'} icon={icon_03} content={'Gestión Empleados'} />
-          <OptionMenuLeft link={'/GestionEmpleados'} shade={'shade_dashborad'} classNameImg={'icon_4'} icon={icon_04} content={'Dashboard'} />
+          <OptionMenuLeft link={'/Soporte'} shade={'shade_dashborad'} classNameImg={'icon_4'} icon={icon_04} content={'Soporte'} />
         </div>
         <img className='img-right' src={icon_03} alt="" />
 

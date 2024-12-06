@@ -9,12 +9,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #073B4C;
+    background-color: #073B4C;    
 }
 
-.logo {
-    width: 15rem;
+.logo_login {
+    width: 8rem;
     margin-top: 6rem;
+    margin-bottom: 3rem;
 }
 
 .login,
@@ -27,13 +28,13 @@
     border-radius: 10px;
     text-decoration: none;
     box-shadow: 7px 6px 10px #07954983;
-    width: 19rem;
+    width: 15rem;
     border: none;
     font-size: 1.2rem;
 }
 
 .login {
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 
 .recover_password {
@@ -47,13 +48,18 @@
     font-size: 2.8rem;
     margin-bottom: 3rem;
     font-weight: 400;
+    text-align: center;
 }
 
-.form {
+.form-login {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 20rem; /* Fija el ancho del formulario */
+    margin: 0 auto; /* Centra horizontalmente */
+    position: relative; /* Para mantener contenido interno */
 }
+
 
 .form_label {
     width: 100%;
@@ -103,4 +109,63 @@
     color: #e7e7e7;
     text-align: center;
     margin-bottom: 1rem;
+}
+
+.responsivo-main{
+    text-align: center;   
+}
+
+@media (width > 1200px) {
+    .container-login {
+        width: 100%;
+        height: 100%;   
+        background-image: linear-gradient(180deg, #073B4C,#073B4C, #07954A, #073b4c,#073B4C );   
+           
+           
+    }
+
+    .logo_login {
+        width: 10rem;
+        margin: 0;      
+                      
+    }
+    
+    .title-login {
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+        font-weight: 400;
+    }
+
+    .login {
+        margin-top: 1rem;        
+    }
+
+    .main_login{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 80%;
+        height: 80%;         
+        margin: 2rem;      
+        border: 3px solid red;     
+        padding: 2rem;          
+        background-image: url("../../../assets/Images/fondos/fondo_long.png");
+        background-position: center;
+        border: 3px solid #073B4C;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px 5px #29b86c;
+    }
+
+    .form-login {               
+       border-left: 3px solid rgb(120, 120, 120);
+       ;       
+       padding-left: 8rem;
+       margin: 0;
+              
+    }  
+    
+    .error-message{
+        font-size: 0.5rem;
+    }
 }

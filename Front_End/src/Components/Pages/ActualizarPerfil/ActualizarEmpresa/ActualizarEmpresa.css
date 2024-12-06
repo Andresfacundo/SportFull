@@ -18,12 +18,21 @@
     
 }
 
+.part1_form, .part2_form, .part3_form{
+  width: 80%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .main-perfilEmpresa{
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 7rem;
 }
 
 /* Estilos para el contenedor del modal (fondo oscuro) */
@@ -149,5 +158,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+
+  }
+
+
+  
+  @media (min-width: 1024px){
+
+    .form-update{
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .part1_form, .part2_form, .part3_form{
+      width: 30%;
+    }
+
 
   }

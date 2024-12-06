@@ -1,3 +1,10 @@
+*{
+    margin: 0;
+    padding: 0;
+    color: #e7e7e7;
+}
+
+
 .shade_ManageFields {
     width: 62%;
     height: 3rem;
@@ -19,7 +26,7 @@
 }
 
 .shade_dashborad {
-    width: 49%;
+    width: 42%;
     height: 3rem;
     display: flex;
     position: absolute;
@@ -100,7 +107,8 @@
 
 }
 
-@media (min-width: 1024px) {
+
+@media (min-width: 1280px){
 
     .main_homeEmpresa {
         width: 100%;
@@ -108,6 +116,7 @@
         gap: 1rem;
         justify-content: space-evenly;
     }
+
 
     .icon_1,
     .icon_2,
@@ -151,10 +160,5 @@
         width: 30%;
         gap: 1rem;
     }
-
-
-
-
-
 
 }

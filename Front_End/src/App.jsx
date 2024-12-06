@@ -42,7 +42,6 @@ import { PendingReservations } from './Components/Pages/PendingReservations/Pend
 import { CardReservation } from './Components/UI/CardReservation/CardReservation.jsx'
 import PaymentMethod from './Components/Pages/PaymentMethod/PaymentMethod.jsx'
 import { SearchFields } from './Components/Pages/GestionCanchas/SearchFields/SearchFields.jsx'
-import './App.css'
 import CardGps from './Components/UI/CardGps/CardGps.jsx'
 import { UpdateReservationDate } from './Components/UI/UpdateReservationDate/UpdateReservationDate.jsx'
 import Soporte from './Components/Pages/Soporte/Soporte.jsx'

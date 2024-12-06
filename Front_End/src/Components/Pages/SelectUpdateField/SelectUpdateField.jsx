@@ -14,6 +14,8 @@ export const SelectUpdateField = () => {
         backgroundPosition: 'center',
         height: '100%',
         width: '100%',
+        display: 'flex',
+        flexDirection: 'column'
     };
 
     const navigate = useNavigate(); // Para redirigir
@@ -21,7 +23,7 @@ export const SelectUpdateField = () => {
     // Función para manejar la actualización de una cancha
     const handleUpdate = (field) => {
         // Redirigir a la página de actualización, pasando el ID de la cancha
-        navigate(`/UpdateField/${field.id}`); 
+        navigate(`/UpdateField/${field.id}`);
     };
 
     // Hook para el estado de usuario
@@ -51,21 +53,26 @@ export const SelectUpdateField = () => {
 
             <main className='main_ShowFields'>
                 <h2>Canchas</h2>
-                {/* Si hay más de una cancha, mapea sobre el arreglo y crea una SmallCard para cada una */}
-                {fields.length > 0 ? (
-                    fields.map((field, index) => (
-                        <SmallCard
-                            key={index}
-                            nombreEmpresa={user?.adminModels?.nombreEmpresa || 'Empresa'}
-                            nombreCancha={field.nombre || 'Cancha'}
-                        >
-                            <button className='btn-action' onClick={() => handleUpdate(field)}>Actualizar</button> {/* Botón para actualizar */}
-                        </SmallCard>
-                    ))
-                ) : (
-                    <p>No hay canchas disponibles.</p>
-                )}
+                <div className='container-listCards'>
+                    {/* Si hay más de una cancha, mapea sobre el arreglo y crea una SmallCard para cada una */}
+                    {fields.length > 0 ? (
+                        fields.map((field, index) => (
+                            <SmallCard
+                                key={index}
+                                nombreEmpresa={user?.adminModels?.nombreEmpresa || 'Empresa'}
+                                nombreCancha={field.nombre || 'Cancha'}
+                            >
+                                <button className='btn-action' onClick={() => handleUpdate(field)}>Actualizar</button> {/* Botón para actualizar */}
+                            </SmallCard>
+                        ))
+                    ) : (
+                        <p>No hay canchas disponibles.</p>
+                    )}
+                </div>
             </main>
+            <footer className='footer_empresa'>
+                <NavBar />
+            </footer>
         </div>
     );
 };

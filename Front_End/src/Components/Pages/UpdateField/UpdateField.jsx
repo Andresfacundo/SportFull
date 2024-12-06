@@ -7,6 +7,13 @@ import NavBar from '../../UI/NavBar/NavBar';
 import ClienteService from '../../../services/ClienteService';
 
 export const UpdateField = () => {
+    const backgroundStyle = {
+        backgroundColor: '#073B4C',
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+    };
     const { id } = useParams();
     const [seleccionados, setSeleccionados] = useState({});
     const [serviciosGenerales, setServiciosGenerales] = useState([]);
@@ -140,7 +147,7 @@ export const UpdateField = () => {
 
 
     return (
-        <div className='container_agregarCancha'>
+        <div style={backgroundStyle} className='container'>
             <Header />
             <main className='main_agregarCancha'>
                 <h2 className='tittle_agregarCancha'>Actualizar Cancha</h2>
@@ -192,7 +199,7 @@ export const UpdateField = () => {
                         <span className='form_text'>Valor por hora</span>
                     </label>
 
-                    <div className="servicios">
+                    <div className="servicios_addField">
                         <p>Servicios</p>
                         <div className="opciones">
                             {serviciosGenerales.length > 0 ? (
@@ -245,7 +252,7 @@ export const UpdateField = () => {
                     <NavLink className='return' to='/GestionCanchas'>Volver</NavLink>
                 </form>
             </main>
-            <footer>
+            <footer className='footer_empresa'>
                 <NavBar />
             </footer>
         </div>

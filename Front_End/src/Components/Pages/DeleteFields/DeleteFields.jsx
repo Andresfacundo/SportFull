@@ -13,6 +13,8 @@ export const DeleteFields = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   // Hook para el estado de usuario
@@ -40,36 +42,36 @@ export const DeleteFields = () => {
   const handleDelete = (fieldId) => {
     const user = JSON.parse(localStorage.getItem('user')); // Obtener el usuario desde el localStorage
     if (!user) {
-        console.error("No se pudo obtener la información del usuario.");
-        return;
+      console.error("No se pudo obtener la información del usuario.");
+      return;
     }
 
     ClienteService.deleteField(fieldId, user.adminModels.id) // Pasa el ID de la cancha y la empresa
-        .then(response => {
-            console.log('Cancha eliminada:', response.data);
-            // Filtra las canchas eliminadas para actualizar la lista en la interfaz
-            const updatedFields = user.adminModels.fields.filter(field => field.id !== fieldId);
-            setFields(updatedFields);
+      .then(response => {
+        console.log('Cancha eliminada:', response.data);
+        // Filtra las canchas eliminadas para actualizar la lista en la interfaz
+        const updatedFields = user.adminModels.fields.filter(field => field.id !== fieldId);
+        setFields(updatedFields);
 
-            // Actualizar el usuario en el localStorage
-            const updatedUser = {
-                ...user,
-                adminModels: {
-                    ...user.adminModels,
-                    fields: updatedFields // Actualiza las canchas en el usuario
-                }
-            };
+        // Actualizar el usuario en el localStorage
+        const updatedUser = {
+          ...user,
+          adminModels: {
+            ...user.adminModels,
+            fields: updatedFields // Actualiza las canchas en el usuario
+          }
+        };
 
-            // Guarda el usuario actualizado en el localStorage
-            localStorage.setItem('user', JSON.stringify(updatedUser));
+        // Guarda el usuario actualizado en el localStorage
+        localStorage.setItem('user', JSON.stringify(updatedUser));
 
-            // Actualiza el estado de usuario para reflejar el cambio
-            setUser(updatedUser);
-        })
-        .catch(error => {
-            console.error('Error al eliminar la cancha:', error.response.data);
-        });
-};
+        // Actualiza el estado de usuario para reflejar el cambio
+        setUser(updatedUser);
+      })
+      .catch(error => {
+        console.error('Error al eliminar la cancha:', error.response.data);
+      });
+  };
 
 
   return (
@@ -78,25 +80,29 @@ export const DeleteFields = () => {
 
       <main className='main_ShowFields'>
         <h2>Canchas</h2>
-        {/* Si hay más de una cancha, mapea sobre el arreglo y crea una SmallCard para cada una */}
-        {fields.length > 0 ? (
-          fields.map((field, index) => (
-            <SmallCard
-              key={index}
-              nombreEmpresa={user?.adminModels?.nombreEmpresa || 'Empresa'}
-              nombreCancha={field.nombre || 'Cancha'}
-            >
-              <button className='btn-action' onClick={() => handleDelete(field.id)}>Eliminar</button> {/* Botón para eliminar */}
-            </SmallCard>
-          ))
-        ) : (
-          <p>No hay canchas disponibles.</p>
-        )}
+
+        <div className='container-listCards'>
+          {/* Si hay más de una cancha, mapea sobre el arreglo y crea una SmallCard para cada una */}
+          {fields.length > 0 ? (
+            fields.map((field, index) => (
+              <SmallCard
+                key={index}
+                nombreEmpresa={user?.adminModels?.nombreEmpresa || 'Empresa'}
+                nombreCancha={field.nombre || 'Cancha'}
+              >
+                <button className='btn-action' onClick={() => handleDelete(field.id)}>Eliminar</button> {/* Botón para eliminar */}
+              </SmallCard>
+            ))
+          ) : (
+            <p>No hay canchas disponibles.</p>
+          )}
+
+        </div>
       </main>
 
-      {/* <footer>
+      <footer className='footer_empresa'>
         <NavBar />
-      </footer> */}
+      </footer>
     </div>
   );
 };

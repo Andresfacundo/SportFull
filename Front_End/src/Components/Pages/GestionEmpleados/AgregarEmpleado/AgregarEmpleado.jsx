@@ -7,6 +7,13 @@ import ModalExitoso from '../../../UI/ModalExitoso/ModalExitoso';
 
 
 export const AgregarEmpleado = () => {
+  const backgroundStyle = {
+    backgroundColor: '#073B4C',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
+};
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
@@ -94,7 +101,7 @@ export const AgregarEmpleado = () => {
   };
 
   return (
-    <div className='container_agregarEmpleado'>
+    <div style={backgroundStyle} className='container'>
       <Header />
 
       <main className='main_agregarEmpleado'>

@@ -19,12 +19,12 @@
 }
 
 .main_actualizarClient{
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 5rem;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 7rem;
 }
 
 
@@ -55,12 +55,6 @@
 
   }
 
-  .footer_client{
-    width: 100%;
-    height: auto;
-    position: fixed; 
-    top: 96%;
-}
 
   .input_password:focus{
     border-color:#07954A; /* Borde rojo al hacer clic */

@@ -3,9 +3,10 @@
     width: 100%;
     height: auto;
     display: flex;
-    flex-direction: column;
-    gap: 4rem;
-    margin-bottom: 5rem;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8rem;
 }
 .shade_consultfield{
     width: 67%;
@@ -48,4 +49,11 @@
     box-shadow: -35px 5px 3px rgba(0, 0,0, 0.6) ;
 
     
+}
+
+
+@media (min-width: 1280px){
+    .shade_addfield,.shade_consultfield,.shade_dropfield,.shade_updatefield{
+        display: none;
+    }
 }

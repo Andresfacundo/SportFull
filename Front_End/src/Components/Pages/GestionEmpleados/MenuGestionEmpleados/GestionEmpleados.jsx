@@ -18,24 +18,30 @@ export const GestionEmpleados = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
   return (
     <div style={backgroundStyle} className='container'>
       <Header />
 
       <main className='main_gestionEmpleados'>
-        <OptionMenuRight link={'/AddEmployee'} shade={'shade_addEmployee'} classNameImg={'icon_1'} icon={icon_01} content={'Agregar Empleado'} />
-        <OptionMenuLeft link={'/DeleteEmployee'} shade={'shade_dropEmployee'} classNameImg={'icon_2'} icon={icon_02} content={'Eliminar Empleado'} />
-        <OptionMenuRight link={'/UpdateEmployee'} shade={'shade_updateEmployee'} classNameImg={'icon_3'} icon={icon_03} content={'Actualizar Empleado'} />
-        <OptionMenuLeft link={'/ShowEmployee'} shade={'shade_consultEmployee'} classNameImg={'icon_4'} icon={icon_04} content={'Consultar Empleado'} />
+        <img className='img-left' src={icon_03} alt="" />
+        <div className='container-options-admin'>
+          <OptionMenuRight link={'/AddEmployee'} shade={'shade_addEmployee'} classNameImg={'icon_1'} icon={icon_01} content={'Agregar Empleado'} />
+          <OptionMenuLeft link={'/DeleteEmployee'} shade={'shade_dropEmployee'} classNameImg={'icon_2'} icon={icon_02} content={'Eliminar Empleado'} />
+          <OptionMenuRight link={'/UpdateEmployee'} shade={'shade_updateEmployee'} classNameImg={'icon_3'} icon={icon_03} content={'Actualizar Empleado'} />
+          <OptionMenuLeft link={'/ShowEmployee'} shade={'shade_consultEmployee'} classNameImg={'icon_4'} icon={icon_04} content={'Consultar Empleado'} />
+        </div>
+        <img className='img-right' src={icon_03} alt="" />
+      
+      </main>
 
-        </main>
-
-
-
-      {/* <footer>
+      <footer className='footer_empresa'>
         <NavBar />
-      </footer> */}
+      </footer>
+
+
     </div>
   )
 }

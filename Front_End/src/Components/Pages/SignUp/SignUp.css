@@ -10,11 +10,17 @@
     flex-direction: column;
     align-items: center;
     background-color: #073B4C;
+    text-align: center;
+    padding-bottom: 3rem;
 }
 
-.logo {
+.logo-registro {
     width: 9rem;
     margin: 6rem 0 3rem 0;
+}
+
+.main_SignUp{
+    margin: 0px 0px 1rem 0px;
 }
 
 .title_signUp {
@@ -51,8 +57,8 @@
 
 .register,
 .return {
-    margin-top: 3rem;
-    width: 19rem;
+    margin-top: 2rem;
+    width: 15rem;
     border: none;
     height: 4rem;
     background-color: #07954A;
@@ -68,7 +74,7 @@
 }
 
 .return{
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
 }
 
 
@@ -134,6 +140,10 @@
 
 }
 
+.slogan_register{
+    display: none;
+}
+
 .form_inputs {
     margin-top: 1rem;
     display: grid;
@@ -171,7 +181,6 @@
     top: -3.3rem;
     left: 1rem;
     align-items: center;
-    transform-origin: right center;
     transition: transform .3s;
     border-radius: 10px;
 }
@@ -208,4 +217,96 @@
   .message{
     text-align: justify;
   }
-  
+
+  .parrafo-tipo-cuenta{
+    text-align: left;
+    margin-bottom: 2rem;
+}
+  .contenedor-principal{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @media (width > 1200px) {
+
+    .signUp{       
+        background-image: linear-gradient(180deg, #073B4C,#073B4C, #07954A, #073b4c,#073B4C ); 
+        padding-bottom: 0;
+    }
+
+    .title_signUp{
+        font-size: 2rem;    
+        margin:0 0 1rem 0;  
+    }
+
+    .contenedor-principal{
+        width: 90%;
+        height: 85%;
+        margin: 4rem ;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        background-image: url("../../../assets/Images/fondos/fondo_long.png");
+        border: 1px solid #07954A;
+        border-radius: 15px;
+        box-shadow: 0px 0px 5px 5px #07954A;
+        align-items: center;
+    }
+
+    .logo-registro {
+        width: 10rem;
+        margin: 0;
+    }
+
+    .slogan_register{
+        display: block;
+        font-size: 1rem;
+    }
+    .contenedor-registro-responsivo{
+        text-align: center;        
+        width: 20%;
+        
+    }
+
+    .contenedor-registro-responsivo-two{
+        margin: 2rem;
+        text-align: left;
+        border-left: 3px solid rgb(120, 120, 120);
+        padding-left: 5rem;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-right: 5rem;
+       
+    }
+
+    .form_input{
+        margin: 0;    
+
+    }
+
+    .registro-ultima-seccion{
+        margin-top: 3rem;
+    }
+    .parrafo-tipo-cuenta{
+        text-align: left;
+        margin: 2rem;
+    }
+
+    .form{
+        padding: 0;
+        margin: 0;
+    }
+    .account-type-container{
+        
+        margin: 0;
+        padding: 0;
+    }
+    
+  }
+
+ 
