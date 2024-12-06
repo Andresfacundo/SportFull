@@ -82,9 +82,10 @@ export const AgregarCancha = () => {
                 ...user,
                 adminModels: {
                     ...user.adminModels,
-                    fields: [...user.adminModels.fields, response.data] // Agregar la nueva cancha al array de canchas
+                    fields: user.adminModels?.fields ? [...user.adminModels.fields, response.data] : [response.data]
                 }
             };
+            console.log(updatedUser)// Agregar la nueva cancha al array de canchas
             
             localStorage.setItem('user', JSON.stringify(updatedUser)); // Guardar el nuevo usuario en localStorage
     
