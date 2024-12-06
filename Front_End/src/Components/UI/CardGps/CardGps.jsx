@@ -102,9 +102,10 @@ const CardGps = () => {
   // Obtener datos del backend y geocodificarlos
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/admin/find-all`)
+      .get(`http://localhost:8080/admin/find-all-no-img`)
       .then((response) => {
         const dataCompany = response.data;
+        console.log("Respuesta del backend:", response.data);
         setAllCompanies(dataCompany); // Guarda las empresas originales
         // Continúa con la lógica de extracción y geocodificación
         const allFields = dataCompany.flatMap((empresa) =>
@@ -330,6 +331,15 @@ const geocodeFields = async (fields) => {
     });
   };
 
+
+    //estado derivado para mostar canchas dependiendo del filtro
+
+    const filteredCompanies = allCompanies.filter((empresa) =>
+      filteredLocations.some((location) => location.id_empresa === empresa.id)
+    );
+    
+    
+
   //Filtrar por tipo cancha
   const handleTipoCanchaChange = (tipo) => {
     setSelectedTiposCancha(
@@ -384,13 +394,6 @@ const geocodeFields = async (fields) => {
     }
   };
 
-
-  //estado derivado para mostar canchas dependiendo del filtro
-
-  const filteredCompanies = allCompanies.filter((empresa) =>
-    filteredLocations.some((location) => location.id_empresa === empresa.id)
-  );
-  
 
   return (
     <div style={backgroundStyle} className='container'  >
@@ -596,7 +599,7 @@ const geocodeFields = async (fields) => {
 
 
       {/* Tarjetas de empresas */}
-<section className="empresas">
+      <section className="empresas">
   <h3>Resultado búsqueda</h3>
   <div className="lista-empresas">
     {filteredCompanies.length > 0 ? (
@@ -606,10 +609,18 @@ const geocodeFields = async (fields) => {
           <button
             className="btn-arrive"
             onClick={() => {
+              // Lógica para manejar el clic en "Cómo llegar"
               const location = geocodedFields.find(
                 (field) => field.id_empresa === empresa.id
               );
               if (location) {
+                // Filtramos las empresas para eliminar la seleccionada
+                const updatedCompanies = allCompanies.filter(
+                  (empresa) => empresa.id !== empresa.id
+                );
+                setAllCompanies(updatedCompanies);
+
+                // Calculamos la ruta solo si se encuentra la ubicación
                 calcularRuta({ lat: location.lat, lng: location.lng });
               } else {
                 alert("No se encontraron coordenadas para esta empresa.");
