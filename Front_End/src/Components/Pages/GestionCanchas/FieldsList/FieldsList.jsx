@@ -14,13 +14,15 @@ export const FieldsList = () => {
     backgroundPosition: 'center',
     height: '100%',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   // Estados para las canchas y posibles errores
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCancha, setSelectedCancha] = useState(null);
 
   // Cargar las canchas al montar el componente
@@ -59,7 +61,7 @@ export const FieldsList = () => {
   return (
     <div style={backgroundStyle} className='container'>
       <Header />
-      
+
       <main className='main_foundFields'>
         <h2 className='title_foundFields'>Canchas</h2>
         {fields.length > 0 ? (
@@ -90,6 +92,10 @@ export const FieldsList = () => {
       {isModalVisible && selectedCancha && (
         <BigCard cancha={selectedCancha} onClose={handleCloseModal} />
       )}
+
+<footer className='footer_empresa'>
+        <NavBar/>
+      </footer>
     </div>
   );
 };

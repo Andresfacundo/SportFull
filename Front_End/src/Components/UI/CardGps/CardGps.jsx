@@ -40,7 +40,7 @@ const CardGps = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: 'auto',
+    height: '100vh',
     width: '100%',
     alignItems: 'center',
     display: 'flex',

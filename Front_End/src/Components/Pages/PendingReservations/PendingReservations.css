@@ -5,6 +5,8 @@
     flex-direction: column;
     gap: 4rem;
     margin-bottom: 5rem;
+    align-items: center;
+    margin-top: 8rem;
 }
 
 

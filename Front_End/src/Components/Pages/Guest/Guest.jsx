@@ -16,7 +16,7 @@ export const Guest = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
     display: 'flex',
     flexDirection: 'column'

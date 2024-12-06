@@ -10,7 +10,7 @@ export const Welcome = () => {
     backgroundImage: `url(${fondo})`,
     backgroundSize: 'cover', 
     backgroundPosition: 'center', 
-    height: '100%', 
+    height: '100vh', 
     width: '100%', 
   };
   return (

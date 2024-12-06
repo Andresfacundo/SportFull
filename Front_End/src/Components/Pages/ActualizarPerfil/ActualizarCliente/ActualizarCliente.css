@@ -4,6 +4,7 @@
 }
 
 .container{
+  align-items: center;
     overflow-x: hidden;
 }
 .tittle_update{

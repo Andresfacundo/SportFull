@@ -12,8 +12,10 @@ export const PendingReservations = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   const [fields, setFields] = useState([]);
@@ -50,7 +52,7 @@ export const PendingReservations = () => {
   }, [userId]);
   return (
     <div style={backgroundStyle} className="container">
-      <Header />
+      {/* <Header /> */}
       <main className="main_pendingReservations">
         <h2 className="title_pendingReservations">Reservas Pendientes</h2>
         {loading ? (

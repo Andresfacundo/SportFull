@@ -4,9 +4,10 @@
     display: flex;
     flex-direction: column;
     gap: 4rem;
-    margin-bottom: 5rem;
+    margin-bottom: 10rem;
 }
 
 .title_foundFields{
     font-size: 2.5rem;
+    text-align: center;
 }

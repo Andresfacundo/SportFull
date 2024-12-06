@@ -150,7 +150,7 @@ export const ActualizarCliente = () => {
     <div style={backgroundStyle} className='container'>
       <Header />
 
-      <main className='main-perfilEmpresa'>
+      <main className='main_actualizarClient'>
 
         <h2 className='tittle_update'>Actualizar Perfil</h2>
         <form onSubmit={saveUser} className='form-update'>

@@ -18,8 +18,10 @@ export const HistorialCliente = () => {
     backgroundImage: `url(${fondo_long})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '100%',
+    height: '100vh',
     width: '100%',
+      display: 'flex',
+    flexDirection: 'column'
   };
 
   useEffect(() => {
@@ -101,7 +103,7 @@ export const HistorialCliente = () => {
   if (reservations.length === 0) {
     return (
       <div style={backgroundStyle} className="container">
-        <Header />
+        {/* <Header/> */}
         <main className="main_historialClient">
           <h2 className="title_historialClient">Historial</h2>
           <p>No tienes reservas registradas.</p>
@@ -112,7 +114,7 @@ export const HistorialCliente = () => {
 
   return (
     <div style={backgroundStyle} className="container">
-      <Header />
+      {/* <Header /> */}
       <main className="main_historialClient">
         <h2 className="title_historialClient">Historial</h2>
 
@@ -185,9 +187,6 @@ export const HistorialCliente = () => {
         </div>
       </main>
 
-      <footer>
-        <NavBar/>
-      </footer>
 
       {modalOpen && selectedReservation && (
         <UpdateReservationDate
@@ -195,6 +194,9 @@ export const HistorialCliente = () => {
           onClose={() => setModalOpen(false)}
         />
       )}
+      <footer className='footer_empresa'>
+        <NavBar/>
+      </footer>
     </div>
   );
 };

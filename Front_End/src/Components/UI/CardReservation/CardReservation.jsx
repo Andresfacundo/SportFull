@@ -16,17 +16,17 @@ export const CardReservation = ({ empresa, cancha, fechaReserva, horaInicio, hor
     }
   };
 
-  // Función para determinar la clase según la asistencia
-  const getStatusAsistencia = (asistida) => {
-    switch (asistida) {
-      case 'SI':
-        return 'status-green';
-      case 'NO':
-        return 'status-red';
-      default:
-        return '';
-    }
-  };
+  // // Función para determinar la clase según la asistencia
+  // const getStatusAsistencia = (asistida) => {
+  //   switch (asistida) {
+  //     case 'SI':
+  //       return 'status-green';
+  //     case 'NO':
+  //       return 'status-red';
+  //     default:
+  //       return '';
+  //   }
+  // };
 
   // Verifica si el estado permite clickeo
   const isClickable = estado === 'CONFIRMADA' || estado === 'PENDIENTE';
@@ -38,7 +38,6 @@ export const CardReservation = ({ empresa, cancha, fechaReserva, horaInicio, hor
     >
       <div className="tittle-reservation">
         <h3>Reservación #{id} </h3>
-        <p>{fechaPago}</p>
       </div>
       <div className="container-description">
         <div className="container-details">
@@ -61,8 +60,7 @@ export const CardReservation = ({ empresa, cancha, fechaReserva, horaInicio, hor
         <div className="container-status">
           <h4>Estado</h4>
           <h4 className={`status ${getStatusClass(estado)}`}>{estado}</h4>
-          <h4>Asistida</h4>
-          <h4 className={`attendance ${getStatusAsistencia(asistida)}`}>{asistida}</h4>
+          
         </div>
       </div>
     </div>

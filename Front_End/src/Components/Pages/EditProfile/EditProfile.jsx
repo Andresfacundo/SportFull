@@ -18,8 +18,9 @@ import avatar_female_4 from "../../../assets/Images/Avatars/Females/avatar_femal
 import avatar_female_5 from "../../../assets/Images/Avatars/Females/avatar_female_5.png";
 import avatar_female_6 from "../../../assets/Images/Avatars/Females/avatar_female_6.png";
 import ClienteServices from "../../../services/ClienteService"; // Asegúrate de que la ruta sea correcta
-
+import NavBar from "../../UI/NavBar/NavBar";
 export const EditProfile = ({ setProfileImage }) => {
+
   const [image, setImage] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [scale, setScale] = useState(1);
@@ -80,14 +81,14 @@ export const EditProfile = ({ setProfileImage }) => {
         const empresaId = user?.adminModels?.id;
         const clienteId = user?.clientModels?.id;
         const gestorId = user?.gestorModels?.id;
-  
+
         if (!tipoUsuario) {
           throw new Error("No se encontró el tipo de usuario.");
         }
-  
+
         // Eliminar el prefijo "data:image/jpeg;base64," para obtener solo el contenido Base64
         const base64Image = croppedImage.split(',')[1];
-  
+
         // Convertir el Base64 a Blob
         const byteString = atob(base64Image);
         const mimeString = croppedImage.split(',')[0].split(':')[1].split(';')[0];
@@ -97,9 +98,9 @@ export const EditProfile = ({ setProfileImage }) => {
           intArray[i] = byteString.charCodeAt(i);
         }
         const file = new Blob([buffer], { type: mimeString });
-  
+
         let response;
-  
+
         // Determinar el método a ejecutar basado en el tipo de usuario
         if (tipoUsuario === "EMPRESA") {
           if (!empresaId) throw new Error("No se encontró el ID de la empresa.");
@@ -113,15 +114,15 @@ export const EditProfile = ({ setProfileImage }) => {
         } else {
           throw new Error("Tipo de usuario no válido.");
         }
-  
+
         // Validar la respuesta
         if (response.status === 200) {
           // Actualizar la imagen en el estado global
           setImage(croppedImage);
-  
+
           // Actualizar la imagen en el localStorage
           const updatedUser = { ...user };
-  
+
           if (tipoUsuario === "EMPRESA") {
             updatedUser.adminModels = {
               ...user.adminModels,
@@ -138,9 +139,9 @@ export const EditProfile = ({ setProfileImage }) => {
               imgPerfil: base64Image, // Guardar solo el contenido Base64
             };
           }
-  
+
           localStorage.setItem('user', JSON.stringify(updatedUser)); // Guardar el usuario actualizado en el localStorage
-  
+
           setSuccessMessage("Imagen actualizada con éxito.");
           navigate("/ActualizarCliente");
         } else {
@@ -151,7 +152,7 @@ export const EditProfile = ({ setProfileImage }) => {
       }
     }
   };
-  
+
 
 
   return (
@@ -162,6 +163,9 @@ export const EditProfile = ({ setProfileImage }) => {
         backgroundPosition: "center",
         height: "100%",
         width: "100%",
+        display: 'flex',
+        flexDirection: 'column'
+
       }}
       className="container"
     >
@@ -169,16 +173,16 @@ export const EditProfile = ({ setProfileImage }) => {
       <main className="editPhotoProfile">
         <h2>Editar foto de Perfil</h2>
         {/* Vista previa de la imagen recortada */}
-      {croppedImage && (
-        <div className="cropped-image-preview">
-          <h3>Vista previa:</h3>
-          <img
-            src={croppedImage}
-            alt="Cropped"
-            style={{ borderRadius: "50%" }}
-          />
-        </div>
-      )}
+        {croppedImage && (
+          <div className="cropped-image-preview">
+            <h3>Vista previa:</h3>
+            <img
+              src={croppedImage}
+              alt="Cropped"
+              style={{ borderRadius: "50%" }}
+            />
+          </div>
+        )}
 
         <Dropzone onDrop={handleDrop} maxFiles={1} accept="image/jpeg, image/png">
           {({ getRootProps, getInputProps }) => (
@@ -253,6 +257,10 @@ export const EditProfile = ({ setProfileImage }) => {
 
         {successMessage && <div className="success-message">{successMessage}</div>}
       </main>
+
+      <footer className='footer_empresa'>
+        <NavBar />
+      </footer>
     </div>
   );
 };
